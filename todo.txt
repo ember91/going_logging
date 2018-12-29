@@ -1,0 +1,21 @@
+Now:
+Ensure errors are handled
+Improve documentation
+Forward declarations
+Don't pollute namespace
+Compile with all warnings enabled
+Include everything used (but not more)
+Run static analysis
+Run valgrind
+add noexcept, const, constepxr etc where applicable
+No tabs
+Test on Windows
+Use move where applicable
+
+Future:
+Better looking doxygen theme
+Add colour
+Add c++20 concepts
+Add type information (int i: 7)
+Add template specialization to put quotation marks around strings
+Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
