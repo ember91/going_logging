@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['prefix',['prefix',['../namespacegl.html#a87ccae1fff21009c7b7873f4add07308',1,'gl']]]
+  ['set_5fprefixes',['set_prefixes',['../namespacegl.html#a4a1fa511516348755e3f762ba1c27a26',1,'gl']]]
 ];

@@ -17,7 +17,7 @@ worse alternative. It is not for heavy logging. Use a proper library for that.
 ### A variable
 ```
 int i = 1;
-D(i);
+l(i);
 ```
 Which outputs:
 ```
@@ -28,7 +28,7 @@ i: 1
 ```
 int i = 1;
 const char* s = "s";
-D(i, s);
+l(i, s);
 ```
 Which outputs:
 ```
@@ -38,13 +38,13 @@ i: 1, s: s
 ### Array
 ```
 int a[] = {0, 1, 2};
-D_ARR(a, 3);
+l_arr(a, 3);
 ```
 
 ### Matrix
 ```
 int m[][] = {{0, 11}, {22, 33}};
-D_MAT(m, 2, 2);
+l_mat(m, 2, 2);
 ```
 
 ### Custom objects
@@ -55,7 +55,7 @@ Output file, line, and other information by using:
 ```
 gl::set_prefixes(gl::prefix::FILE | gl::prefix::LINE);
 int i = 1;
-D(i);
+l(i);
 ```
 Which outputs:
 ```

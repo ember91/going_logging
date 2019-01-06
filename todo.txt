@@ -1,6 +1,6 @@
 Now:
 Ensure errors are handled
-Improve documentation
+Improve documentation. Add build instructions. Add instructions of required packages (CMake, doxygen, ...)
 Forward declarations
 Don't pollute namespace
 Compile with all warnings enabled
@@ -13,7 +13,6 @@ Test on Windows
 Use std::move where applicable
 Move goinglogging.h to include instead of include/goinglogging/
 Add cpplint to CMake
-Rename from goinglogging to going_logging
 
 Future:
 Better looking doxygen theme

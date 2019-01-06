@@ -26,9 +26,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 add_library(libtest src/test.cpp)
 
-add_executable(d        src/d.cpp)
-add_executable(d_arr    src/d_arr.cpp)
-add_executable(d_mat    src/d_mat.cpp)
+add_executable(l        src/l.cpp)
+add_executable(l_arr    src/l_arr.cpp)
+add_executable(l_mat    src/l_mat.cpp)
 add_executable(disabled src/disabled.cpp)
 add_executable(postfix  src/postfix.cpp)
 add_executable(prefixes src/prefixes.cpp)
@@ -40,15 +40,15 @@ if(CLANG_TIDY_EXE)
         CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
     )
     set_target_properties(
-        d PROPERTIES
+        l PROPERTIES
         CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
     )
     set_target_properties(
-        d_arr PROPERTIES
+        l_arr PROPERTIES
         CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
     )
     set_target_properties(
-        d_mat PROPERTIES
+        l_mat PROPERTIES
         CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
     )
     set_target_properties(
@@ -69,9 +69,9 @@ if(CLANG_TIDY_EXE)
     )
 endif()
 
-target_link_libraries(d        libtest)
-target_link_libraries(d_arr    libtest)
-target_link_libraries(d_mat    libtest)
+target_link_libraries(l        libtest)
+target_link_libraries(l_arr    libtest)
+target_link_libraries(l_mat    libtest)
 target_link_libraries(disabled libtest)
 target_link_libraries(postfix  libtest)
 target_link_libraries(prefixes libtest)

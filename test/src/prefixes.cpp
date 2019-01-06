@@ -28,9 +28,9 @@ int main(int argc, const char** argv) {
                             std::cout << "Failed to set prefixes" << std::endl;
                             return EXIT_FAILURE;
                         }
-                        D(0);
-                        D_ARR(a, 1);
-                        D_MAT(m, 1, 1);
+                        l(0);
+                        l_arr(a, 1);
+                        l_mat(m, 1, 1);
                     }
                 }
             }

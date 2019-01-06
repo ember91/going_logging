@@ -12,13 +12,13 @@ int main(int argc, const char** argv) {
 
     int m[2][2] = {{0, 1}, {2, 3}};
 
-    D_MAT(m, 0, 0);
-    D_MAT(m, 0, 1);
-    D_MAT(m, 0, 2);
-    D_MAT(m, 0, 0);
-    D_MAT(m, 1, 0);
-    D_MAT(m, 2, 0);
-    D_MAT(m, 2, 2);
+    l_mat(m, 0, 0);
+    l_mat(m, 0, 1);
+    l_mat(m, 0, 2);
+    l_mat(m, 0, 0);
+    l_mat(m, 1, 0);
+    l_mat(m, 2, 0);
+    l_mat(m, 2, 2);
 
     return t.compare_output(false);
 }

@@ -12,13 +12,13 @@ int main(int argc, const char** argv) {
     t.setup(__FILE__);
 
     int i = 1;
-    D(i);
+    l(i);
 
     int a[2] = {0, 1};
-    D_ARR(a, 2);
+    l_arr(a, 2);
 
     int m[2][2] = {{0, 1}, {2, 3}};
-    D_MAT(m, 2, 2);
+    l_mat(m, 2, 2);
 
     return t.compare_output(false);
 }

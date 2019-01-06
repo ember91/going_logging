@@ -27,39 +27,39 @@
  * \subsection section_a_variable A variable
  * \code
  * int i = 1;
- * D(i);
+ * l(i);
  * \endcode
  * Which outputs:
  * \code
  * i: 1
  * \endcode
- * \sa D()
+ * \sa l()
  *
  * \subsection section_multiple_variables Multiple variables
  * \code
  * int i = 1;
  * const char* s = "s";
- * D(i, s);
+ * l(i, s);
  * \endcode
  * Which outputs:
  * \code
  * i: 1, s: s
  * \endcode
- * \sa D()
+ * \sa l()
  *
  * \subsection section_array Array
  * \code
  * int i[] = {0, 1, 2};
- * D_ARR(i, 3);
+ * l_arr(i, 3);
  * \endcode
- * \sa D_ARR()
+ * \sa l_arr()
  *
  * \subsection section_matrix Matrix
  * \code
  * int i[][] = {{0, 11}, {22, 33}};
- * D_MAT(i, 2, 2);
+ * l_mat(i, 2, 2);
  * \endcode
- * \sa D_MAT()
+ * \sa l_mat()
  *
  * \subsection section_custom_objects Custom objects
  * Can output any object with an overloaded << operator.
@@ -69,7 +69,7 @@
  * \code
  * gl::set_prefixes(gl::prefix::FILE | gl::prefix::LINE);
  * int i = 1;
- * D(i);
+ * l(i);
  * \endcode
  * Which outputs:
  * \code
@@ -412,7 +412,7 @@ prefix get_prefixes() noexcept {
 
 /** \brief Set prefixes of logging output.
  *
- * Alters the output of \sa D(), \sa D_ARR(), and \sa D_MAT().
+ * Alters the output of \sa l(), \sa l_arr(), and \sa l_mat().
  *
  * \param p Bitwise \c or of prefix settings.
  *
@@ -442,9 +442,9 @@ void set_prefixes(prefix p) noexcept {
  * Use as:
  * \code
  * int i = 1;
- * D(i);
+ * l(i);
  * std::string s("s");
- * D(i, s);
+ * l(i, s);
  * \endcode
  * Which outputs:
  * \code
@@ -454,10 +454,10 @@ void set_prefixes(prefix p) noexcept {
  * \note Supports up to 16 variables on the same line.
  * \note Uses prefix information set with \ref set_prefixes().
  *
- * \sa D_ARR() \sa D_MAT() \sa set_prefixes().
+ * \sa l_arr() \sa l_mat() \sa set_prefixes().
  *
  */
-#define D(...) do { \
+#define l(...) do { \
 gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
 GOINGLOGGING_GET_MACRO(__VA_ARGS__, GOINGLOGGING16, GOINGLOGGING15, \
     GOINGLOGGING14, GOINGLOGGING13, GOINGLOGGING12, GOINGLOGGING11, \
@@ -466,7 +466,7 @@ GOINGLOGGING_GET_MACRO(__VA_ARGS__, GOINGLOGGING16, GOINGLOGGING15, \
     GOINGLOGGING2, GOINGLOGGING1,)(__VA_ARGS__) << (GOINGLOGGING_NEWLINE); \
 } while (false)
 #else
-#define D(...) do { \
+#define l(...) do { \
 gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
     GOINGLOGGING_GET_MACRO(__VA_ARGS__, GOINGLOGGING16, GOINGLOGGING15, \
     GOINGLOGGING14, GOINGLOGGING13, GOINGLOGGING12, GOINGLOGGING11, \
@@ -607,7 +607,7 @@ gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
  * Used as:
  * \code
  * int a[] = {3, 4, 5};
- * D_ARR(a, 3);
+ * l_arr(a, 3);
  * \endcode
  *
  * Which outputs:
@@ -619,10 +619,10 @@ gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
  *
  * \warning Behaviour is undefined if \p n is larger than the allocated array.
  *
- * \sa D() \sa D_MAT() \sa set_prefixes()
+ * \sa l() \sa l_mat() \sa set_prefixes()
  *
  */
-#define D_ARR(v, n) \
+#define l_arr(v, n) \
     do { \
         gl::internal::array((#v), __FILE__, __LINE__, __func__, (v), (n)); \
     } while (false)
@@ -636,7 +636,7 @@ gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
  * Used as:
  * \code
  * int m[][] = {{11, 12}, {21, 22}};
- * D_MAT(m, 2, 2);
+ * l_mat(m, 2, 2);
  * \endcode
  *
  * Which outputs:
@@ -649,10 +649,10 @@ gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
  * \warning Behaviour is undefined if \p c or \p r is larger than the
  *          allocated matrix.
  *
- * \sa D() \sa D_ARR() \sa set_prefixes()
+ * \sa l() \sa l_arr() \sa set_prefixes()
  *
  */
-#define D_MAT(m, c, r) \
+#define l_mat(m, c, r) \
     do { \
         gl::internal::matrix((#m), __FILE__, __LINE__, __func__, (m), (c), \
                              (r)); \

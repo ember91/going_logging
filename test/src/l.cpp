@@ -40,19 +40,19 @@ int main(int argc, const char** argv) {
     int*        g = &a;
     test_op     h;
     int&        i = a;
-    D(a);
-    D(a, b);
-    D(a, b, c);
-    D(a, b, c, d);
-    D(a, b, c, d, e);
-    D(a, b, c, d, e, f);
-    D(a, b, c, d, e, f, g);
-    D(a, b, c, d, e, f, g, h);
-    D(a, b, c, d, e, f, g, h, i);
-    D(a, b, c, d, e, f, g, h, i, *g);
-    D(a, b, c, d, e, f, g, h, i, *g, a + c);
-    D(a, b, c, d, e, f, g, h, i, *g, a + c, 0);
-    D(a, b, c, d, e, f, g, h, i, *g, a + c, 0, "j");
+    l(a);
+    l(a, b);
+    l(a, b, c);
+    l(a, b, c, d);
+    l(a, b, c, d, e);
+    l(a, b, c, d, e, f);
+    l(a, b, c, d, e, f, g);
+    l(a, b, c, d, e, f, g, h);
+    l(a, b, c, d, e, f, g, h, i);
+    l(a, b, c, d, e, f, g, h, i, *g);
+    l(a, b, c, d, e, f, g, h, i, *g, a + c);
+    l(a, b, c, d, e, f, g, h, i, *g, a + c, 0);
+    l(a, b, c, d, e, f, g, h, i, *g, a + c, 0, "j");
 
     return t.compare_output(true);
 }

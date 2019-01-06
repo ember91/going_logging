@@ -15,11 +15,11 @@ int main(int argc, const char** argv) {
     std::unique_ptr<int[]> a2(new int[1]);
     a2[0] = 0;
 
-    D_ARR(a,  0);
-    D_ARR(a,  1);
-    D_ARR(a,  2);
-    D_ARR(a,  3);
-    D_ARR(a2.get(), 1);
+    l_arr(a,  0);
+    l_arr(a,  1);
+    l_arr(a,  2);
+    l_arr(a,  3);
+    l_arr(a2.get(), 1);
 
     return t.compare_output(false);
 }
