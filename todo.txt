@@ -1,8 +1,6 @@
 Now:
 Ensure errors are handled
 Improve documentation
-Add build instructions
-Add instructions of required packages (CMake, doxygen, ...)
 Add problem description (printf("i = %s\n"); vs l(i);)
 Compile with all warnings enabled
 Include everything used (but not more)

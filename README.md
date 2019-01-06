@@ -61,3 +61,9 @@ Which outputs:
 ```
 my_file.cpp:68: i = 1
 ```
+
+## License
+
+Copyright 2018 Emil Berg
+
+Licensed under the [MIT license](LICENSE)
