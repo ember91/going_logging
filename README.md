@@ -21,7 +21,7 @@ l(i);
 ```
 Which outputs:
 ```
-i: 1
+i = 1
 ```
 
 ### Multiple variables
@@ -32,7 +32,7 @@ l(i, s);
 ```
 Which outputs:
 ```
-i: 1, s: s
+i = 1, s = s
 ```
 
 ### Array
@@ -59,5 +59,5 @@ l(i);
 ```
 Which outputs:
 ```
-my_file.cpp:68: i: 1
+my_file.cpp:68: i = 1
 ```
