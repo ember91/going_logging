@@ -37,6 +37,6 @@ int main(int argc, const char** argv) {
         }
     }
 
-    t.compare_output(true);
+    return t.compare_output(true);
 }
 
