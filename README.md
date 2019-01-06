@@ -3,7 +3,7 @@
 C++11 library that logs information to command line or file. This is useful when
 debugging realtime systems where compiling with debug symbols and/or a low
 optimization level will slow down the program too much. This library is designed
-to make it as effortless as possible to output the name and value of a variable. 
+to make it as effortless as possible to output the name and value of a variable.
 
 Note that goinglogging is a logging library for debugging when a debugger is a
 worse alternative. It is not for heavy logging. Use a proper library for that.

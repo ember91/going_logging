@@ -3,12 +3,12 @@
  *
  * \section section_description Description
  *
- * \e goinglogging is an open source, lightweight, multiplatform, single header 
- * C++11 library that logs information to command line or file. This is useful 
+ * \e goinglogging is an open source, lightweight, multiplatform, single header
+ * C++11 library that logs information to command line or file. This is useful
  * when debugging realtime systems where compiling with debug symbols and/or a
  * low optimization level will slow down the program too much. This library is
  * designed to make it as effortless as possible to output the name and value
- * of a variable. 
+ * of a variable.
  *
  * \note goinglogging is a logging library for debugging when a debugger is a
  * worse alternative. It is not for heavy logging. Use a proper library for
@@ -386,7 +386,7 @@ void matrix(const char* name, const char* file, unsigned int line,
             }
             for (size_t i = 1; i < r; ++i) {
                 for (size_t j = 0; j < c; ++j) {
-                    std::cout << ", " << "[" << i << ',' << j << "] = " << 
+                    std::cout << ", " << "[" << i << ',' << j << "] = " <<
                                  m[i][j];
                 }
             }
