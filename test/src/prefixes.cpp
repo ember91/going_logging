@@ -14,6 +14,7 @@ int main(int argc, const char** argv) {
     test t;
     t.setup(__FILE__);
 
+    int i       = 0;
     int a[1]    = {0};
     int m[1][1] = {{0}};
 
@@ -28,7 +29,7 @@ int main(int argc, const char** argv) {
                             std::cout << "Failed to set prefixes" << std::endl;
                             return EXIT_FAILURE;
                         }
-                        l(0);
+                        l(i);
                         l_arr(a, 1);
                         l_mat(m, 1, 1);
                     }

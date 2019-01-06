@@ -151,7 +151,8 @@ enum class prefix : uint32_t {
     FILE     = 1<<0, /**< File name. For example 'main.cpp'. */
     LINE     = 1<<1, /**< Line number in file. For example 'Line: 16'. */
     FUNCTION = 1<<2, /**< Function name. For example 'calculate()'. */
-    TIME     = 1<<3, /**< Current local time as hour:minute:second. For example '10:22:13'. */
+    TIME     = 1<<3, /**< Current local time as hour:minute:second.millisecond.
+                       *  For example '10:02:13.057'. */
     THREAD   = 1<<4  /**< ID of current thread. For example 'TID: 12'. */
 };
 
@@ -255,19 +256,27 @@ static prefix curPrefixes = prefix::NONE; /**< \brief Current prefixes */
 void print_prefix(const std::string& file, unsigned int line,
                   const std::string& func) noexcept {
 #ifndef GOINGLOGGING_DISABLED
+    /** Number of prefixes written */
     uint32_t cnt = 0;
 
+    // FILE
     if ((curPrefixes & prefix::FILE) != prefix::NONE) {
+        /** Path separator */
         const char sep =
 #ifdef _WIN32
             '\\';
 #else
             '/';
 #endif  // _WIN32
+
+        /** Start index of file name */
         size_t idx = file.find_last_of(sep);
+
         std::cout << (idx == std::string::npos ? file : file.substr(idx + 1));
         ++cnt;
     }
+
+    // LINE
     if ((curPrefixes & prefix::LINE) != prefix::NONE) {
         if (cnt == 0) {
             std::cout << "Line: ";
@@ -277,6 +286,8 @@ void print_prefix(const std::string& file, unsigned int line,
         std::cout << line;
         ++cnt;
     }
+
+    // FUNCTION
     if ((curPrefixes & prefix::FUNCTION) != prefix::NONE) {
         if (cnt != 0) {
             std::cout << ", ";
@@ -284,15 +295,25 @@ void print_prefix(const std::string& file, unsigned int line,
         std::cout << func << "()";
         ++cnt;
     }
+
+    // TIME
     if ((curPrefixes & prefix::TIME) != prefix::NONE) {
         if (cnt != 0) {
             std::cout << ", ";
         }
-        auto t = std::chrono::system_clock::now();
-        auto in_time_t = std::chrono::system_clock::to_time_t(t);
-        std::cout << std::put_time(std::localtime(&in_time_t), "%H:%M:%S");
+
+        // Get time
+        auto now = std::chrono::system_clock::now();
+        std::time_t sinceEpoch = std::chrono::system_clock::to_time_t(now);
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                      now.time_since_epoch()) % 1000;
+
+        std::cout << std::put_time(std::localtime(&sinceEpoch), "%H:%M:%S") <<
+                     '.' << std::setfill('0') << std::setw(3) << ms.count();
         ++cnt;
     }
+
+    // THREAD
     if ((curPrefixes & prefix::THREAD) != prefix::NONE) {
         if (cnt != 0) {
             std::cout << ", ";
@@ -301,6 +322,7 @@ void print_prefix(const std::string& file, unsigned int line,
         ++cnt;
     }
 
+    // Final separator, if any
     if (cnt != 0) {
         std::cout << ": ";
     }
