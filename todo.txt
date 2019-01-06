@@ -11,6 +11,7 @@ No tabs
 Test on Windows
 Use std::move where applicable
 Add cpplint to CMake
+Clean up CMakeLists.txt
 
 Future:
 Add template specialization to put quotation marks around strings

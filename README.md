@@ -62,6 +62,11 @@ Which outputs:
 my_file.cpp:68: i = 1
 ```
 
+### Disable output
+```
+gl::set_enabled(false);
+```
+
 ## License
 
 Copyright 2018 Emil Berg

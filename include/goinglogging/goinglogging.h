@@ -79,9 +79,9 @@
  *
  * \subsection section_disabled_output Disable output
  * \code
- * #define GOINGLOGGING_DISABLED
- * #include "goinglogging/goinglogging.h"
+ * gl::set_enabled(false);
  * \endcode
+ * \sa set_enabled()
  *
  * \subsection section_flush_output Flush output
  * goinglogging will not flush output by default. To ensure it flushes, use:
@@ -237,13 +237,14 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
     return lhs = lhs ^ rhs;
 }
 
-/* Hide from doxygen */
+/** \brief Hide this section from doxygen */
 #ifndef DOXYGEN_HIDDEN
 
 /** \brief Functionality in this namespace is for internal use */
 namespace internal {
 
 static prefix curPrefixes = prefix::NONE; /**< \brief Current prefixes */
+static bool   enabled     = true;         /**< \c true if enabled */
 
 /** \brief Print prefix string.
  *
@@ -255,7 +256,6 @@ static prefix curPrefixes = prefix::NONE; /**< \brief Current prefixes */
  */
 void print_prefix(const std::string& file, unsigned int line,
                   const std::string& func) noexcept {
-#ifndef GOINGLOGGING_DISABLED
     /** Number of prefixes written */
     uint32_t cnt = 0;
 
@@ -326,12 +326,6 @@ void print_prefix(const std::string& file, unsigned int line,
     if (cnt != 0) {
         std::cout << ": ";
     }
-#else
-    // Avoid warning of unused variable
-    (void)(file);
-    (void)(line);
-    (void)(func);
-#endif  // GOINGLOGGING_DISABLED
 }
 
 /** \brief Log array.
@@ -349,27 +343,19 @@ void print_prefix(const std::string& file, unsigned int line,
 template<class T>
 void array(const char* name, const char* file, unsigned int line,
            const char* func, const T v, size_t n) noexcept {
-#ifndef GOINGLOGGING_DISABLED
-    print_prefix(file, line, func);
-    std::cout << name << ": ";
-    if (n <= 0) {
-        std::cout << "{}";
-    } else {
-        std::cout << "[0] = " << v[0];
-        for (size_t i = 1; i < n; ++i) {
-            std::cout << ", [" << i << "] = " << v[i];
+    if (internal::enabled) {
+        print_prefix(file, line, func);
+        std::cout << name << ": ";
+        if (n <= 0) {
+            std::cout << "{}";
+        } else {
+            std::cout << "[0] = " << v[0];
+            for (size_t i = 1; i < n; ++i) {
+                std::cout << ", [" << i << "] = " << v[i];
+            }
         }
+        std::cout << GOINGLOGGING_NEWLINE;
     }
-    std::cout << GOINGLOGGING_NEWLINE;
-#else
-    // Avoid warning of unused variables
-    (void)(name);
-    (void)(file);
-    (void)(line);
-    (void)(func);
-    (void)(v);
-    (void)(n);
-#endif  // GOINGLOGGING_DISABLED
 }
 
 /** \brief Log matrix with dimensions \p c * \p r.
@@ -388,33 +374,25 @@ void array(const char* name, const char* file, unsigned int line,
 template<class T>
 void matrix(const char* name, const char* file, unsigned int line,
             const char* func, const T m, size_t c, size_t r) noexcept {
-#ifndef GOINGLOGGING_DISABLED
-    print_prefix(file, line, func);
-    std::cout << name << ": ";
-    if (c <= 0 || r <= 0) {
-        std::cout << "{}";
-    } else {
-        std::cout << "[0,0] = " << m[0][0];
-        for (size_t j = 1; j < c; ++j) {
-            std::cout << ", " << "[0," << j << "] = " << m[0][j];
-        }
-        for (size_t i = 1; i < r; ++i) {
-            for (size_t j = 0; j < c; ++j) {
-                std::cout << ", " << "[" << i << ',' << j << "] = " << m[i][j];
+    if (internal::enabled) {
+        print_prefix(file, line, func);
+        std::cout << name << ": ";
+        if (c <= 0 || r <= 0) {
+            std::cout << "{}";
+        } else {
+            std::cout << "[0,0] = " << m[0][0];
+            for (size_t j = 1; j < c; ++j) {
+                std::cout << ", " << "[0," << j << "] = " << m[0][j];
+            }
+            for (size_t i = 1; i < r; ++i) {
+                for (size_t j = 0; j < c; ++j) {
+                    std::cout << ", " << "[" << i << ',' << j << "] = " << 
+                                 m[i][j];
+                }
             }
         }
+        std::cout << GOINGLOGGING_NEWLINE;
     }
-    std::cout << GOINGLOGGING_NEWLINE;
-#else
-    // Avoid warnings of unused variables
-    (void)(name);
-    (void)(file);
-    (void)(line);
-    (void)(func);
-    (void)(m);
-    (void)(c);
-    (void)(r);
-#endif  // GOINGLOGGING_DISABLED
 }
 
 }  // namespace internal
@@ -425,7 +403,7 @@ void matrix(const char* name, const char* file, unsigned int line,
  *
  * \return Prefix settings.
  *
- * \sa prefix \sa get_prefixes()
+ * \sa prefix \sa set_prefixes()
  *
  */
 prefix get_prefixes() noexcept {
@@ -453,12 +431,35 @@ void set_prefixes(prefix p) noexcept {
     internal::curPrefixes = p;
 }
 
+/** \brief Check if output is enabled.
+ *
+ * \return e \c true if output is enabled.
+ *
+ * \sa set_enabled()
+ *
+ */
+bool is_enabled() noexcept {
+    return internal::enabled;
+}
+
+/** \brief Enable or disable output.
+ *
+ * \note Defaults to enabled.
+ *
+ * \param e \c true if output shall be enabled.
+ *
+ * \sa is_enabled()
+ *
+ */
+void set_enabled(bool e) noexcept {
+    internal::enabled = e;
+}
+
 #ifndef DOXYGEN_HIDDEN
 #define GOINGLOGGING_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
     _12, _13, _14, _15, _16, NAME, ...) NAME
 #endif  // DOXYGEN_HIDDEN
 
-#ifndef GOINGLOGGING_DISABLED
 /** \brief Log variables to stdout.
  *
  * Use as:
@@ -480,27 +481,17 @@ void set_prefixes(prefix p) noexcept {
  *
  */
 #define l(...) do { \
-gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
-GOINGLOGGING_GET_MACRO(__VA_ARGS__, GOINGLOGGING16, GOINGLOGGING15, \
-    GOINGLOGGING14, GOINGLOGGING13, GOINGLOGGING12, GOINGLOGGING11, \
-    GOINGLOGGING10, GOINGLOGGING9, GOINGLOGGING8, GOINGLOGGING7, \
-    GOINGLOGGING6, GOINGLOGGING5, GOINGLOGGING4, GOINGLOGGING3, \
-    GOINGLOGGING2, GOINGLOGGING1,)(__VA_ARGS__) << (GOINGLOGGING_NEWLINE); \
+    if (gl::internal::enabled) { \
+        gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
+        GOINGLOGGING_GET_MACRO(__VA_ARGS__, GOINGLOGGING16, GOINGLOGGING15, \
+            GOINGLOGGING14, GOINGLOGGING13, GOINGLOGGING12, GOINGLOGGING11, \
+            GOINGLOGGING10, GOINGLOGGING9, GOINGLOGGING8, GOINGLOGGING7, \
+            GOINGLOGGING6, GOINGLOGGING5, GOINGLOGGING4, GOINGLOGGING3, \
+            GOINGLOGGING2, GOINGLOGGING1,)(__VA_ARGS__) << (GOINGLOGGING_NEWLINE); \
+    } \
 } while (false)
-#else
-#define l(...) do { \
-gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
-    GOINGLOGGING_GET_MACRO(__VA_ARGS__, GOINGLOGGING16, GOINGLOGGING15, \
-    GOINGLOGGING14, GOINGLOGGING13, GOINGLOGGING12, GOINGLOGGING11, \
-    GOINGLOGGING10, GOINGLOGGING9, GOINGLOGGING8, GOINGLOGGING7, \
-    GOINGLOGGING6, GOINGLOGGING5, GOINGLOGGING4, GOINGLOGGING3, GOINGLOGGING2, \
-    GOINGLOGGING1,)(__VA_ARGS__) \
-} while (false)
-#endif  // GOINGLOGGING_DISABLED
 
 #ifndef DOXYGEN_HIDDEN
-
-#ifndef GOINGLOGGING_DISABLED
 
 #define GOINGLOGGING1(v1) \
     std::cout << (#v1) << " = " << (v1)
@@ -563,61 +554,6 @@ gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
     GOINGLOGGING15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14, v15) << \
         ", " << (#v16) << " = " << (v16)
-
-#else
-
-#define GOINGLOGGING1(v1) \
-    (void)(v1);
-
-#define GOINGLOGGING2(v1, v2) \
-    GOINGLOGGING1(v1); (void)(v2);
-
-#define GOINGLOGGING3(v1, v2, v3) \
-    GOINGLOGGING2(v1); (void)(v3);
-
-#define GOINGLOGGING4(v1, v2, v3, v4) \
-    GOINGLOGGING3(v1); (void)(v4);
-
-#define GOINGLOGGING5(v1, v2, v3, v4, v5) \
-    GOINGLOGGING4(v1); (void)(v5);
-
-#define GOINGLOGGING6(v1, v2, v3, v4, v5, v6) \
-    GOINGLOGGING5(v1); (void)(v6);
-
-#define GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) \
-    GOINGLOGGING6(v1); (void)(v7);
-
-#define GOINGLOGGING8(v1, v2, v3, v4, v5, v6, v7, v8) \
-    GOINGLOGGING7(v1); (void)(v8);
-
-#define GOINGLOGGING9(v1, v2, v3, v4, v5, v6, v7, v8, v9) \
-    GOINGLOGGING8(v1); (void)(v9);
-
-#define GOINGLOGGING10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) \
-    GOINGLOGGING9(v1); (void)(v10);
-
-#define GOINGLOGGING11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) \
-    GOINGLOGGING10(v1); (void)(v11);
-
-#define GOINGLOGGING12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
-    GOINGLOGGING11(v1); (void)(v12);
-
-#define GOINGLOGGING13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) \
-    GOINGLOGGING12(v1); (void)(v13);
-
-#define GOINGLOGGING14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
-                       v14) \
-    GOINGLOGGING13(v1); (void)(v14);
-
-#define GOINGLOGGING15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
-                       v14, v15) \
-    GOINGLOGGING14(v1); (void)(v15);
-
-#define GOINGLOGGING16(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
-                       v14, v15, v16) \
-    GOINGLOGGING15(v1); (void)(v16);
-
-#endif  // GOINGLOGGING_DISABLED
 
 #endif  // DOXYGEN_HIDDEN
 

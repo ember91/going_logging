@@ -1,4 +1,3 @@
-#define GOINGLOGGING_DISABLED
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
 
@@ -11,6 +10,8 @@ int main(int argc, const char** argv) {
     test t;
     t.setup(__FILE__);
 
+    gl::set_enabled(false);
+
     int i = 2;
     l(i);
 
@@ -19,6 +20,12 @@ int main(int argc, const char** argv) {
 
     int m[2][2] = {{0, 1}, {2, 3}};
     l_mat(m, 2, 2);
+
+    int j = 2;
+
+    gl::set_enabled(true);
+
+    l(j);
 
     return t.compare_output(false);
 }
