@@ -31,7 +31,7 @@
  * \endcode
  * Which outputs:
  * \code
- * i: 1
+ * i = 1
  * \endcode
  * \sa l()
  *
@@ -43,7 +43,7 @@
  * \endcode
  * Which outputs:
  * \code
- * i: 1, s: s
+ * i = 1, s = s
  * \endcode
  * \sa l()
  *
@@ -73,7 +73,7 @@
  * \endcode
  * Which outputs:
  * \code
- * my_file:68: i: 1
+ * my_file:68: i = 1
  * \endcode
  * \sa set_prefixes()
  *
@@ -333,9 +333,9 @@ void array(const char* name, const char* file, unsigned int line,
     if (n <= 0) {
         std::cout << "{}";
     } else {
-        std::cout << "[0]: " << v[0];
+        std::cout << "[0] = " << v[0];
         for (size_t i = 1; i < n; ++i) {
-            std::cout << ", [" << i << "]: " << v[i];
+            std::cout << ", [" << i << "] = " << v[i];
         }
     }
     std::cout << GOINGLOGGING_NEWLINE;
@@ -372,13 +372,13 @@ void matrix(const char* name, const char* file, unsigned int line,
     if (c <= 0 || r <= 0) {
         std::cout << "{}";
     } else {
-        std::cout << "[0,0]: " << m[0][0];
+        std::cout << "[0,0] = " << m[0][0];
         for (size_t j = 1; j < c; ++j) {
-            std::cout << ", " << "[0," << j << "]: " << m[0][j];
+            std::cout << ", " << "[0," << j << "] = " << m[0][j];
         }
         for (size_t i = 1; i < r; ++i) {
             for (size_t j = 0; j < c; ++j) {
-                std::cout << ", " << "[" << i << ',' << j << "]: " << m[i][j];
+                std::cout << ", " << "[" << i << ',' << j << "] = " << m[i][j];
             }
         }
     }
@@ -448,7 +448,7 @@ void set_prefixes(prefix p) noexcept {
  * \endcode
  * Which outputs:
  * \code
- * i: 1, s: s
+ * i = 1, s = s
  * \endcode
  *
  * \note Supports up to 16 variables on the same line.
@@ -481,66 +481,66 @@ gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
 #ifndef GOINGLOGGING_DISABLED
 
 #define GOINGLOGGING1(v1) \
-    std::cout << (#v1) << ": " << (v1)
+    std::cout << (#v1) << " = " << (v1)
 
 #define GOINGLOGGING2(v1, v2) \
-    GOINGLOGGING1(v1) << ", " << (#v2) << ": " << (v2)
+    GOINGLOGGING1(v1) << ", " << (#v2) << " = " << (v2)
 
 #define GOINGLOGGING3(v1, v2, v3) \
-    GOINGLOGGING2(v1, v2) << ", " << (#v3) << ": " << (v3)
+    GOINGLOGGING2(v1, v2) << ", " << (#v3) << " = " << (v3)
 
 #define GOINGLOGGING4(v1, v2, v3, v4) \
-    GOINGLOGGING3(v1, v2, v3) << ", " << (#v4) << ": " << (v4)
+    GOINGLOGGING3(v1, v2, v3) << ", " << (#v4) << " = " << (v4)
 
 #define GOINGLOGGING5(v1, v2, v3, v4, v5) \
-    GOINGLOGGING4(v1, v2, v3, v4) << ", " << (#v5) << ": " << (v5)
+    GOINGLOGGING4(v1, v2, v3, v4) << ", " << (#v5) << " = " << (v5)
 
 #define GOINGLOGGING6(v1, v2, v3, v4, v5, v6) \
-    GOINGLOGGING5(v1, v2, v3, v4, v5) << ", " << (#v6) << ": " << (v6)
+    GOINGLOGGING5(v1, v2, v3, v4, v5) << ", " << (#v6) << " = " << (v6)
 
 #define GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) \
-    GOINGLOGGING6(v1, v2, v3, v4, v5, v6) << ", " << (#v7) << ": " << (v7)
+    GOINGLOGGING6(v1, v2, v3, v4, v5, v6) << ", " << (#v7) << " = " << (v7)
 
 #define GOINGLOGGING8(v1, v2, v3, v4, v5, v6, v7, v8) \
-    GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) << ", " << (#v8) << ": " << (v8)
+    GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) << ", " << (#v8) << " = " << (v8)
 
 #define GOINGLOGGING9(v1, v2, v3, v4, v5, v6, v7, v8, v9) \
     GOINGLOGGING8(v1, v2, v3, v4, v5, v6, v7, v8) << \
-        ", " << (#v9) << ": " << (v9)
+        ", " << (#v9) << " = " << (v9)
 
 #define GOINGLOGGING10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) \
     GOINGLOGGING9(v1, v2, v3, v4, v5, v6, v7, v8, v9) << \
-        ", " << (#v10) << ": " << (v10)
+        ", " << (#v10) << " = " << (v10)
 
 #define GOINGLOGGING11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) \
     GOINGLOGGING10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) << \
-        ", " << (#v11) << ": " << (v11)
+        ", " << (#v11) << " = " << (v11)
 
 #define GOINGLOGGING12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
     GOINGLOGGING11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) << \
-        ", " << (#v12) << ": " << (v12)
+        ", " << (#v12) << " = " << (v12)
 
 #define GOINGLOGGING13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13) \
     GOINGLOGGING12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) << \
-        ", " << (#v13) << ": " << (v13)
+        ", " << (#v13) << " = " << (v13)
 
 #define GOINGLOGGING14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14) \
     GOINGLOGGING13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) << \
-        ", " << (#v14) << ": " << (v14)
+        ", " << (#v14) << " = " << (v14)
 
 #define GOINGLOGGING15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15) \
     GOINGLOGGING14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14) << \
-        ", " << (#v15) << ": " << (v15)
+        ", " << (#v15) << " = " << (v15)
 
 #define GOINGLOGGING16(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15, v16) \
     GOINGLOGGING15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14, v15) << \
-        ", " << (#v16) << ": " << (v16)
+        ", " << (#v16) << " = " << (v16)
 
 #else
 
@@ -612,7 +612,7 @@ gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
  *
  * Which outputs:
  * \code
- * a: [0]: 3, [1]: 4, [2]: 5
+ * a: [0] = 3, [1] = 4, [2] = 5
  * \endcode
  *
  * \note Uses prefix information set with \ref set_prefixes().
@@ -641,7 +641,7 @@ gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
  *
  * Which outputs:
  * \code
- * m: [0,0]: 11, [0,1]: 12, [1,0]: 21, [1,1]: 22
+ * m: [0,0] = 11, [0,1] = 12, [1,0] = 21, [1,1] = 22
  * \endcode
  *
  * \note Uses prefix information set with \ref set_prefixes()

@@ -185,7 +185,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Log variables to stdout. </p>
-<p>Use as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> i = 1;</div><div class="line"><a class="code" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(i);</div><div class="line">std::string s(<span class="stringliteral">&quot;s&quot;</span>);</div><div class="line"><a class="code" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(i, s);</div></div><!-- fragment --><p> Which outputs: </p><div class="fragment"><div class="line">i: 1, s: s</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Supports up to 16 variables on the same line. </dd>
+<p>Use as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> i = 1;</div><div class="line"><a class="code" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(i);</div><div class="line">std::string s(<span class="stringliteral">&quot;s&quot;</span>);</div><div class="line"><a class="code" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(i, s);</div></div><!-- fragment --><p> Which outputs: </p><div class="fragment"><div class="line">i = 1, s = s</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Supports up to 16 variables on the same line. </dd>
 <dd>
 Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a>.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac" title="Log array to stdout. ">l_arr()</a> </dd>
@@ -230,7 +230,7 @@ Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa5115
   </table>
   </dd>
 </dl>
-<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> a[] = {3, 4, 5};</div><div class="line"><a class="code" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac">l_arr</a>(a, 3);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">a: [0]: 3, [1]: 4, [2]: 5</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a>.</dd></dl>
+<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> a[] = {3, 4, 5};</div><div class="line"><a class="code" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac">l_arr</a>(a, 3);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">a: [0] = 3, [1] = 4, [2] = 5</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a>.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Behaviour is undefined if <code>n</code> is larger than the allocated array.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6" title="Log variables to stdout. ">l()</a> </dd>
 <dd>
@@ -281,7 +281,7 @@ Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa5115
   </table>
   </dd>
 </dl>
-<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> m[][] = {{11, 12}, {21, 22}};</div><div class="line"><a class="code" href="goinglogging_8h.html#af023eb76f4b142de14de1d184a32607f">l_mat</a>(m, 2, 2);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">m: [0,0]: 11, [0,1]: 12, [1,0]: 21, [1,1]: 22</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a></dd></dl>
+<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> m[][] = {{11, 12}, {21, 22}};</div><div class="line"><a class="code" href="goinglogging_8h.html#af023eb76f4b142de14de1d184a32607f">l_mat</a>(m, 2, 2);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">m: [0,0] = 11, [0,1] = 12, [1,0] = 21, [1,1] = 22</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a></dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Behaviour is undefined if <code>c</code> or <code>r</code> is larger than the allocated matrix.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6" title="Log variables to stdout. ">l()</a> </dd>
 <dd>
