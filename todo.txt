@@ -1,8 +1,9 @@
 Now:
 Ensure errors are handled
-Improve documentation. Add build instructions. Add instructions of required packages (CMake, doxygen, ...)
-Forward declarations
-Don't pollute namespace
+Improve documentation
+Add build instructions
+Add instructions of required packages (CMake, doxygen, ...)
+Add problem description (printf("i = %s\n"); vs l(i);)
 Compile with all warnings enabled
 Include everything used (but not more)
 Run static analysis
@@ -11,13 +12,12 @@ add noexcept, const, constepxr etc where applicable
 No tabs
 Test on Windows
 Use std::move where applicable
-Move goinglogging.h to include instead of include/goinglogging/
 Add cpplint to CMake
 
 Future:
+Add template specialization to put quotation marks around strings
 Better looking doxygen theme
 Add colour
 Add c++20 concepts
 Add type information (int i: 7)
-Add template specialization to put quotation marks around strings
 Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
