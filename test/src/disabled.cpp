@@ -12,7 +12,7 @@ int main(int argc, const char** argv) {
 
     gl::set_enabled(false);
 
-    int i = 2;
+    int i = 0;
     l(i);
 
     int a[2] = {0, 1};
@@ -21,11 +21,16 @@ int main(int argc, const char** argv) {
     int m[2][2] = {{0, 1}, {2, 3}};
     l_mat(m, 2, 2);
 
-    int j = 2;
-
     gl::set_enabled(true);
 
-    l(j);
+    int i2 = 0;
+    l(i2);
+
+    int a2[2] = {0, 1};
+    l_arr(a2, 2);
+
+    int m2[2][2] = {{0, 1}, {2, 3}};
+    l_mat(m2, 2, 2);
 
     return t.compare_output(false);
 }

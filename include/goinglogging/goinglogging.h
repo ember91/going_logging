@@ -298,19 +298,21 @@ void print_prefix(const std::string& file, unsigned int line,
 
     // TIME
     if ((curPrefixes & prefix::TIME) != prefix::NONE) {
-        if (cnt != 0) {
-            std::cout << ", ";
-        }
-
         // Get time
         auto now = std::chrono::system_clock::now();
         std::time_t sinceEpoch = std::chrono::system_clock::to_time_t(now);
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
                       now.time_since_epoch()) % 1000;
 
-        std::cout << std::put_time(std::localtime(&sinceEpoch), "%H:%M:%S") <<
-                     '.' << std::setfill('0') << std::setw(3) << ms.count();
-        ++cnt;
+        std::tm* local = std::localtime(&sinceEpoch);
+        if (local != nullptr) {
+            if (cnt != 0) {
+                std::cout << ", ";
+            }
+            std::cout << std::put_time(local, "%H:%M:%S") << '.' <<
+                         std::setfill('0') << std::setw(3) << ms.count();
+            ++cnt;
+        }
     }
 
     // THREAD
@@ -444,9 +446,9 @@ bool is_enabled() noexcept {
 
 /** \brief Enable or disable output.
  *
- * \note Defaults to enabled.
- *
  * \param e \c true if output shall be enabled.
+ *
+ * \note Defaults to enabled.
  *
  * \sa is_enabled()
  *

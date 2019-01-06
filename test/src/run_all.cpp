@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <dirent.h>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -16,7 +17,9 @@ std::vector<std::string> get_file_names(const std::string& d) {
         }
         closedir(dir);
     } else {
-        throw std::runtime_error("Failed to open directory");
+        std::stringstream ss;
+        ss << "Failed to open directory '" << d << "'";
+        throw std::runtime_error(ss.str());
     }
 
     return rv;

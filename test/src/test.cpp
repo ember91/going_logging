@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <regex>
+#include <stdexcept>
 
 static const char sep =
 #ifdef _WIN32
@@ -11,14 +12,28 @@ static const char sep =
 #endif  // _WIN32
 
 std::string build_input_string(const std::string& f) {
-    std::string s1 = f.substr(f.find_last_of(sep) + 1);
-    std::string s2 = s1.substr(0, s1.find_last_of('.'));
+    size_t idxSep = f.find_last_of(sep);
+    if (idxSep == std::string::npos) {
+        std::stringstream ss;
+        ss << "Failed to find '" << sep << "' in path '" << f << "'";
+        throw std::runtime_error(ss.str());
+    }
+    std::string s1 = f.substr(idxSep + 1);
+    size_t idxDot = s1.find_last_of('.');
+    std::string s2 = s1.substr(0, idxDot);
     return std::string("tmp_") + s2 + std::string(".txt");
 }
 
 std::string build_ground_truth_string(const std::string& f) {
-    std::string s1 = f.substr(f.find_last_of(sep) + 1);
-    std::string s2 = s1.substr(0, s1.find_last_of('.'));
+    size_t idxSep = f.find_last_of(sep);
+    if (idxSep == std::string::npos) {
+        std::stringstream ss;
+        ss << "Failed to find '" << sep << "' in path '" << f << "'";
+        throw std::runtime_error(ss.str());
+    }
+    std::string s1 = f.substr(idxSep + 1);
+    size_t idxDot = s1.find_last_of('.');
+    std::string s2 = s1.substr(0, idxDot);
     return std::string("..") + sep + "ground_truth" + sep + s2 + std::string(".txt");
 }
 
@@ -115,5 +130,7 @@ int test::compare_output(bool regex) {
 
         lineIdx++;
     }
+
+    return EXIT_SUCCESS;
 }
 

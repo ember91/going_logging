@@ -1,5 +1,4 @@
 Now:
-Ensure errors are handled
 Improve documentation
 Add problem description (printf("i = %s\n"); vs l(i);)
 Compile with all warnings enabled
