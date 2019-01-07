@@ -254,7 +254,7 @@ static bool   enabled     = true;         /**< \c true if enabled */
  * \param func Function name
  *
  */
-void print_prefix(const std::string& file, unsigned int line,
+void print_prefix(const std::string& file, long line,
                   const std::string& func) noexcept {
     /** Number of prefixes written */
     uint32_t cnt = 0;
@@ -343,7 +343,7 @@ void print_prefix(const std::string& file, unsigned int line,
  *
  */
 template<class T>
-void array(const char* name, const char* file, unsigned int line,
+void array(const char* name, const char* file, long line,
            const char* func, const T v, size_t n) noexcept {
     if (internal::enabled) {
         print_prefix(file, line, func);
@@ -374,7 +374,7 @@ void array(const char* name, const char* file, unsigned int line,
  *
  */
 template<class T>
-void matrix(const char* name, const char* file, unsigned int line,
+void matrix(const char* name, const char* file, long line,
             const char* func, const T m, size_t c, size_t r) noexcept {
     if (internal::enabled) {
         print_prefix(file, line, func);
