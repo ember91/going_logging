@@ -50,9 +50,9 @@ int main(int argc, const char** argv) {
     l(a, b, c, d, e, f, g, h);
     l(a, b, c, d, e, f, g, h, i);
     l(a, b, c, d, e, f, g, h, i, *g);
-    l(a, b, c, d, e, f, g, h, i, *g, a + c);
-    l(a, b, c, d, e, f, g, h, i, *g, a + c, 0);
-    l(a, b, c, d, e, f, g, h, i, *g, a + c, 0, "j");
+    l(a, b, c, d, e, f, g, h, i, *g, static_cast<uint32_t>(a) + c);
+    l(a, b, c, d, e, f, g, h, i, *g, static_cast<uint32_t>(a) + c, 0);
+    l(a, b, c, d, e, f, g, h, i, *g, static_cast<uint32_t>(a) + c, 0, "j");
 
     return t.compare_output(true);
 }

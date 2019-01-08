@@ -39,8 +39,7 @@ std::string build_ground_truth_string(const std::string& f) {
 
 test::test() :
     m_file_name(""),
-    m_stdout(nullptr),
-    m_output() {
+    m_stdout(nullptr) {
 }
 
 test::~test() {

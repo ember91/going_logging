@@ -156,6 +156,24 @@ enum class prefix : uint32_t {
     THREAD   = 1<<4  /**< ID of current thread. For example 'TID: 12'. */
 };
 
+namespace internal {
+
+void print_prefix(const std::string& file, long line, const std::string& func)
+    noexcept;
+template<class T>
+void array(const char* name, const char* file, long line, const char* func,
+    const T v, size_t n) noexcept;
+template<class T>
+void matrix(const char* name, const char* file, long line, const char* func,
+    const T m, size_t c, size_t r) noexcept;
+
+}  // namespace internal
+
+prefix get_prefixes() noexcept;
+void set_prefixes(prefix p) noexcept;
+bool is_enabled() noexcept;
+void set_enabled(bool e) noexcept;
+
 /** \brief Bitwise \c and of logging prefix settings.
  *
  * \param lhs First element.
