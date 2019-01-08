@@ -7,7 +7,6 @@ Run valgrind
 add noexcept, const, constepxr etc where applicable
 No tabs
 Test on Windows
-Use std::move where applicable
 Add cpplint to CMake
 Clean up CMakeLists.txt
 
