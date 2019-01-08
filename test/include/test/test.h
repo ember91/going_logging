@@ -2,6 +2,7 @@
 #define INCLUDE_TEST_H_
 
 #include <fstream>
+#include <streambuf>
 #include <string>
 
 class test {

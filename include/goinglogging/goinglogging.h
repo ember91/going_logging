@@ -109,10 +109,11 @@
 #define INCLUDE_GOINGLOGGING_H_
 
 #include <chrono>
+#include <ctime>
 #include <iomanip>
 #include <ios>
 #include <iostream>
-#include <sstream>
+#include <ostream>
 #include <string>
 #include <thread>
 
@@ -272,8 +273,8 @@ static bool   enabled     = true;         /**< \c true if enabled */
  * \param func Function name
  *
  */
-void print_prefix(const std::string& file, long line,
-                  const std::string& func) noexcept {
+void print_prefix(const std::string& file, long line, const std::string& func)
+    noexcept {
     /** Number of prefixes written */
     uint32_t cnt = 0;
 

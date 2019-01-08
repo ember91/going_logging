@@ -1,8 +1,12 @@
 #include "test/test.h"
 
+#include <cstdio>
+#include <fstream>
 #include <iostream>
 #include <regex>
+#include <sstream>
 #include <stdexcept>
+#include <string>
 
 static const char sep =
 #ifdef _WIN32

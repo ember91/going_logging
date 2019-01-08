@@ -2,7 +2,6 @@ Now:
 Improve documentation
 Add problem description (printf("i = %s\n"); vs l(i);)
 Compile with all warnings enabled
-Include everything used (but not more)
 Run static analysis
 Run valgrind
 add noexcept, const, constepxr etc where applicable

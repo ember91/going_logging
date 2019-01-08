@@ -1,3 +1,6 @@
+#include <iostream>
+#include <ostream>
+
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
 

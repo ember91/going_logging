@@ -1,3 +1,6 @@
+#include <iostream>
+#include <ostream>
+
 #define GOINGLOGGING_NEWLINE " end\n"
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"

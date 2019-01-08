@@ -1,3 +1,6 @@
+#include <iostream>
+#include <ostream>
+
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
 
@@ -5,6 +8,7 @@
     for (gl::prefix (n) = gl::prefix::NONE; (n) <= (p); \
         (n) = static_cast<gl::prefix>(static_cast<uint32_t>((n)) + \
                                       static_cast<uint32_t>((p))))
+
 int main(int argc, const char** argv) {
     if (argc != 1) {
         std::cout << "Usage: " << *argv << std::endl;

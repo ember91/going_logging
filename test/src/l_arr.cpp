@@ -1,7 +1,10 @@
+#include <iostream>
 #include <memory>
+#include <ostream>
 
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
+
 int main(int argc, const char** argv) {
     if (argc != 1) {
         std::cout << "Usage: " << *argv << std::endl;

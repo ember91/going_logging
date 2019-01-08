@@ -1,11 +1,11 @@
 #include <cstdlib>
 #include <dirent.h>
+#include <iostream>
+#include <ostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-#include <iostream>
 
 std::vector<std::string> get_file_names(const std::string& d) {
     DIR* dir;
