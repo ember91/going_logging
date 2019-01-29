@@ -10,6 +10,8 @@ int main(int argc, const char** argv) {
         return EXIT_SUCCESS;
     }
 
+    gl::set_prefixes(gl::prefix::NONE);
+
     test t;
     t.setup(__FILE__);
 

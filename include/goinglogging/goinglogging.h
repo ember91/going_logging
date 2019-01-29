@@ -262,8 +262,8 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
 /** \brief Functionality in this namespace is for internal use */
 namespace internal {
 
-static prefix curPrefixes = prefix::NONE; /**< \brief Current prefixes */
-static bool   enabled     = true;         /**< \c true if enabled */
+static prefix curPrefixes = prefix::FILE | prefix::LINE; /**< \brief Current prefixes */
+static bool   enabled     = true; /**< \c true if enabled */
 
 /** \brief Print prefix string.
  *
@@ -443,7 +443,7 @@ prefix get_prefixes() noexcept {
  * \endcode
  * to also log current file and line number.
  *
- * \note Defaults to prefix::NONE.
+ * \note Defaults to prefix::FILE | prefix::LINE.
  *
  * \sa prefix \sa get_prefixes()
  *
