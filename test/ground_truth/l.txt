@@ -8,6 +8,6 @@ a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+
 a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op
 a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op, i = 1
 a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op, i = 1, \*g = 1
-a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op, i = 1, \*g = 1, a \+ c = 8
-a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op, i = 1, \*g = 1, a \+ c = 8, 0 = 0
-a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op, i = 1, \*g = 1, a \+ c = 8, 0 = 0, "j" = j
+a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op, i = 1, \*g = 1, static_cast<uint32_t>\(a\) \+ c = 8
+a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op, i = 1, \*g = 1, static_cast<uint32_t>\(a\) \+ c = 8, 0 = 0
+a = 1, b = hej, c = 7, d = 0, e = 1, f = asdsa, g = 0x[0-9A-Fa-f]+, h = test_op, i = 1, \*g = 1, static_cast<uint32_t>\(a\) \+ c = 8, 0 = 0, "j" = j
