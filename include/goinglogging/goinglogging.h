@@ -79,9 +79,9 @@
  *
  * \subsection section_disabled_output Disable output
  * \code
- * gl::set_enabled(false);
+ * gl::set_output_enabled(false);
  * \endcode
- * \sa set_enabled()
+ * \sa set_output_enabled()
  *
  * \subsection section_flush_output Flush output
  * goinglogging will not flush output by default. To ensure it flushes, use:
@@ -96,6 +96,13 @@
  * std::ofstream f("f.txt");
  * std::cout.rdbuf(f.rdbuf());
  * \endcode
+ *
+ * \subsection section_color Color
+ * Enable colored output in terminals that support ANSI control sequences:
+ * \code
+ * gl::set_color_enabled(true);
+ * \endcode
+ * \sa set_color_enabled()
  *
  */
 
@@ -161,6 +168,8 @@ namespace internal {
 
 void print_prefix(const std::string& file, long line, const std::string& func)
     noexcept;
+void print_color_start() noexcept;
+void print_color_end() noexcept;
 template<class T>
 void array(const char* name, const char* file, long line, const char* func,
     const T v, size_t n) noexcept;
@@ -172,8 +181,10 @@ void matrix(const char* name, const char* file, long line, const char* func,
 
 prefix get_prefixes() noexcept;
 void set_prefixes(prefix p) noexcept;
-bool is_enabled() noexcept;
-void set_enabled(bool e) noexcept;
+bool is_output_enabled() noexcept;
+void set_output_enabled(bool e) noexcept;
+bool is_color_enabled() noexcept;
+void set_color_enabled(bool e) noexcept;
 
 /** \brief Bitwise \c and of logging prefix settings.
  *
@@ -262,8 +273,9 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
 /** \brief Functionality in this namespace is for internal use */
 namespace internal {
 
-static prefix curPrefixes = prefix::FILE | prefix::LINE; /**< \brief Current prefixes */
-static bool   enabled     = true; /**< \c true if enabled */
+static prefix curPrefixes   = prefix::FILE | prefix::LINE; /**< \brief Current prefixes */
+static bool   outputEnabled = true; /**< \c true if enabled */
+static bool   colorEnabled  = false; /**< \c true if color enabled */
 
 /** \brief Print prefix string.
  *
@@ -349,6 +361,28 @@ void print_prefix(const std::string& file, long line, const std::string& func)
     }
 }
 
+/** \brief Print start control sequence of colored output, if enabled.
+ *
+ * \note For internal use.
+ *
+ */
+inline void print_color_start() noexcept {
+    if (internal::colorEnabled) {
+        std::cout << "\033[0;31m";
+    }
+}
+
+/** \brief Print end control sequence of colored output, if enabled.
+ *
+ * \note For internal use.
+ *
+ */
+inline void print_color_end() noexcept {
+    if (internal::colorEnabled) {
+        std::cout << "\033[0m";
+    }
+}
+
 /** \brief Log array.
  *
  * \note For internal use.
@@ -364,8 +398,9 @@ void print_prefix(const std::string& file, long line, const std::string& func)
 template<class T>
 void array(const char* name, const char* file, long line,
            const char* func, const T v, size_t n) noexcept {
-    if (internal::enabled) {
+    if (internal::outputEnabled) {
         print_prefix(file, line, func);
+        print_color_start();
         std::cout << name << ": ";
         if (n <= 0) {
             std::cout << "{}";
@@ -375,6 +410,7 @@ void array(const char* name, const char* file, long line,
                 std::cout << ", [" << i << "] = " << v[i];
             }
         }
+        print_color_end();
         std::cout << GOINGLOGGING_NEWLINE;
     }
 }
@@ -395,8 +431,9 @@ void array(const char* name, const char* file, long line,
 template<class T>
 void matrix(const char* name, const char* file, long line,
             const char* func, const T m, size_t c, size_t r) noexcept {
-    if (internal::enabled) {
+    if (internal::outputEnabled) {
         print_prefix(file, line, func);
+        print_color_start();
         std::cout << name << ": ";
         if (c <= 0 || r <= 0) {
             std::cout << "{}";
@@ -412,6 +449,7 @@ void matrix(const char* name, const char* file, long line,
                 }
             }
         }
+        print_color_end();
         std::cout << GOINGLOGGING_NEWLINE;
     }
 }
@@ -454,13 +492,13 @@ void set_prefixes(prefix p) noexcept {
 
 /** \brief Check if output is enabled.
  *
- * \return e \c true if output is enabled.
+ * \return \c true if output is enabled.
  *
- * \sa set_enabled()
+ * \sa set_output_enabled()
  *
  */
-bool is_enabled() noexcept {
-    return internal::enabled;
+bool is_output_enabled() noexcept {
+    return internal::outputEnabled;
 }
 
 /** \brief Enable or disable output.
@@ -469,11 +507,35 @@ bool is_enabled() noexcept {
  *
  * \note Defaults to enabled.
  *
- * \sa is_enabled()
+ * \sa is_output_enabled()
  *
  */
-void set_enabled(bool e) noexcept {
-    internal::enabled = e;
+void set_output_enabled(bool e) noexcept {
+    internal::outputEnabled = e;
+}
+
+/** \brief Enable or disable ANSI color output.
+ *
+ * \param e \c true if output shall be colored.
+ *
+ * \note Defaults to disabled.
+ *
+ * \sa is_color_enabled()
+ *
+ */
+void set_color_enabled(bool e) noexcept {
+    internal::colorEnabled = e;
+}
+
+/** \brief Check if ANSI color output is enabled.
+ *
+ * \return \c true if ANSI color output is enabled.
+ *
+ * \sa set_color_enabled()
+ *
+ */
+bool is_color_enabled() noexcept {
+    return internal::colorEnabled;
 }
 
 #ifndef DOXYGEN_HIDDEN
@@ -502,13 +564,15 @@ void set_enabled(bool e) noexcept {
  *
  */
 #define l(...) do { \
-    if (gl::internal::enabled) { \
+    if (gl::internal::outputEnabled) { \
         gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
+        gl::internal::print_color_start(); \
         GOINGLOGGING_GET_MACRO(__VA_ARGS__, GOINGLOGGING16, GOINGLOGGING15, \
             GOINGLOGGING14, GOINGLOGGING13, GOINGLOGGING12, GOINGLOGGING11, \
             GOINGLOGGING10, GOINGLOGGING9, GOINGLOGGING8, GOINGLOGGING7, \
             GOINGLOGGING6, GOINGLOGGING5, GOINGLOGGING4, GOINGLOGGING3, \
             GOINGLOGGING2, GOINGLOGGING1,)(__VA_ARGS__) << (GOINGLOGGING_NEWLINE); \
+        gl::internal::print_color_end(); \
     } \
 } while (false)
 

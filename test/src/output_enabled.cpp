@@ -15,7 +15,7 @@ int main(int argc, const char** argv) {
     test t;
     t.setup(__FILE__);
 
-    gl::set_enabled(false);
+    gl::set_output_enabled(false);
 
     int i = 0;
     l(i);
@@ -26,7 +26,7 @@ int main(int argc, const char** argv) {
     int m[2][2] = {{0, 1}, {2, 3}};
     l_mat(m, 2, 2);
 
-    gl::set_enabled(true);
+    gl::set_output_enabled(true);
 
     int i2 = 0;
     l(i2);
