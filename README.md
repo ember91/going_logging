@@ -64,7 +64,12 @@ my_file.cpp:68: i = 1
 
 ### Disable output
 ```
-gl::set_enabled(false);
+gl::set_output_enabled(false);
+```
+
+### Enable colored (red) output
+```
+gl::set_color_enabled(true);
 ```
 
 ## License
