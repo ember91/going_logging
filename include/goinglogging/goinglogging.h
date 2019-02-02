@@ -1067,11 +1067,6 @@ bool is_color_enabled() noexcept {
     return internal::colorEnabled;
 }
 
-#ifndef DOXYGEN_HIDDEN
-#define GL_INTERNAL_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
-    _12, _13, _14, _15, _16, NAME, ...) NAME
-#endif  // DOXYGEN_HIDDEN
-
 /** \brief Log variables to stdout.
  *
  * Use as:
@@ -1095,79 +1090,85 @@ bool is_color_enabled() noexcept {
 #define l(...) do { \
     if (gl::internal::outputEnabled) { \
         std::cout << gl::internal::color_start << \
-                     gl::internal::Prefixer(__FILE__, __LINE__, __func__); \
-        GL_INTERNAL_GET_MACRO(__VA_ARGS__, GL_INTERNAL_L16, GL_INTERNAL_L15, \
-            GL_INTERNAL_L14, GL_INTERNAL_L13, GL_INTERNAL_L12, GL_INTERNAL_L11, \
-            GL_INTERNAL_L10, GL_INTERNAL_L9, GL_INTERNAL_L8, GL_INTERNAL_L7, \
-            GL_INTERNAL_L6, GL_INTERNAL_L5, GL_INTERNAL_L4, GL_INTERNAL_L3, \
-            GL_INTERNAL_L2, GL_INTERNAL_L1,)(__VA_ARGS__) << (GL_NEWLINE); \
-        std::cout << gl::internal::color_end; \
+                     gl::internal::Prefixer(__FILE__, __LINE__, __func__) << \
+                     GL_INTERNAL_GET_MACRO(__VA_ARGS__, GL_INTERNAL_L16, GL_INTERNAL_L15, \
+                         GL_INTERNAL_L14, GL_INTERNAL_L13, GL_INTERNAL_L12, GL_INTERNAL_L11, \
+                         GL_INTERNAL_L10, GL_INTERNAL_L9, GL_INTERNAL_L8, GL_INTERNAL_L7, \
+                         GL_INTERNAL_L6, GL_INTERNAL_L5, GL_INTERNAL_L4, GL_INTERNAL_L3, \
+                         GL_INTERNAL_L2, GL_INTERNAL_L1,)(__VA_ARGS__) << \
+                     gl::internal::color_end << (GL_NEWLINE); \
     } \
 } while (false)
 
 #ifndef DOXYGEN_HIDDEN
 
+#define GL_INTERNAL_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
+    _12, _13, _14, _15, _16, NAME, ...) NAME
+
+#define GL_INTERNAL_LX(v) \
+    gl::internal::type_name((v), true) << (#v) << " = " << gl::internal::stringify((v))
+
 #define GL_INTERNAL_L1(v1) \
-    std::cout << gl::internal::type_name(v1, true) << (#v1) << " = " << gl::internal::stringify((v1))
+    GL_INTERNAL_LX(v1)
 
 #define GL_INTERNAL_L2(v1, v2) \
-    GL_INTERNAL_L1(v1) << ", " << gl::internal::type_name(v2, true) << (#v2) << " = " << gl::internal::stringify((v2))
+    GL_INTERNAL_L1(v1) << ", " << GL_INTERNAL_LX(v2)
 
 #define GL_INTERNAL_L3(v1, v2, v3) \
-    GL_INTERNAL_L2(v1, v2) << ", " << gl::internal::type_name(v3, true) << (#v3) << " = " << gl::internal::stringify((v3))
+    GL_INTERNAL_L2(v1, v2) << ", " << GL_INTERNAL_LX(v3)
 
 #define GL_INTERNAL_L4(v1, v2, v3, v4) \
-    GL_INTERNAL_L3(v1, v2, v3) << ", " << gl::internal::type_name(v4, true) << (#v4) << " = " << gl::internal::stringify((v4))
+    GL_INTERNAL_L3(v1, v2, v3) << ", " << GL_INTERNAL_LX(v4)
 
 #define GL_INTERNAL_L5(v1, v2, v3, v4, v5) \
-    GL_INTERNAL_L4(v1, v2, v3, v4) << ", " << gl::internal::type_name(v5, true) << (#v5) << " = " << gl::internal::stringify((v5))
+    GL_INTERNAL_L4(v1, v2, v3, v4) << ", " << GL_INTERNAL_LX(v5)
 
 #define GL_INTERNAL_L6(v1, v2, v3, v4, v5, v6) \
-    GL_INTERNAL_L5(v1, v2, v3, v4, v5) << ", " << gl::internal::type_name(v6, true) << (#v6) << " = " << gl::internal::stringify((v6))
+    GL_INTERNAL_L5(v1, v2, v3, v4, v5) << ", " << GL_INTERNAL_LX(v6)
 
 #define GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) \
-    GL_INTERNAL_L6(v1, v2, v3, v4, v5, v6) << ", " << gl::internal::type_name(v7, true) << (#v7) << " = " << gl::internal::stringify((v7))
+    GL_INTERNAL_L6(v1, v2, v3, v4, v5, v6) << ", " << GL_INTERNAL_LX(v7)
 
 #define GL_INTERNAL_L8(v1, v2, v3, v4, v5, v6, v7, v8) \
-    GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) << ", " << gl::internal::type_name(v8, true) << (#v8) << " = " << gl::internal::stringify((v8))
+    GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) << ", " << GL_INTERNAL_LX(v8)
 
 #define GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9) \
     GL_INTERNAL_L8(v1, v2, v3, v4, v5, v6, v7, v8) << \
-        ", " << gl::internal::type_name(v9, true) << (#v9) << " = " << gl::internal::stringify((v9))
+        ", " << GL_INTERNAL_LX(v9)
 
 #define GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) \
     GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9) << \
-        ", " << gl::internal::type_name(v10, true) << (#v10) << " = " << gl::internal::stringify((v10))
+        ", " << GL_INTERNAL_LX(v10)
 
 #define GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) \
     GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) << \
-        ", " << gl::internal::type_name(v11, true) << (#v11) << " = " << gl::internal::stringify((v11))
+        ", " << GL_INTERNAL_LX(v11)
 
 #define GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
     GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) << \
-        ", " << gl::internal::type_name(v12, true) << (#v12) << " = " << gl::internal::stringify((v12))
+        ", " << GL_INTERNAL_LX(v12)
 
 #define GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13) \
     GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) << \
-        ", " << gl::internal::type_name(v13, true) << (#v13) << " = " << gl::internal::stringify((v13))
+        ", " << GL_INTERNAL_LX(v13)
 
 #define GL_INTERNAL_L14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14) \
     GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) << \
-        ", " << gl::internal::type_name(v14, true) << (#v14) << " = " << gl::internal::stringify((v14))
+        ", " << GL_INTERNAL_LX(v14)
 
 #define GL_INTERNAL_L15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15) \
     GL_INTERNAL_L14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14) << \
-        ", " << gl::internal::type_name(v15, true) << (#v15) << " = " << gl::internal::stringify((v15))
+        ", " << GL_INTERNAL_LX(v15)
 
 #define GL_INTERNAL_L16(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15, v16) \
     GL_INTERNAL_L15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14, v15) << \
-        ", " << gl::internal::type_name(v16, true) << (#v16) << " = " << gl::internal::stringify((v16))
+        ", " << GL_INTERNAL_LX(v16)
 
 #endif  // DOXYGEN_HIDDEN
 
