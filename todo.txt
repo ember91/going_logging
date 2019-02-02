@@ -1,23 +1,33 @@
-Now:
+Cleanup:
 Improve documentation
-Add problem description (printf("i = %s\n"); vs l(i);)
 Compile with all warnings enabled
 Run static analysis
 Run valgrind
-add noexcept, const, constepxr etc where applicable
+add noexcept, const, constepxr, explicit etc where applicable
 No tabs
 Test on Windows
-Add cpplint to CMake
 Clean up CMakeLists.txt
-Forward declare template specializations
-Return ostream from color, prefix etc for efficiency
+Forward declare all functions
 Check limit of 80 characters
 Ensure classes are PascalCase, variables camelCase and functions snake_case
+Inline functions in classes?
+Change name of of macros to GL_INTERNAL
+Ensure one character c-strings use single quotes
+Ensure almost no usage of std::cout
+Ensure internal use objects have "\note For internal use."
+Use ::gl::internal instead of gl::internal
+Fix order of functions and classes
 
-Future:
+Features:
+ninja instead of make
+Use color for the whole expression including prefix
+Add problem description (printf("i = %s\n"); vs l(i);)
+Add support for types in std, such as std::vector
+Return ostream from color, prefix etc for efficiency
+Run doxygen in cmake
 Better looking doxygen theme
 Add test of colored output
-Add c++20 concepts
+Add c++20 concepts?
 Add type information (int i: 7)
 Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
 clang format
