@@ -288,11 +288,13 @@ class Prefixer {
      * \param func      Function name.
      *
      */
-    Prefixer(const char* file_path, long file_line, const char* func) noexcept : 
+    Prefixer(const char* file_path, long file_line, const char* func) noexcept :
       m_file_path(file_path),
       m_file_line(file_line),
       m_func(func) {
         }
+
+    friend std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept;
 
     /** \brief Get current file path.
      *
@@ -320,8 +322,6 @@ class Prefixer {
     const char* get_function_name() const noexcept {
         return m_func;
     }
-
-    friend std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept;
 
   private:
     const char* m_file_path; /**< File path including name */
@@ -436,15 +436,6 @@ class Stringifier {
      */
     explicit Stringifier(T& t) noexcept : m_t(t) {}
 
-    /** \brief Get variable.
-     *
-     * \return Variable
-     *
-     */
-    T& get_t() const noexcept {
-        return m_t;
-    }
-
     /** \brief Write to stream.
      *
      * \tparam U Variable type.
@@ -455,6 +446,15 @@ class Stringifier {
      */
     template<class U>
     friend std::ostream& operator<<(std::ostream& os, const Stringifier<U>& s) noexcept;
+
+    /** \brief Get variable.
+     *
+     * \return Variable
+     *
+     */
+    T& get_t() const noexcept {
+        return m_t;
+    }
 
   private:
     T& m_t; /**< Variable to stringify. */
@@ -532,15 +532,6 @@ class TypeNamer {
      */
     explicit TypeNamer(T& t) noexcept : m_t(t) {}
 
-    /** \brief Get variable.
-     *
-     * \return Variable
-     *
-     */
-    T& get_t() const noexcept {
-        return m_t;
-    }
-
     /** \brief Write to stream.
      *
      * \tparam U Variable type.
@@ -551,6 +542,29 @@ class TypeNamer {
      */
     template<class U>
     friend std::ostream& operator<<(std::ostream& os, const TypeNamer<U>& t) noexcept;
+
+    /** \brief Helper function for insertion stream operator. Outputs a string if enabled.
+     *
+     * \param os Output stream.
+     * \param s  Output string.
+     * \return Output stream.
+     *
+     */
+    std::ostream& out(std::ostream& os, const char* s) const noexcept {
+        if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+            os << s << ' ';
+        }
+        return os;
+    }
+
+    /** \brief Get variable.
+     *
+     * \return Variable
+     *
+     */
+    T& get_t() const noexcept {
+        return m_t;
+    }
 
   private:
     T& m_t; /**< Variable to get type name of. */
@@ -567,10 +581,7 @@ class TypeNamer {
  */
 template<class T>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<T>& t) noexcept {
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << typeid(t.get_t()).name() << ' ';
-    }
-    return os;
+    return t.out(os, typeid(t.get_t()).name());
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -583,11 +594,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<T>& t) noexcept {
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<uint8_t>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "uint8_t ";
-    }
-    return os;
+    return t.out(os, "uint8_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -600,11 +607,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<uint8_t>& t) noexcept
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<uint16_t>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "uint16_t ";
-    }
-    return os;
+    return t.out(os, "uint16_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -617,11 +620,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<uint16_t>& t) noexcep
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<uint32_t>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "uint32_t ";
-    }
-    return os;
+    return t.out(os, "uint32_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -634,11 +633,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<uint32_t>& t) noexcep
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<uint64_t>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "uint64_t ";
-    }
-    return os;
+    return t.out(os, "uint64_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -651,11 +646,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<uint64_t>& t) noexcep
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<int8_t>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "int8_t ";
-    }
-    return os;
+    return t.out(os, "int8_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -668,11 +659,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<int8_t>& t) noexcept 
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<int16_t>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "int16_t ";
-    }
-    return os;
+    return t.out(os, "int16_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -685,11 +672,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<int16_t>& t) noexcept
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<int32_t>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "int32_t ";
-    }
-    return os;
+    return t.out(os, "int32_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -702,11 +685,46 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<int32_t>& t) noexcept
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<int64_t>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "int64_t ";
-    }
-    return os;
+    return t.out(os, "int64_t");
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<float>& t) noexcept {
+    return t.out(os, "float");
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<double>& t) noexcept {
+    return t.out(os, "double");
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<wchar_t>& t) noexcept {
+    return t.out(os, "wchar_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -719,11 +737,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<int64_t>& t) noexcept
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<const char*>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "const char* ";
-    }
-    return os;
+    return t.out(os, "const char*");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -736,11 +750,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<const char*>& t) noex
  */
 template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<std::string>& t) noexcept {
-    (void)(t);
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "std::string ";
-    }
-    return os;
+    return t.out(os, "std::string");
 }
 
 /** \brief Create TypeNamer from scratch.
