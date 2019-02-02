@@ -24,6 +24,9 @@ Don't use C-style comments
 Ensure parameters are in a good order
 
 Features:
+Test type name prefix for multiple variables with l(). Add type name test.
+Add specialized type name prefixes for all std classes and for some pointer types. Add tests for this.
+GL_INTERNAL macros can use an intermediate macro to reduce code duplication
 ninja instead of make
 Add problem description (printf("i = %s\n"); vs l(i);)
 Add support for types in std, such as std::vector
@@ -32,10 +35,9 @@ Run doxygen in cmake
 Better looking doxygen theme
 Add test of colored output
 Add c++20 concepts?
-Add type information (int i: 7)
-Make template specializations that return predefined type names for some types and type_id.name() for the remaining types
 Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
 VS code settings
 VS code clang format
 github create a release
 Add c++17 std::string_view to Stringify template specializations
+Comments in ground truth?

@@ -155,13 +155,14 @@ namespace gl {
  *
  */
 enum class prefix : uint32_t {
-    NONE     = 0,    /**< No prefix. */
-    FILE     = 1<<0, /**< File name. For example 'main.cpp'. */
-    LINE     = 1<<1, /**< Line number in file. For example 'Line: 16'. */
-    FUNCTION = 1<<2, /**< Function name. For example 'calculate()'. */
-    TIME     = 1<<3, /**< Current local time as hour:minute:second.millisecond.
+    NONE      = 0,    /**< No prefix. */
+    FILE      = 1<<0, /**< File name. For example 'main.cpp'. */
+    LINE      = 1<<1, /**< Line number in file. For example 'Line: 16'. */
+    FUNCTION  = 1<<2, /**< Function name. For example 'calculate()'. */
+    TIME      = 1<<3, /**< Current local time as hour:minute:second.millisecond.
                        *  For example '10:02:13.057'. */
-    THREAD   = 1<<4  /**< ID of current thread. For example 'TID: 12'. */
+    THREAD    = 1<<4, /**< ID of current thread. For example 'TID: 12'. */
+    TYPE_NAME = 1<<5  /**< Name of type. For example 'int'. */
 };
 
 namespace internal {
@@ -508,11 +509,251 @@ std::ostream& operator<<(std::ostream& os, const Stringifier<std::string>& s) no
  * \note For internal use.
  * \tparam T variable type.
  * \param t Variable.
- * \return Created Stringifier object.
+ * \return Created Stringifier.
  */
 template<class T>
 Stringifier<T> stringify(T& t) {
     return Stringifier<T>(t);
+};
+
+/** \brief Write name of a type to stream.
+ *
+ * \note For internal use.
+ * \tparam T Variable type.
+ *
+ */
+template<class T>
+class TypeNamer {
+  public:
+    /** \brief Create object with variable.
+     *
+     * \param t Variable.
+     *
+     */
+    explicit TypeNamer(T& t) noexcept : m_t(t) {}
+
+    /** \brief Get variable.
+     *
+     * \return Variable
+     *
+     */
+    T& get_t() const noexcept {
+        return m_t;
+    }
+
+    /** \brief Write to stream.
+     *
+     * \tparam U Variable type.
+     * \param os Output stream.
+     * \param t  Object to output.
+     * \return Output stream.
+     *
+     */
+    template<class U>
+    friend std::ostream& operator<<(std::ostream& os, const TypeNamer<U>& t) noexcept;
+
+  private:
+    T& m_t; /**< Variable to get type name of. */
+};
+
+/** \brief General TypeNamer output function.
+ *
+ * \note For internal use.
+ * \tparam T Variable type.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<class T>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<T>& t) noexcept {
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << typeid(t.get_t()).name() << ' ';
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<uint8_t>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "uint8_t ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<uint16_t>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "uint16_t ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<uint32_t>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "uint32_t ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<uint64_t>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "uint64_t ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<int8_t>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "int8_t ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<int16_t>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "int16_t ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<int32_t>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "int32_t ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<int64_t>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "int64_t ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<const char*>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "const char* ";
+    }
+    return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<std::string>& t) noexcept {
+    (void)(t);
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "std::string ";
+    }
+    return os;
+}
+
+/** \brief Create TypeNamer from scratch.
+ *  This solves the error "cannot refer to class template 'TypeNamer' without a template argument list".
+ *
+ * \note For internal use.
+ * \tparam T variable type.
+ * \param t Variable.
+ * \return Created TypeNamer.
+ */
+template<class T>
+TypeNamer<T> type_name(T& t) {
+    return TypeNamer<T>(t);
 };
 
 /** \brief Output ANSI color start code, if color is enabled.
@@ -563,7 +804,7 @@ void array(const char* var_name, const char* file_path, long file_line,
     if (outputEnabled) {
         std::cout << color_start <<
                      Prefixer(file_path, file_line, func) <<
-                     var_name << ": {";
+                     type_name(var_val) << var_name << " = {";
         // Print first object without comma
         if (len > 0)
             std::cout << stringify(var_val[0]);
@@ -594,7 +835,7 @@ void matrix(const char* var_name, const char* file_path, long file_line,
     if (outputEnabled) {
         std::cout << color_start <<
                      Prefixer(file_path, file_line, func) <<
-                     var_name << ": ";
+                     type_name(var_val) << var_name << ": ";
         if (cols <= 0 || rows <= 0) {
             std::cout << "{}";
         } else {
@@ -738,66 +979,66 @@ bool is_color_enabled() noexcept {
 #ifndef DOXYGEN_HIDDEN
 
 #define GL_INTERNAL_L1(v1) \
-    std::cout << (#v1) << " = " << gl::internal::stringify((v1))
+    std::cout << gl::internal::type_name(v1) << (#v1) << " = " << gl::internal::stringify((v1))
 
 #define GL_INTERNAL_L2(v1, v2) \
-    GL_INTERNAL_L1(v1) << ", " << (#v2) << " = " << gl::internal::stringify((v2))
+    GL_INTERNAL_L1(v1) << ", " << gl::internal::type_name(v2) << (#v2) << " = " << gl::internal::stringify((v2))
 
 #define GL_INTERNAL_L3(v1, v2, v3) \
-    GL_INTERNAL_L2(v1, v2) << ", " << (#v3) << " = " << gl::internal::stringify((v3))
+    GL_INTERNAL_L2(v1, v2) << ", " << gl::internal::type_name(v3) << (#v3) << " = " << gl::internal::stringify((v3))
 
 #define GL_INTERNAL_L4(v1, v2, v3, v4) \
-    GL_INTERNAL_L3(v1, v2, v3) << ", " << (#v4) << " = " << gl::internal::stringify((v4))
+    GL_INTERNAL_L3(v1, v2, v3) << ", " << gl::internal::type_name(v4) << (#v4) << " = " << gl::internal::stringify((v4))
 
 #define GL_INTERNAL_L5(v1, v2, v3, v4, v5) \
-    GL_INTERNAL_L4(v1, v2, v3, v4) << ", " << (#v5) << " = " << gl::internal::stringify((v5))
+    GL_INTERNAL_L4(v1, v2, v3, v4) << ", " << gl::internal::type_name(v5) << (#v5) << " = " << gl::internal::stringify((v5))
 
 #define GL_INTERNAL_L6(v1, v2, v3, v4, v5, v6) \
-    GL_INTERNAL_L5(v1, v2, v3, v4, v5) << ", " << (#v6) << " = " << gl::internal::stringify((v6))
+    GL_INTERNAL_L5(v1, v2, v3, v4, v5) << ", " << gl::internal::type_name(v6) << (#v6) << " = " << gl::internal::stringify((v6))
 
 #define GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) \
-    GL_INTERNAL_L6(v1, v2, v3, v4, v5, v6) << ", " << (#v7) << " = " << gl::internal::stringify((v7))
+    GL_INTERNAL_L6(v1, v2, v3, v4, v5, v6) << ", " << gl::internal::type_name(v7) << (#v7) << " = " << gl::internal::stringify((v7))
 
 #define GL_INTERNAL_L8(v1, v2, v3, v4, v5, v6, v7, v8) \
-    GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) << ", " << (#v8) << " = " << gl::internal::stringify((v8))
+    GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) << ", " << gl::internal::type_name(v8) << (#v8) << " = " << gl::internal::stringify((v8))
 
 #define GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9) \
     GL_INTERNAL_L8(v1, v2, v3, v4, v5, v6, v7, v8) << \
-        ", " << (#v9) << " = " << gl::internal::stringify((v9))
+        ", " << gl::internal::type_name(v9) << (#v9) << " = " << gl::internal::stringify((v9))
 
 #define GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) \
     GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9) << \
-        ", " << (#v10) << " = " << gl::internal::stringify((v10))
+        ", " << gl::internal::type_name(v10) << (#v10) << " = " << gl::internal::stringify((v10))
 
 #define GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) \
     GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) << \
-        ", " << (#v11) << " = " << gl::internal::stringify((v11))
+        ", " << gl::internal::type_name(v11) << (#v11) << " = " << gl::internal::stringify((v11))
 
 #define GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
     GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) << \
-        ", " << (#v12) << " = " << gl::internal::stringify((v12))
+        ", " << gl::internal::type_name(v12) << (#v12) << " = " << gl::internal::stringify((v12))
 
 #define GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13) \
     GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) << \
-        ", " << (#v13) << " = " << gl::internal::stringify((v13))
+        ", " << gl::internal::type_name(v13) << (#v13) << " = " << gl::internal::stringify((v13))
 
 #define GL_INTERNAL_L14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14) \
     GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) << \
-        ", " << (#v14) << " = " << gl::internal::stringify((v14))
+        ", " << gl::internal::type_name(v14) << (#v14) << " = " << gl::internal::stringify((v14))
 
 #define GL_INTERNAL_L15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15) \
     GL_INTERNAL_L14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14) << \
-        ", " << (#v15) << " = " << gl::internal::stringify((v15))
+        ", " << gl::internal::type_name(v15) << (#v15) << " = " << gl::internal::stringify((v15))
 
 #define GL_INTERNAL_L16(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15, v16) \
     GL_INTERNAL_L15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14, v15) << \
-        ", " << (#v16) << " = " << gl::internal::stringify((v16))
+        ", " << gl::internal::type_name(v16) << (#v16) << " = " << gl::internal::stringify((v16))
 
 #endif  // DOXYGEN_HIDDEN
 
