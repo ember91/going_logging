@@ -44,6 +44,7 @@ int main(int argc, const char** argv) {
     int*        g = &a;
     TestOp      h;
     int&        i = a;
+    char        j = 'j';
 
     l(a);
     l(a, b);
@@ -54,11 +55,10 @@ int main(int argc, const char** argv) {
     l(a, b, c, d, e, f, g);
     l(a, b, c, d, e, f, g, h);
     l(a, b, c, d, e, f, g, h, i);
-    l(a, b, c, d, e, f, g, h, i, *g);
-    l(a, b, c, d, e, f, g, h, i, *g, a);
-    l(a, b, c, d, e, f, g, h, i, *g, a, b);
-    l(a, b, c, d, e, f, g, h, i, *g, a, b, c);
+    l(a, b, c, d, e, f, g, h, i, j);
+    l(a, b, c, d, e, f, g, h, i, j, *g);
+    l(a, b, c, d, e, f, g, h, i, j, *g, a);
+    l(a, b, c, d, e, f, g, h, i, j, *g, a, b);
 
     return t.compare_output(true);
 }
-

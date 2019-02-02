@@ -198,9 +198,14 @@ int32_t i32 = 32
 int64_t i64 = 64
 float f32 = 32
 double f64 = 64
+char c8 = '1'
 char16_t c16 = 52
 char32_t c32 = 53
 wchar_t wc = 119
 const char\* s1 = "s1"
-std::string s2 = \"s2\"
-uint16_t u16 = 16, uint32_t u32 = 32, uint64_t u64 = 64, int16_t i16 = 16, int32_t i32 = 32, int64_t i64 = 64, float f32 = 32, double f64 = 64, char16_t c16 = 52, char32_t c32 = 53, wchar_t wc = 119, const char\* s1 = "s1", std::string s2 = \"s2\"
+char\* s2 = "s1"
+std::string s3 = \"s3\"
+int32_t\* pi32 = 0x[0-9A-Fa-f]+
+int32_t\*\* ppi32 = 0x[0-9A-Fa-f]+
+uint16_t u16 = 16, uint32_t u32 = 32, uint64_t u64 = 64, int16_t i16 = 16, int32_t i32 = 32, int64_t i64 = 64, float f32 = 32, double f64 = 64
+char c8 = '1', char16_t c16 = 52, char32_t c32 = 53, wchar_t wc = 119, const char\* s1 = "s1", char\* s2 = "s1", std::string s3 = \"s3\", int32_t\* pi32 = 0x[0-9A-Fa-f]+, int32_t\*\* ppi32 = 0x[0-9A-Fa-f]+

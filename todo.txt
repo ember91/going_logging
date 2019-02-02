@@ -25,6 +25,8 @@ Ensure parameters are in a good order
 Control regexes in ground truth?
 
 Features:
+Add TypeNamer tests for const pointers, normal pointers, const references, normal references, double pointers, void pointers etc.
+Add char stringifiers
 Add specialized type name prefixes for all std classes and for some pointer types. Add tests for this.
 GL_INTERNAL macros can use an intermediate macro to reduce code duplication
 ninja instead of make
