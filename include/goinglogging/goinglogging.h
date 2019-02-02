@@ -723,6 +723,32 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<double>& t) noexcept 
  *
  */
 template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<char16_t>& t) noexcept {
+    return t.out(os, "char16_t");
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<char32_t>& t) noexcept {
+    return t.out(os, "char32_t");
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
 std::ostream& operator<<(std::ostream& os, const TypeNamer<wchar_t>& t) noexcept {
     return t.out(os, "wchar_t");
 }
