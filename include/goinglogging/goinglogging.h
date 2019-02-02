@@ -290,7 +290,8 @@ class Prefixer {
     Prefixer(const char* file_path, long file_line, const char* func) noexcept : 
       m_file_path(file_path),
       m_file_line(file_line),
-      m_func(func) {}
+      m_func(func) {
+        }
 
     /** \brief Get current file path.
      *
@@ -560,7 +561,8 @@ template<class T>
 void array(const char* var_name, const char* file_path, long file_line,
            const char* func, const T var_val, size_t len) noexcept {
     if (internal::outputEnabled) {
-        std::cout << Prefixer(file_path, file_line, func) << color_start << 
+        std::cout << color_start <<
+                     Prefixer(file_path, file_line, func) <<
                      var_name << ": {";
         // Print first object without comma
         if (len > 0)
@@ -590,7 +592,8 @@ template<class T>
 void matrix(const char* var_name, const char* file_path, long file_line,
             const char* func, const T var_val, size_t cols, size_t rows) noexcept {
     if (internal::outputEnabled) {
-        std::cout << Prefixer(file_path, file_line, func) << color_start << 
+        std::cout << color_start <<
+                     Prefixer(file_path, file_line, func) <<
                      var_name << ": ";
         if (cols <= 0 || rows <= 0) {
             std::cout << "{}";
@@ -721,7 +724,8 @@ bool is_color_enabled() noexcept {
  */
 #define l(...) do { \
     if (gl::internal::outputEnabled) { \
-        std::cout << gl::internal::Prefixer(__FILE__, __LINE__, __func__) << gl::internal::color_start; \
+        std::cout << gl::internal::color_start << \
+                     gl::internal::Prefixer(__FILE__, __LINE__, __func__); \
         GL_INTERNAL_GET_MACRO(__VA_ARGS__, GL_INTERNAL_L16, GL_INTERNAL_L15, \
             GL_INTERNAL_L14, GL_INTERNAL_L13, GL_INTERNAL_L12, GL_INTERNAL_L11, \
             GL_INTERNAL_L10, GL_INTERNAL_L9, GL_INTERNAL_L8, GL_INTERNAL_L7, \
