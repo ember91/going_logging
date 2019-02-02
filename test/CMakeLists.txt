@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(test)
+project(goinglogging_test)
 
 find_program(
     CLANG_TIDY_EXE
