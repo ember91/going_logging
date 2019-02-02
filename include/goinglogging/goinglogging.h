@@ -519,12 +519,12 @@ Stringifier<T> stringify(T& t) {
  *
  * \note For internal use.
  * \param os Output stream.
- * \return Output stream
+ * \return Output stream.
  *
  */
 std::ostream& color_start(std::ostream& os) noexcept
 {
-    if (internal::colorEnabled) {
+    if (colorEnabled) {
         os << "\033[0;31m";
     }
     return os;
@@ -534,12 +534,12 @@ std::ostream& color_start(std::ostream& os) noexcept
  *
  * \note For internal use.
  * \param os Output stream.
- * \return Output stream
+ * \return Output stream.
  *
  */
 std::ostream& color_end(std::ostream& os) noexcept
 {
-    if (internal::colorEnabled) {
+    if (colorEnabled) {
         os << "\033[0m";
     }
     return os;
@@ -560,7 +560,7 @@ std::ostream& color_end(std::ostream& os) noexcept
 template<class T>
 void array(const char* var_name, const char* file_path, long file_line,
            const char* func, const T var_val, size_t len) noexcept {
-    if (internal::outputEnabled) {
+    if (outputEnabled) {
         std::cout << color_start <<
                      Prefixer(file_path, file_line, func) <<
                      var_name << ": {";
@@ -591,7 +591,7 @@ void array(const char* var_name, const char* file_path, long file_line,
 template<class T>
 void matrix(const char* var_name, const char* file_path, long file_line,
             const char* func, const T var_val, size_t cols, size_t rows) noexcept {
-    if (internal::outputEnabled) {
+    if (outputEnabled) {
         std::cout << color_start <<
                      Prefixer(file_path, file_line, func) <<
                      var_name << ": ";
