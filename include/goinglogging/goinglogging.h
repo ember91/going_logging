@@ -43,7 +43,7 @@
  * \endcode
  * Which outputs:
  * \code
- * i = 1, s = s
+ * i = 1, s = "s"
  * \endcode
  * \sa l()
  *
@@ -274,8 +274,8 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
 namespace internal {
 
 static prefix curPrefixes   = prefix::FILE | prefix::LINE; /**< \brief Current prefixes */
-static bool   outputEnabled = true; /**< \c true if enabled */
-static bool   colorEnabled  = false; /**< \c true if color enabled */
+static bool   outputEnabled = true;  /**< \c true if output is enabled */
+static bool   colorEnabled  = false; /**< \c true if color is enabled */
 
 /** \brief Print prefix string.
  *
@@ -383,6 +383,97 @@ inline void print_color_end() noexcept {
     }
 }
 
+/** \brief Helps stringifying a variable to stream.
+ *
+ * \tparam T Variable type.
+ *
+ */
+template<class T>
+class Stringify {
+  public:
+    /** \brief Create object with variable.
+     *
+     * \param t Variable.
+     *
+     */
+    explicit Stringify(T& t) noexcept : m_t(t) {}
+
+    /** \brief Get variable.
+     *
+     * \return Variable
+     *
+     */
+    T& get_t() const noexcept {
+        return m_t;
+    }
+
+    /** \brief Write to stream.
+     *
+     * \tparam U Variable type.
+     * \param os Output stream.
+     * \param s  Object to output.
+     * \return Output stream.
+     *
+     */
+    template<class U>
+    friend std::ostream& operator<<(std::ostream& os, const Stringify<U>& s) noexcept;
+
+  private:
+    T& m_t; /**< Variable. */
+};
+
+/** \brief General output function.
+ *
+ * \tparam T Variable type.
+ * \param os Output stream.
+ * \param s  Stringify object.
+ * \return Output stream.
+ *
+ */
+template<class T>
+std::ostream& operator<<(std::ostream& os, const Stringify<T>& s) noexcept {
+    os << s.get_t();
+    return os;
+}
+
+/** \brief C string specialized output function.
+ *
+ * \param os Output stream.
+ * \param s  Stringify object.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const Stringify<const char*>& s) noexcept {
+    os << '\"' << s.get_t() << '\"';
+    return os;
+}
+
+/** \brief C++ string specialized output function.
+ *
+ * \param os Output stream.
+ * \param s  Stringify object.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const Stringify<std::string>& s) noexcept {
+    os << '\"' << s.get_t() << '\"';
+    return os;
+}
+
+/** \brief Create stringify object from scratch.
+ *  This solves the error "cannot refer to class template 'Stringify' without a template argument list".
+ *
+ * \tparam T variable type.
+ * \param t Variable.
+ * \return Created Stringify object.
+ */
+template<class T>
+Stringify<T> make_stringify(T& t) {
+    return Stringify<T>(t);
+};
+
 /** \brief Log array.
  *
  * \note For internal use.
@@ -405,9 +496,9 @@ void array(const char* name, const char* file, long line,
         if (n <= 0) {
             std::cout << "{}";
         } else {
-            std::cout << "[0] = " << v[0];
+            std::cout << "[0] = " << make_stringify(v[0]);
             for (size_t i = 1; i < n; ++i) {
-                std::cout << ", [" << i << "] = " << v[i];
+                std::cout << ", [" << i << "] = " << make_stringify(v[i]);
             }
         }
         print_color_end();
@@ -438,14 +529,14 @@ void matrix(const char* name, const char* file, long line,
         if (c <= 0 || r <= 0) {
             std::cout << "{}";
         } else {
-            std::cout << "[0,0] = " << m[0][0];
+            std::cout << "[0,0] = " << make_stringify(m[0][0]);
             for (size_t j = 1; j < c; ++j) {
-                std::cout << ", " << "[0," << j << "] = " << m[0][j];
+                std::cout << ", " << "[0," << j << "] = " << make_stringify(m[0][j]);
             }
             for (size_t i = 1; i < r; ++i) {
                 for (size_t j = 0; j < c; ++j) {
                     std::cout << ", " << "[" << i << ',' << j << "] = " <<
-                                 m[i][j];
+                                 make_stringify(m[i][j]);
                 }
             }
         }
@@ -579,66 +670,66 @@ bool is_color_enabled() noexcept {
 #ifndef DOXYGEN_HIDDEN
 
 #define GOINGLOGGING1(v1) \
-    std::cout << (#v1) << " = " << (v1)
+    std::cout << (#v1) << " = " << gl::internal::make_stringify((v1))
 
 #define GOINGLOGGING2(v1, v2) \
-    GOINGLOGGING1(v1) << ", " << (#v2) << " = " << (v2)
+    GOINGLOGGING1(v1) << ", " << (#v2) << " = " << gl::internal::make_stringify((v2))
 
 #define GOINGLOGGING3(v1, v2, v3) \
-    GOINGLOGGING2(v1, v2) << ", " << (#v3) << " = " << (v3)
+    GOINGLOGGING2(v1, v2) << ", " << (#v3) << " = " << gl::internal::make_stringify((v3))
 
 #define GOINGLOGGING4(v1, v2, v3, v4) \
-    GOINGLOGGING3(v1, v2, v3) << ", " << (#v4) << " = " << (v4)
+    GOINGLOGGING3(v1, v2, v3) << ", " << (#v4) << " = " << gl::internal::make_stringify((v4))
 
 #define GOINGLOGGING5(v1, v2, v3, v4, v5) \
-    GOINGLOGGING4(v1, v2, v3, v4) << ", " << (#v5) << " = " << (v5)
+    GOINGLOGGING4(v1, v2, v3, v4) << ", " << (#v5) << " = " << gl::internal::make_stringify((v5))
 
 #define GOINGLOGGING6(v1, v2, v3, v4, v5, v6) \
-    GOINGLOGGING5(v1, v2, v3, v4, v5) << ", " << (#v6) << " = " << (v6)
+    GOINGLOGGING5(v1, v2, v3, v4, v5) << ", " << (#v6) << " = " << gl::internal::make_stringify((v6))
 
 #define GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) \
-    GOINGLOGGING6(v1, v2, v3, v4, v5, v6) << ", " << (#v7) << " = " << (v7)
+    GOINGLOGGING6(v1, v2, v3, v4, v5, v6) << ", " << (#v7) << " = " << gl::internal::make_stringify((v7))
 
 #define GOINGLOGGING8(v1, v2, v3, v4, v5, v6, v7, v8) \
-    GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) << ", " << (#v8) << " = " << (v8)
+    GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) << ", " << (#v8) << " = " << gl::internal::make_stringify((v8))
 
 #define GOINGLOGGING9(v1, v2, v3, v4, v5, v6, v7, v8, v9) \
     GOINGLOGGING8(v1, v2, v3, v4, v5, v6, v7, v8) << \
-        ", " << (#v9) << " = " << (v9)
+        ", " << (#v9) << " = " << gl::internal::make_stringify((v9))
 
 #define GOINGLOGGING10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) \
     GOINGLOGGING9(v1, v2, v3, v4, v5, v6, v7, v8, v9) << \
-        ", " << (#v10) << " = " << (v10)
+        ", " << (#v10) << " = " << gl::internal::make_stringify((v10))
 
 #define GOINGLOGGING11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) \
     GOINGLOGGING10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) << \
-        ", " << (#v11) << " = " << (v11)
+        ", " << (#v11) << " = " << gl::internal::make_stringify((v11))
 
 #define GOINGLOGGING12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
     GOINGLOGGING11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) << \
-        ", " << (#v12) << " = " << (v12)
+        ", " << (#v12) << " = " << gl::internal::make_stringify((v12))
 
 #define GOINGLOGGING13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13) \
     GOINGLOGGING12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) << \
-        ", " << (#v13) << " = " << (v13)
+        ", " << (#v13) << " = " << gl::internal::make_stringify((v13))
 
 #define GOINGLOGGING14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14) \
     GOINGLOGGING13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) << \
-        ", " << (#v14) << " = " << (v14)
+        ", " << (#v14) << " = " << gl::internal::make_stringify((v14))
 
 #define GOINGLOGGING15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15) \
     GOINGLOGGING14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14) << \
-        ", " << (#v15) << " = " << (v15)
+        ", " << (#v15) << " = " << gl::internal::make_stringify((v15))
 
 #define GOINGLOGGING16(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15, v16) \
     GOINGLOGGING15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14, v15) << \
-        ", " << (#v16) << " = " << (v16)
+        ", " << (#v16) << " = " << gl::internal::make_stringify((v16))
 
 #endif  // DOXYGEN_HIDDEN
 

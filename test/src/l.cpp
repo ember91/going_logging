@@ -6,9 +6,9 @@
 #include "test/test.h"
 
 /** Test outputting a class by overriding the << operator */
-class test_op {
+class TestOp {
  public:
-    friend std::ostream& operator<<(std::ostream& out, const test_op& t);
+    friend std::ostream& operator<<(std::ostream& out, const TestOp& t);
 };
 
 /** Output class information
@@ -18,9 +18,9 @@ class test_op {
  * \return    Stream
  *
  */
-std::ostream& operator<<(std::ostream& out, const test_op& t) {
+std::ostream& operator<<(std::ostream& out, const TestOp& t) {
     (void)(t);
-    out << "test_op";
+    out << "TestOp";
     return out;
 }
 
@@ -42,8 +42,9 @@ int main(int argc, const char** argv) {
     bool        e = true;
     std::string f("asdsa");
     int*        g = &a;
-    test_op     h;
+    TestOp      h;
     int&        i = a;
+
     l(a);
     l(a, b);
     l(a, b, c);
@@ -54,9 +55,9 @@ int main(int argc, const char** argv) {
     l(a, b, c, d, e, f, g, h);
     l(a, b, c, d, e, f, g, h, i);
     l(a, b, c, d, e, f, g, h, i, *g);
-    l(a, b, c, d, e, f, g, h, i, *g, static_cast<uint32_t>(a) + c);
-    l(a, b, c, d, e, f, g, h, i, *g, static_cast<uint32_t>(a) + c, 0);
-    l(a, b, c, d, e, f, g, h, i, *g, static_cast<uint32_t>(a) + c, 0, "j");
+    l(a, b, c, d, e, f, g, h, i, *g, a);
+    l(a, b, c, d, e, f, g, h, i, *g, a, b);
+    l(a, b, c, d, e, f, g, h, i, *g, a, b, c);
 
     return t.compare_output(true);
 }

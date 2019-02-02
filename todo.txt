@@ -9,11 +9,18 @@ No tabs
 Test on Windows
 Add cpplint to CMake
 Clean up CMakeLists.txt
+Forward declare template specializations
+Return ostream from color, prefix etc for efficiency
+Check limit of 80 characters
+Ensure classes are PascalCase, variables camelCase and functions snake_case
 
 Future:
-Add template specialization to put quotation marks around strings
 Better looking doxygen theme
 Add test of colored output
 Add c++20 concepts
 Add type information (int i: 7)
 Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
+clang format
+VS code workspace
+github create a release
+Add c++17 std::string_view to Stringify template specializations

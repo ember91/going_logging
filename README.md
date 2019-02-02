@@ -32,7 +32,7 @@ l(i, s);
 ```
 Which outputs:
 ```
-i = 1, s = s
+i = 1, s = "s"
 ```
 
 ### Array

@@ -15,15 +15,17 @@ int main(int argc, const char** argv) {
     test t;
     t.setup(__FILE__);
 
-    int m[2][2] = {{0, 1}, {2, 3}};
+    int         a[2][2] = {{0, 1}, {2, 3}};
+    const char* b[2][2] = {{"a", "b"}, {"c", "d"}};
 
-    l_mat(m, 0, 0);
-    l_mat(m, 0, 1);
-    l_mat(m, 0, 2);
-    l_mat(m, 0, 0);
-    l_mat(m, 1, 0);
-    l_mat(m, 2, 0);
-    l_mat(m, 2, 2);
+    l_mat(a, 0, 0);
+    l_mat(a, 0, 1);
+    l_mat(a, 0, 2);
+    l_mat(a, 0, 0);
+    l_mat(a, 1, 0);
+    l_mat(a, 2, 0);
+    l_mat(a, 2, 2);
+    l_mat(b, 2, 2);
 
     return t.compare_output(false);
 }
