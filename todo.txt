@@ -42,4 +42,3 @@ VS code preferences
 VS code clang format
 github create a release
 Add c++17 std::string_view to Stringify template specializations
-Allow comments in ground truth files?

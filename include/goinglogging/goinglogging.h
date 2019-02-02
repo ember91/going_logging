@@ -351,7 +351,7 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
 #endif  // _WIN32
 
         // Convert to std::string
-        // TODO: This is unnecessary. Search for separator instead.
+        // TODO: This is unnecessary. Search for separator instead. Add separator index to file_path.
         std::string file(p.get_file_path());
 
         // Start index of file name

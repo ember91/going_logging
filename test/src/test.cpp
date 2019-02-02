@@ -94,11 +94,13 @@ int test::compare_output(bool regex) {
         std::getline(fOut, lOut);
         std::getline(fGt, lGt);
 
+        // Both files ended at the same line
         if (!fGt && !fOut) {
             std::cout << "Files are identical" << std::endl;
             return EXIT_SUCCESS;
         }
 
+        // Output file ended before ground truth
         if (fGt && !fOut) {
             std::cout << "Ground truth has more lines than output at line " <<
                          lineIdx << '\n' <<
@@ -106,6 +108,7 @@ int test::compare_output(bool regex) {
             return EXIT_FAILURE;
         }
 
+        // Ground truth ended before output file
         if (!fGt && fOut) {
             std::cout << "Output has more lines than ground truth at line " <<
                          lineIdx << '\n' <<
@@ -136,4 +139,3 @@ int test::compare_output(bool regex) {
 
     return EXIT_SUCCESS;
 }
-
