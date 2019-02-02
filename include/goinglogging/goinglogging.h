@@ -86,7 +86,7 @@
  * \subsection section_flush_output Flush output
  * goinglogging will not flush output by default. To ensure it flushes, use:
  * \code
- * #define GOINGLOGGING_NEWLINE std::endl
+ * #define GL_NEWLINE std::endl
  * #include "goinglogging/goinglogging.h"
  * \endcode
  *
@@ -124,21 +124,21 @@
 #include <string>
 #include <thread>
 
-#ifndef GOINGLOGGING_NEWLINE
+#ifndef GL_NEWLINE
 /** \brief Newline character to use after each logging message.
  *
  * May e.g. be changed to std::endl to enable flush after each
  * logging message:
  * \code
- * #define GOINGLOGGING_NEWLINE std::endl
+ * #define GL_NEWLINE std::endl
  * #include "goinglogging/goinglogging.h"
  * \endcode
  *
  * \note Defaults to \\n, i.e. no flushing.
  *
  */
-#define GOINGLOGGING_NEWLINE '\n'
-#endif  // GOINGLOGGING_NEWLINE
+#define GL_NEWLINE '\n'
+#endif  // GL_NEWLINE
 
 /** \brief Namespace for goinglogging library  */
 namespace gl {
@@ -168,8 +168,6 @@ namespace internal {
 
 void print_prefix(const std::string& file, long line, const std::string& func)
     noexcept;
-void print_color_start() noexcept;
-void print_color_end() noexcept;
 template<class T>
 void array(const char* name, const char* file, long line, const char* func,
     const T v, size_t n) noexcept;
@@ -361,42 +359,21 @@ void print_prefix(const std::string& file, long line, const std::string& func)
     }
 }
 
-/** \brief Print start control sequence of colored output, if enabled.
+/** \brief Stringifies a variable to stream.
  *
  * \note For internal use.
- *
- */
-inline void print_color_start() noexcept {
-    if (internal::colorEnabled) {
-        std::cout << "\033[0;31m";
-    }
-}
-
-/** \brief Print end control sequence of colored output, if enabled.
- *
- * \note For internal use.
- *
- */
-inline void print_color_end() noexcept {
-    if (internal::colorEnabled) {
-        std::cout << "\033[0m";
-    }
-}
-
-/** \brief Helps stringifying a variable to stream.
- *
  * \tparam T Variable type.
  *
  */
 template<class T>
-class Stringify {
+class Stringifier {
   public:
     /** \brief Create object with variable.
      *
      * \param t Variable.
      *
      */
-    explicit Stringify(T& t) noexcept : m_t(t) {}
+    explicit Stringifier(T& t) noexcept : m_t(t) {}
 
     /** \brief Get variable.
      *
@@ -416,63 +393,97 @@ class Stringify {
      *
      */
     template<class U>
-    friend std::ostream& operator<<(std::ostream& os, const Stringify<U>& s) noexcept;
+    friend std::ostream& operator<<(std::ostream& os, const Stringifier<U>& s) noexcept;
 
   private:
     T& m_t; /**< Variable. */
 };
 
-/** \brief General output function.
+/** \brief General Stringifier output function.
  *
+ * \note For internal use.
  * \tparam T Variable type.
  * \param os Output stream.
- * \param s  Stringify object.
+ * \param s  Stringifier.
  * \return Output stream.
  *
  */
 template<class T>
-std::ostream& operator<<(std::ostream& os, const Stringify<T>& s) noexcept {
+std::ostream& operator<<(std::ostream& os, const Stringifier<T>& s) noexcept {
     os << s.get_t();
     return os;
 }
 
-/** \brief C string specialized output function.
+/** \brief Stringifier C string specialized output function.
  *
+ * \note For internal use.
  * \param os Output stream.
- * \param s  Stringify object.
+ * \param s  Stringifier.
  * \return Output stream.
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const Stringify<const char*>& s) noexcept {
+std::ostream& operator<<(std::ostream& os, const Stringifier<const char*>& s) noexcept {
     os << '\"' << s.get_t() << '\"';
     return os;
 }
 
-/** \brief C++ string specialized output function.
+/** \brief Stringifier C++ string specialized output function.
  *
+ * \note For internal use.
  * \param os Output stream.
- * \param s  Stringify object.
+ * \param s  Stringifier.
  * \return Output stream.
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const Stringify<std::string>& s) noexcept {
+std::ostream& operator<<(std::ostream& os, const Stringifier<std::string>& s) noexcept {
     os << '\"' << s.get_t() << '\"';
     return os;
 }
 
-/** \brief Create stringify object from scratch.
- *  This solves the error "cannot refer to class template 'Stringify' without a template argument list".
+/** \brief Create Stringifier from scratch.
+ *  This solves the error "cannot refer to class template 'Stringifier' without a template argument list".
  *
+ * \note For internal use.
  * \tparam T variable type.
  * \param t Variable.
- * \return Created Stringify object.
+ * \return Created Stringifier object.
  */
 template<class T>
-Stringify<T> make_stringify(T& t) {
-    return Stringify<T>(t);
+Stringifier<T> stringify(T& t) {
+    return Stringifier<T>(t);
 };
+
+/** \brief Output ANSI color start code, if color is enabled.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \return Output stream
+ *
+ */
+std::ostream& color_start(std::ostream& os) noexcept
+{
+    if (internal::colorEnabled) {
+        os << "\033[0;31m";
+    }
+    return os;
+}
+
+/** \brief Output ANSI color end code, if color is enabled.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \return Output stream
+ *
+ */
+std::ostream& color_end(std::ostream& os) noexcept
+{
+    if (internal::colorEnabled) {
+        os << "\033[0m";
+    }
+    return os;
+}
 
 /** \brief Log array.
  *
@@ -491,18 +502,15 @@ void array(const char* name, const char* file, long line,
            const char* func, const T v, size_t n) noexcept {
     if (internal::outputEnabled) {
         print_prefix(file, line, func);
-        print_color_start();
-        std::cout << name << ": ";
-        if (n <= 0) {
-            std::cout << "{}";
-        } else {
-            std::cout << "[0] = " << make_stringify(v[0]);
-            for (size_t i = 1; i < n; ++i) {
-                std::cout << ", [" << i << "] = " << make_stringify(v[i]);
-            }
+        std::cout << color_start << name << ": {";
+        // Print first object without comma
+        if (n > 0)
+            std::cout << stringify(v[0]);
+        // Print the rest
+        for (size_t i = 1; i < n; ++i) {
+            std::cout << ", " << stringify(v[i]);
         }
-        print_color_end();
-        std::cout << GOINGLOGGING_NEWLINE;
+        std::cout << '}' << color_end << GL_NEWLINE;
     }
 }
 
@@ -524,24 +532,22 @@ void matrix(const char* name, const char* file, long line,
             const char* func, const T m, size_t c, size_t r) noexcept {
     if (internal::outputEnabled) {
         print_prefix(file, line, func);
-        print_color_start();
-        std::cout << name << ": ";
+        std::cout << color_start << name << ": ";
         if (c <= 0 || r <= 0) {
             std::cout << "{}";
         } else {
-            std::cout << "[0,0] = " << make_stringify(m[0][0]);
+            std::cout << "[0,0] = " << stringify(m[0][0]);
             for (size_t j = 1; j < c; ++j) {
-                std::cout << ", " << "[0," << j << "] = " << make_stringify(m[0][j]);
+                std::cout << ", " << "[0," << j << "] = " << stringify(m[0][j]);
             }
             for (size_t i = 1; i < r; ++i) {
                 for (size_t j = 0; j < c; ++j) {
                     std::cout << ", " << "[" << i << ',' << j << "] = " <<
-                                 make_stringify(m[i][j]);
+                                 stringify(m[i][j]);
                 }
             }
         }
-        print_color_end();
-        std::cout << GOINGLOGGING_NEWLINE;
+        std::cout << color_end << GL_NEWLINE;
     }
 }
 
@@ -630,7 +636,7 @@ bool is_color_enabled() noexcept {
 }
 
 #ifndef DOXYGEN_HIDDEN
-#define GOINGLOGGING_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
+#define GL_INTERNAL_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
     _12, _13, _14, _15, _16, NAME, ...) NAME
 #endif  // DOXYGEN_HIDDEN
 
@@ -657,79 +663,79 @@ bool is_color_enabled() noexcept {
 #define l(...) do { \
     if (gl::internal::outputEnabled) { \
         gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
-        gl::internal::print_color_start(); \
-        GOINGLOGGING_GET_MACRO(__VA_ARGS__, GOINGLOGGING16, GOINGLOGGING15, \
-            GOINGLOGGING14, GOINGLOGGING13, GOINGLOGGING12, GOINGLOGGING11, \
-            GOINGLOGGING10, GOINGLOGGING9, GOINGLOGGING8, GOINGLOGGING7, \
-            GOINGLOGGING6, GOINGLOGGING5, GOINGLOGGING4, GOINGLOGGING3, \
-            GOINGLOGGING2, GOINGLOGGING1,)(__VA_ARGS__) << (GOINGLOGGING_NEWLINE); \
-        gl::internal::print_color_end(); \
+        std::cout << gl::internal::color_start; \
+        GL_INTERNAL_GET_MACRO(__VA_ARGS__, GL_INTERNAL_L16, GL_INTERNAL_L15, \
+            GL_INTERNAL_L14, GL_INTERNAL_L13, GL_INTERNAL_L12, GL_INTERNAL_L11, \
+            GL_INTERNAL_L10, GL_INTERNAL_L9, GL_INTERNAL_L8, GL_INTERNAL_L7, \
+            GL_INTERNAL_L6, GL_INTERNAL_L5, GL_INTERNAL_L4, GL_INTERNAL_L3, \
+            GL_INTERNAL_L2, GL_INTERNAL_L1,)(__VA_ARGS__) << (GL_NEWLINE); \
+        std::cout << gl::internal::color_end; \
     } \
 } while (false)
 
 #ifndef DOXYGEN_HIDDEN
 
-#define GOINGLOGGING1(v1) \
-    std::cout << (#v1) << " = " << gl::internal::make_stringify((v1))
+#define GL_INTERNAL_L1(v1) \
+    std::cout << (#v1) << " = " << gl::internal::stringify((v1))
 
-#define GOINGLOGGING2(v1, v2) \
-    GOINGLOGGING1(v1) << ", " << (#v2) << " = " << gl::internal::make_stringify((v2))
+#define GL_INTERNAL_L2(v1, v2) \
+    GL_INTERNAL_L1(v1) << ", " << (#v2) << " = " << gl::internal::stringify((v2))
 
-#define GOINGLOGGING3(v1, v2, v3) \
-    GOINGLOGGING2(v1, v2) << ", " << (#v3) << " = " << gl::internal::make_stringify((v3))
+#define GL_INTERNAL_L3(v1, v2, v3) \
+    GL_INTERNAL_L2(v1, v2) << ", " << (#v3) << " = " << gl::internal::stringify((v3))
 
-#define GOINGLOGGING4(v1, v2, v3, v4) \
-    GOINGLOGGING3(v1, v2, v3) << ", " << (#v4) << " = " << gl::internal::make_stringify((v4))
+#define GL_INTERNAL_L4(v1, v2, v3, v4) \
+    GL_INTERNAL_L3(v1, v2, v3) << ", " << (#v4) << " = " << gl::internal::stringify((v4))
 
-#define GOINGLOGGING5(v1, v2, v3, v4, v5) \
-    GOINGLOGGING4(v1, v2, v3, v4) << ", " << (#v5) << " = " << gl::internal::make_stringify((v5))
+#define GL_INTERNAL_L5(v1, v2, v3, v4, v5) \
+    GL_INTERNAL_L4(v1, v2, v3, v4) << ", " << (#v5) << " = " << gl::internal::stringify((v5))
 
-#define GOINGLOGGING6(v1, v2, v3, v4, v5, v6) \
-    GOINGLOGGING5(v1, v2, v3, v4, v5) << ", " << (#v6) << " = " << gl::internal::make_stringify((v6))
+#define GL_INTERNAL_L6(v1, v2, v3, v4, v5, v6) \
+    GL_INTERNAL_L5(v1, v2, v3, v4, v5) << ", " << (#v6) << " = " << gl::internal::stringify((v6))
 
-#define GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) \
-    GOINGLOGGING6(v1, v2, v3, v4, v5, v6) << ", " << (#v7) << " = " << gl::internal::make_stringify((v7))
+#define GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) \
+    GL_INTERNAL_L6(v1, v2, v3, v4, v5, v6) << ", " << (#v7) << " = " << gl::internal::stringify((v7))
 
-#define GOINGLOGGING8(v1, v2, v3, v4, v5, v6, v7, v8) \
-    GOINGLOGGING7(v1, v2, v3, v4, v5, v6, v7) << ", " << (#v8) << " = " << gl::internal::make_stringify((v8))
+#define GL_INTERNAL_L8(v1, v2, v3, v4, v5, v6, v7, v8) \
+    GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) << ", " << (#v8) << " = " << gl::internal::stringify((v8))
 
-#define GOINGLOGGING9(v1, v2, v3, v4, v5, v6, v7, v8, v9) \
-    GOINGLOGGING8(v1, v2, v3, v4, v5, v6, v7, v8) << \
-        ", " << (#v9) << " = " << gl::internal::make_stringify((v9))
+#define GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9) \
+    GL_INTERNAL_L8(v1, v2, v3, v4, v5, v6, v7, v8) << \
+        ", " << (#v9) << " = " << gl::internal::stringify((v9))
 
-#define GOINGLOGGING10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) \
-    GOINGLOGGING9(v1, v2, v3, v4, v5, v6, v7, v8, v9) << \
-        ", " << (#v10) << " = " << gl::internal::make_stringify((v10))
+#define GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) \
+    GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9) << \
+        ", " << (#v10) << " = " << gl::internal::stringify((v10))
 
-#define GOINGLOGGING11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) \
-    GOINGLOGGING10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) << \
-        ", " << (#v11) << " = " << gl::internal::make_stringify((v11))
+#define GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) \
+    GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) << \
+        ", " << (#v11) << " = " << gl::internal::stringify((v11))
 
-#define GOINGLOGGING12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
-    GOINGLOGGING11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) << \
-        ", " << (#v12) << " = " << gl::internal::make_stringify((v12))
+#define GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
+    GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) << \
+        ", " << (#v12) << " = " << gl::internal::stringify((v12))
 
-#define GOINGLOGGING13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
+#define GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13) \
-    GOINGLOGGING12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) << \
-        ", " << (#v13) << " = " << gl::internal::make_stringify((v13))
+    GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) << \
+        ", " << (#v13) << " = " << gl::internal::stringify((v13))
 
-#define GOINGLOGGING14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
+#define GL_INTERNAL_L14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14) \
-    GOINGLOGGING13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) << \
-        ", " << (#v14) << " = " << gl::internal::make_stringify((v14))
+    GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) << \
+        ", " << (#v14) << " = " << gl::internal::stringify((v14))
 
-#define GOINGLOGGING15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
+#define GL_INTERNAL_L15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15) \
-    GOINGLOGGING14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
+    GL_INTERNAL_L14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14) << \
-        ", " << (#v15) << " = " << gl::internal::make_stringify((v15))
+        ", " << (#v15) << " = " << gl::internal::stringify((v15))
 
-#define GOINGLOGGING16(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
+#define GL_INTERNAL_L16(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
                        v13, v14, v15, v16) \
-    GOINGLOGGING15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
+    GL_INTERNAL_L15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
                    v14, v15) << \
-        ", " << (#v16) << " = " << gl::internal::make_stringify((v16))
+        ", " << (#v16) << " = " << gl::internal::stringify((v16))
 
 #endif  // DOXYGEN_HIDDEN
 
@@ -740,13 +746,13 @@ bool is_color_enabled() noexcept {
  *
  * Used as:
  * \code
- * int a[] = {3, 4, 5};
+ * int a[] = {0, 1, 2};
  * l_arr(a, 3);
  * \endcode
  *
  * Which outputs:
  * \code
- * a: [0] = 3, [1] = 4, [2] = 5
+ * a: {0, 1, 2}
  * \endcode
  *
  * \note Uses prefix information set with \ref set_prefixes().
