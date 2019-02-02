@@ -38,7 +38,6 @@ Add test of colored output
 Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
 VS code build with CMake
 VS code launch binary
-VS code preferences
 github create a release
 Add c++17 std::string_view to Stringify template specializations
 Add c++20 concepts?
