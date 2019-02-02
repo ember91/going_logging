@@ -166,14 +166,12 @@ enum class prefix : uint32_t {
 
 namespace internal {
 
-void print_prefix(const std::string& file, long line, const std::string& func)
-    noexcept;
 template<class T>
-void array(const char* name, const char* file, long line, const char* func,
-    const T v, size_t n) noexcept;
+void array(const char* var_name, const char* file_path, long file_line, const char* func,
+    const T var_val, size_t len) noexcept;
 template<class T>
-void matrix(const char* name, const char* file, long line, const char* func,
-    const T m, size_t c, size_t r) noexcept;
+void matrix(const char* var_name, const char* file_path, long file_line, const char* func,
+    const T var_val, size_t cols, size_t rows) noexcept;
 
 }  // namespace internal
 
@@ -271,26 +269,78 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
 /** \brief Functionality in this namespace is for internal use */
 namespace internal {
 
-static prefix curPrefixes   = prefix::FILE | prefix::LINE; /**< \brief Current prefixes */
+static prefix curPrefixes   = prefix::FILE | prefix::LINE; /**< Current prefixes */
 static bool   outputEnabled = true;  /**< \c true if output is enabled */
 static bool   colorEnabled  = false; /**< \c true if color is enabled */
 
-/** \brief Print prefix string.
+/** \brief Generate prefix to stream.
  *
  * \note For internal use.
- * \param file File name
- * \param line Line in file
- * \param func Function name
  *
  */
-void print_prefix(const std::string& file, long line, const std::string& func)
-    noexcept {
+class Prefixer {
+  public:
+    /** \brief Create.
+     *
+     * \param file_path File path including name.
+     * \param file_line Line number in file.
+     * \param func      Function name.
+     *
+     */
+    Prefixer(const char* file_path, long file_line, const char* func) noexcept : 
+      m_file_path(file_path),
+      m_file_line(file_line),
+      m_func(func) {}
+
+    /** \brief Get current file path.
+     *
+     * \return Current file path.
+     *
+     */
+    const char* get_file_path() const noexcept {
+        return m_file_path;
+    }
+
+    /** \brief Get current line number in file.
+     *
+     * \return Current line number in file.
+     *
+     */
+    long get_file_line_number() const noexcept {
+        return m_file_line;
+    }
+
+    /** \brief Get current function name.
+     *
+     * \return Current function name.
+     *
+     */
+    const char* get_function_name() const noexcept {
+        return m_func;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept;
+
+  private:
+    const char* m_file_path; /**< File path including name */
+    long        m_file_line; /**< Line number in file */
+    const char* m_func;      /**< Function name */
+};
+
+/** \brief Write to stream.
+ *
+ * \param os Output stream.
+ * \param p  Object to output.
+ * \return Output stream.
+ *
+ */
+std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
     /** Number of prefixes written */
     uint32_t cnt = 0;
 
     // FILE
     if ((curPrefixes & prefix::FILE) != prefix::NONE) {
-        /** Path separator */
+        // Path separator
         const char sep =
 #ifdef _WIN32
             '\\';
@@ -298,30 +348,37 @@ void print_prefix(const std::string& file, long line, const std::string& func)
             '/';
 #endif  // _WIN32
 
-        /** Start index of file name */
+        // Convert to std::string
+        // TODO: This is unnecessary. Search for separator instead.
+        std::string file(p.get_file_path());
+
+        // Start index of file name
         size_t idx = file.find_last_of(sep);
 
-        std::cout << (idx == std::string::npos ? file : file.substr(idx + 1));
+        // Output
+        os << (idx == std::string::npos ? file : file.substr(idx + 1));
+
         ++cnt;
     }
 
     // LINE
     if ((curPrefixes & prefix::LINE) != prefix::NONE) {
         if (cnt == 0) {
-            std::cout << "Line: ";
+            os << "Line: ";
         } else {
-            std::cout << ":";
+            os << ":";
         }
-        std::cout << line;
+        os << p.get_file_line_number();
+
         ++cnt;
     }
 
     // FUNCTION
     if ((curPrefixes & prefix::FUNCTION) != prefix::NONE) {
         if (cnt != 0) {
-            std::cout << ", ";
+            os << ", ";
         }
-        std::cout << func << "()";
+        os << p.get_function_name() << "()";
         ++cnt;
     }
 
@@ -336,9 +393,9 @@ void print_prefix(const std::string& file, long line, const std::string& func)
         std::tm* local = std::localtime(&sinceEpoch);
         if (local != nullptr) {
             if (cnt != 0) {
-                std::cout << ", ";
+                os << ", ";
             }
-            std::cout << std::put_time(local, "%H:%M:%S") << '.' <<
+            os << std::put_time(local, "%H:%M:%S") << '.' <<
                          std::setfill('0') << std::setw(3) << ms.count();
             ++cnt;
         }
@@ -347,16 +404,18 @@ void print_prefix(const std::string& file, long line, const std::string& func)
     // THREAD
     if ((curPrefixes & prefix::THREAD) != prefix::NONE) {
         if (cnt != 0) {
-            std::cout << ", ";
+            os << ", ";
         }
-        std::cout << "TID: " << std::this_thread::get_id();
+        os << "TID: " << std::this_thread::get_id();
         ++cnt;
     }
 
     // Final separator, if any
     if (cnt != 0) {
-        std::cout << ": ";
+        os << ": ";
     }
+
+    return os;
 }
 
 /** \brief Stringifies a variable to stream.
@@ -396,7 +455,7 @@ class Stringifier {
     friend std::ostream& operator<<(std::ostream& os, const Stringifier<U>& s) noexcept;
 
   private:
-    T& m_t; /**< Variable. */
+    T& m_t; /**< Variable to stringify. */
 };
 
 /** \brief General Stringifier output function.
@@ -489,26 +548,26 @@ std::ostream& color_end(std::ostream& os) noexcept
  *
  * \note For internal use.
  * \tparam T Variable type.
- * \param name Variable name.
- * \param file File name.
- * \param line File line number.
- * \param func Function name.
- * \param v    Variable values.
- * \param n    Number of elements.
+ * \param var_name  Variable name.
+ * \param file_path Current File path including name.
+ * \param file_line Current line number in file.
+ * \param func      Current function name.
+ * \param var_val   Variable values.
+ * \param len       Number of elements.
  *
  */
 template<class T>
-void array(const char* name, const char* file, long line,
-           const char* func, const T v, size_t n) noexcept {
+void array(const char* var_name, const char* file_path, long file_line,
+           const char* func, const T var_val, size_t len) noexcept {
     if (internal::outputEnabled) {
-        print_prefix(file, line, func);
-        std::cout << color_start << name << ": {";
+        std::cout << Prefixer(file_path, file_line, func) << color_start << 
+                     var_name << ": {";
         // Print first object without comma
-        if (n > 0)
-            std::cout << stringify(v[0]);
+        if (len > 0)
+            std::cout << stringify(var_val[0]);
         // Print the rest
-        for (size_t i = 1; i < n; ++i) {
-            std::cout << ", " << stringify(v[i]);
+        for (size_t i = 1; i < len; ++i) {
+            std::cout << ", " << stringify(var_val[i]);
         }
         std::cout << '}' << color_end << GL_NEWLINE;
     }
@@ -518,32 +577,32 @@ void array(const char* name, const char* file, long line,
  *
  * \note For internal use.
  * \tparam T Variable type.
- * \param name Variable name.
- * \param file File name.
- * \param line File line number.
- * \param func Function name.
- * \param m    Variable values.
- * \param c    Number of columns.
- * \param r    Number of rows.
+ * \param var_name  Variable name.
+ * \param file_path Current file path including name.
+ * \param file_line Current line number in file.
+ * \param func      Current function name.
+ * \param var_val   Variable values.
+ * \param cols      Number of columns.
+ * \param rows      Number of rows.
  *
  */
 template<class T>
-void matrix(const char* name, const char* file, long line,
-            const char* func, const T m, size_t c, size_t r) noexcept {
+void matrix(const char* var_name, const char* file_path, long file_line,
+            const char* func, const T var_val, size_t cols, size_t rows) noexcept {
     if (internal::outputEnabled) {
-        print_prefix(file, line, func);
-        std::cout << color_start << name << ": ";
-        if (c <= 0 || r <= 0) {
+        std::cout << Prefixer(file_path, file_line, func) << color_start << 
+                     var_name << ": ";
+        if (cols <= 0 || rows <= 0) {
             std::cout << "{}";
         } else {
-            std::cout << "[0,0] = " << stringify(m[0][0]);
-            for (size_t j = 1; j < c; ++j) {
-                std::cout << ", " << "[0," << j << "] = " << stringify(m[0][j]);
+            std::cout << "[0,0] = " << stringify(var_val[0][0]);
+            for (size_t j = 1; j < cols; ++j) {
+                std::cout << ", " << "[0," << j << "] = " << stringify(var_val[0][j]);
             }
-            for (size_t i = 1; i < r; ++i) {
-                for (size_t j = 0; j < c; ++j) {
+            for (size_t i = 1; i < rows; ++i) {
+                for (size_t j = 0; j < cols; ++j) {
                     std::cout << ", " << "[" << i << ',' << j << "] = " <<
-                                 stringify(m[i][j]);
+                                 stringify(var_val[i][j]);
                 }
             }
         }
@@ -662,8 +721,7 @@ bool is_color_enabled() noexcept {
  */
 #define l(...) do { \
     if (gl::internal::outputEnabled) { \
-        gl::internal::print_prefix(__FILE__, __LINE__, __func__); \
-        std::cout << gl::internal::color_start; \
+        std::cout << gl::internal::Prefixer(__FILE__, __LINE__, __func__) << gl::internal::color_start; \
         GL_INTERNAL_GET_MACRO(__VA_ARGS__, GL_INTERNAL_L16, GL_INTERNAL_L15, \
             GL_INTERNAL_L14, GL_INTERNAL_L13, GL_INTERNAL_L12, GL_INTERNAL_L11, \
             GL_INTERNAL_L10, GL_INTERNAL_L9, GL_INTERNAL_L8, GL_INTERNAL_L7, \
@@ -741,8 +799,8 @@ bool is_color_enabled() noexcept {
 
 /** \brief Log array to stdout.
  *
- * \param v Array to print.
- * \param n Number of elements.
+ * \param v   Array to print.
+ * \param len Number of elements.
  *
  * Used as:
  * \code
@@ -762,16 +820,16 @@ bool is_color_enabled() noexcept {
  * \sa l() \sa l_mat() \sa set_prefixes()
  *
  */
-#define l_arr(v, n) \
+#define l_arr(v, len) \
     do { \
-        gl::internal::array((#v), __FILE__, __LINE__, __func__, (v), (n)); \
+        gl::internal::array((#v), __FILE__, __LINE__, __func__, (v), (len)); \
     } while (false)
 
 /** \brief Log matrix to stdout.
  *
- * \param m Matrix to print.
- * \param c Number of columns in matrix.
- * \param r Number of rows in matrix.
+ * \param m    Matrix to print.
+ * \param cols Number of columns in matrix.
+ * \param rows Number of rows in matrix.
  *
  * Used as:
  * \code
@@ -792,10 +850,10 @@ bool is_color_enabled() noexcept {
  * \sa l() \sa l_arr() \sa set_prefixes()
  *
  */
-#define l_mat(m, c, r) \
+#define l_mat(m, cols, rows) \
     do { \
-        gl::internal::matrix((#m), __FILE__, __LINE__, __func__, (m), (c), \
-                             (r)); \
+        gl::internal::matrix((#m), __FILE__, __LINE__, __func__, (m), (cols), \
+                             (rows)); \
     } while (false)
 
 } // namespace gl

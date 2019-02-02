@@ -17,6 +17,11 @@ Ensure almost no usage of std::cout
 Ensure internal use objects have "\note For internal use."
 Use ::gl::internal instead of gl::internal
 Fix order of functions and classes
+Pass std::string by reference only when necessary
+Ensure documentation such as \param ends with dot
+Don't convert between const char* and std::string too much
+Don't use C-style comments
+Ensure parameters are in a good order
 
 Features:
 ninja instead of make

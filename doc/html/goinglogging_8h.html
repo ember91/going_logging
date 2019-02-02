@@ -100,12 +100,12 @@ Macros</h2></td></tr>
 <tr class="memitem:af406485346ddd0f2085c674ef16617a6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(...)</td></tr>
 <tr class="memdesc:af406485346ddd0f2085c674ef16617a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log variables to stdout.  <a href="#af406485346ddd0f2085c674ef16617a6">More...</a><br /></td></tr>
 <tr class="separator:af406485346ddd0f2085c674ef16617a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92b9b13daffee9d6a76cb0949374d8ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac">l_arr</a>(v,  n)</td></tr>
-<tr class="memdesc:a92b9b13daffee9d6a76cb0949374d8ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log array to stdout.  <a href="#a92b9b13daffee9d6a76cb0949374d8ac">More...</a><br /></td></tr>
-<tr class="separator:a92b9b13daffee9d6a76cb0949374d8ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af023eb76f4b142de14de1d184a32607f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="goinglogging_8h.html#af023eb76f4b142de14de1d184a32607f">l_mat</a>(m,  c,  r)</td></tr>
-<tr class="memdesc:af023eb76f4b142de14de1d184a32607f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log matrix to stdout.  <a href="#af023eb76f4b142de14de1d184a32607f">More...</a><br /></td></tr>
-<tr class="separator:af023eb76f4b142de14de1d184a32607f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ec0f9cf56cb159694761c45503663a4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="goinglogging_8h.html#a6ec0f9cf56cb159694761c45503663a4">l_arr</a>(v,  len)</td></tr>
+<tr class="memdesc:a6ec0f9cf56cb159694761c45503663a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log array to stdout.  <a href="#a6ec0f9cf56cb159694761c45503663a4">More...</a><br /></td></tr>
+<tr class="separator:a6ec0f9cf56cb159694761c45503663a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae247c04dbaedf080874e5a86325ca620"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="goinglogging_8h.html#ae247c04dbaedf080874e5a86325ca620">l_mat</a>(m,  cols,  rows)</td></tr>
+<tr class="memdesc:ae247c04dbaedf080874e5a86325ca620"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log matrix to stdout.  <a href="#ae247c04dbaedf080874e5a86325ca620">More...</a><br /></td></tr>
+<tr class="separator:ae247c04dbaedf080874e5a86325ca620"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -124,17 +124,14 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8897439d34ac89dba61c0ac3daa89328"><td class="memItemLeft" align="right" valign="top"><a id="a8897439d34ac89dba61c0ac3daa89328"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>gl::internal::print_prefix</b> (const std::string &amp;file, long line, const std::string &amp;func) noexcept</td></tr>
-<tr class="separator:a8897439d34ac89dba61c0ac3daa89328"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0e6966ad0124621ec8cda8a76c3c78a"><td class="memTemplParams" colspan="2"><a id="ad0e6966ad0124621ec8cda8a76c3c78a"></a>
+<tr class="memitem:ab719fe3ee3bbf0fcbfea49e529cb0da6"><td class="memTemplParams" colspan="2"><a id="ab719fe3ee3bbf0fcbfea49e529cb0da6"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:ad0e6966ad0124621ec8cda8a76c3c78a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>gl::internal::array</b> (const char *name, const char *file, long line, const char *func, const T v, size_t n) noexcept</td></tr>
-<tr class="separator:ad0e6966ad0124621ec8cda8a76c3c78a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ba8ad59d2bf3989062cc6f7008e9bb4"><td class="memTemplParams" colspan="2"><a id="a1ba8ad59d2bf3989062cc6f7008e9bb4"></a>
+<tr class="memitem:ab719fe3ee3bbf0fcbfea49e529cb0da6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>gl::internal::array</b> (const char *var_name, const char *file_path, long file_line, const char *func, const T var_val, size_t len) noexcept</td></tr>
+<tr class="separator:ab719fe3ee3bbf0fcbfea49e529cb0da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2df1b3af85a5a04b253465327d0e8d36"><td class="memTemplParams" colspan="2"><a id="a2df1b3af85a5a04b253465327d0e8d36"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:a1ba8ad59d2bf3989062cc6f7008e9bb4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>gl::internal::matrix</b> (const char *name, const char *file, long line, const char *func, const T m, size_t c, size_t r) noexcept</td></tr>
-<tr class="separator:a1ba8ad59d2bf3989062cc6f7008e9bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2df1b3af85a5a04b253465327d0e8d36"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>gl::internal::matrix</b> (const char *var_name, const char *file_path, long file_line, const char *func, const T var_val, size_t cols, size_t rows) noexcept</td></tr>
+<tr class="separator:a2df1b3af85a5a04b253465327d0e8d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6de796b6febaa5ac722ef6a29099ea32"><td class="memItemLeft" align="right" valign="top">prefix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a6de796b6febaa5ac722ef6a29099ea32">gl::get_prefixes</a> () noexcept</td></tr>
 <tr class="memdesc:a6de796b6febaa5ac722ef6a29099ea32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hide this section from doxygen.  <a href="namespacegl.html#a6de796b6febaa5ac722ef6a29099ea32">More...</a><br /></td></tr>
 <tr class="separator:a6de796b6febaa5ac722ef6a29099ea32"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,16 +209,16 @@ template&lt;class T &gt; </td></tr>
 <p>Use as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> i = 1;</div><div class="line"><a class="code" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(i);</div><div class="line">std::string s(<span class="stringliteral">&quot;s&quot;</span>);</div><div class="line"><a class="code" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(i, s);</div></div><!-- fragment --><p> Which outputs: </p><div class="fragment"><div class="line">i = 1, s = s</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Supports up to 16 variables on the same line. </dd>
 <dd>
 Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a>.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac" title="Log array to stdout. ">l_arr()</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#a6ec0f9cf56cb159694761c45503663a4" title="Log array to stdout. ">l_arr()</a> </dd>
 <dd>
-<a class="el" href="goinglogging_8h.html#af023eb76f4b142de14de1d184a32607f" title="Log matrix to stdout. ">l_mat()</a> </dd>
+<a class="el" href="goinglogging_8h.html#ae247c04dbaedf080874e5a86325ca620" title="Log matrix to stdout. ">l_mat()</a> </dd>
 <dd>
 <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26" title="Set prefixes of logging output. ">set_prefixes()</a>. </dd></dl>
 
 </div>
 </div>
-<a id="a92b9b13daffee9d6a76cb0949374d8ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92b9b13daffee9d6a76cb0949374d8ac">&#9670;&nbsp;</a></span>l_arr</h2>
+<a id="a6ec0f9cf56cb159694761c45503663a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ec0f9cf56cb159694761c45503663a4">&#9670;&nbsp;</a></span>l_arr</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -236,7 +233,7 @@ Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa5115
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">n&#160;</td>
+          <td class="paramname">len&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -250,22 +247,22 @@ Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa5115
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">v</td><td>Array to print. </td></tr>
-    <tr><td class="paramname">n</td><td>Number of elements.</td></tr>
+    <tr><td class="paramname">len</td><td>Number of elements.</td></tr>
   </table>
   </dd>
 </dl>
-<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> a[] = {0, 1, 2};</div><div class="line"><a class="code" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac">l_arr</a>(a, 3);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">a: {0, 1, 2}</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a>.</dd></dl>
+<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> a[] = {0, 1, 2};</div><div class="line"><a class="code" href="goinglogging_8h.html#a6ec0f9cf56cb159694761c45503663a4">l_arr</a>(a, 3);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">a: {0, 1, 2}</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a>.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Behaviour is undefined if <code>n</code> is larger than the allocated array.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6" title="Log variables to stdout. ">l()</a> </dd>
 <dd>
-<a class="el" href="goinglogging_8h.html#af023eb76f4b142de14de1d184a32607f" title="Log matrix to stdout. ">l_mat()</a> </dd>
+<a class="el" href="goinglogging_8h.html#ae247c04dbaedf080874e5a86325ca620" title="Log matrix to stdout. ">l_mat()</a> </dd>
 <dd>
 <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26" title="Set prefixes of logging output. ">set_prefixes()</a> </dd></dl>
 
 </div>
 </div>
-<a id="af023eb76f4b142de14de1d184a32607f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af023eb76f4b142de14de1d184a32607f">&#9670;&nbsp;</a></span>l_mat</h2>
+<a id="ae247c04dbaedf080874e5a86325ca620"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae247c04dbaedf080874e5a86325ca620">&#9670;&nbsp;</a></span>l_mat</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -280,13 +277,13 @@ Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa5115
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">c, </td>
+          <td class="paramname">cols, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">r&#160;</td>
+          <td class="paramname">rows&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -300,16 +297,16 @@ Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa5115
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">m</td><td>Matrix to print. </td></tr>
-    <tr><td class="paramname">c</td><td>Number of columns in matrix. </td></tr>
-    <tr><td class="paramname">r</td><td>Number of rows in matrix.</td></tr>
+    <tr><td class="paramname">cols</td><td>Number of columns in matrix. </td></tr>
+    <tr><td class="paramname">rows</td><td>Number of rows in matrix.</td></tr>
   </table>
   </dd>
 </dl>
-<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> m[][] = {{11, 12}, {21, 22}};</div><div class="line"><a class="code" href="goinglogging_8h.html#af023eb76f4b142de14de1d184a32607f">l_mat</a>(m, 2, 2);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">m: [0,0] = 11, [0,1] = 12, [1,0] = 21, [1,1] = 22</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a></dd></dl>
+<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> m[][] = {{11, 12}, {21, 22}};</div><div class="line"><a class="code" href="goinglogging_8h.html#ae247c04dbaedf080874e5a86325ca620">l_mat</a>(m, 2, 2);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">m: [0,0] = 11, [0,1] = 12, [1,0] = 21, [1,1] = 22</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a></dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Behaviour is undefined if <code>c</code> or <code>r</code> is larger than the allocated matrix.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6" title="Log variables to stdout. ">l()</a> </dd>
 <dd>
-<a class="el" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac" title="Log array to stdout. ">l_arr()</a> </dd>
+<a class="el" href="goinglogging_8h.html#a6ec0f9cf56cb159694761c45503663a4" title="Log array to stdout. ">l_arr()</a> </dd>
 <dd>
 <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26" title="Set prefixes of logging output. ">set_prefixes()</a> </dd></dl>
 
