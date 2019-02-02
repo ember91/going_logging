@@ -76,10 +76,11 @@ $(function() {
 <p>Lightweight logging library.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;ctime&gt;</code><br />
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;ios&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
-<code>#include &lt;sstream&gt;</code><br />
+<code>#include &lt;ostream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;thread&gt;</code><br />
 </div>
@@ -93,9 +94,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a77def5d5b9b82e846327b597b64e25c6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="goinglogging_8h.html#a77def5d5b9b82e846327b597b64e25c6">GOINGLOGGING_NEWLINE</a></td></tr>
-<tr class="memdesc:a77def5d5b9b82e846327b597b64e25c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Newline character to use after each logging message.  <a href="#a77def5d5b9b82e846327b597b64e25c6">More...</a><br /></td></tr>
-<tr class="separator:a77def5d5b9b82e846327b597b64e25c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bb159f127972a1c5d011e4f00837112"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="goinglogging_8h.html#a7bb159f127972a1c5d011e4f00837112">GL_NEWLINE</a></td></tr>
+<tr class="memdesc:a7bb159f127972a1c5d011e4f00837112"><td class="mdescLeft">&#160;</td><td class="mdescRight">Newline character to use after each logging message.  <a href="#a7bb159f127972a1c5d011e4f00837112">More...</a><br /></td></tr>
+<tr class="separator:a7bb159f127972a1c5d011e4f00837112"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af406485346ddd0f2085c674ef16617a6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(...)</td></tr>
 <tr class="memdesc:af406485346ddd0f2085c674ef16617a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log variables to stdout.  <a href="#af406485346ddd0f2085c674ef16617a6">More...</a><br /></td></tr>
 <tr class="separator:af406485346ddd0f2085c674ef16617a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,6 +124,35 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a8897439d34ac89dba61c0ac3daa89328"><td class="memItemLeft" align="right" valign="top"><a id="a8897439d34ac89dba61c0ac3daa89328"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>gl::internal::print_prefix</b> (const std::string &amp;file, long line, const std::string &amp;func) noexcept</td></tr>
+<tr class="separator:a8897439d34ac89dba61c0ac3daa89328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0e6966ad0124621ec8cda8a76c3c78a"><td class="memTemplParams" colspan="2"><a id="ad0e6966ad0124621ec8cda8a76c3c78a"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ad0e6966ad0124621ec8cda8a76c3c78a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>gl::internal::array</b> (const char *name, const char *file, long line, const char *func, const T v, size_t n) noexcept</td></tr>
+<tr class="separator:ad0e6966ad0124621ec8cda8a76c3c78a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ba8ad59d2bf3989062cc6f7008e9bb4"><td class="memTemplParams" colspan="2"><a id="a1ba8ad59d2bf3989062cc6f7008e9bb4"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a1ba8ad59d2bf3989062cc6f7008e9bb4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>gl::internal::matrix</b> (const char *name, const char *file, long line, const char *func, const T m, size_t c, size_t r) noexcept</td></tr>
+<tr class="separator:a1ba8ad59d2bf3989062cc6f7008e9bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6de796b6febaa5ac722ef6a29099ea32"><td class="memItemLeft" align="right" valign="top">prefix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a6de796b6febaa5ac722ef6a29099ea32">gl::get_prefixes</a> () noexcept</td></tr>
+<tr class="memdesc:a6de796b6febaa5ac722ef6a29099ea32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hide this section from doxygen.  <a href="namespacegl.html#a6de796b6febaa5ac722ef6a29099ea32">More...</a><br /></td></tr>
+<tr class="separator:a6de796b6febaa5ac722ef6a29099ea32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a1fa511516348755e3f762ba1c27a26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">gl::set_prefixes</a> (prefix p) noexcept</td></tr>
+<tr class="memdesc:a4a1fa511516348755e3f762ba1c27a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set prefixes of logging output.  <a href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">More...</a><br /></td></tr>
+<tr class="separator:a4a1fa511516348755e3f762ba1c27a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e1d33777c1fdd32df6bfa73bf5f83ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a2e1d33777c1fdd32df6bfa73bf5f83ba">gl::is_output_enabled</a> () noexcept</td></tr>
+<tr class="memdesc:a2e1d33777c1fdd32df6bfa73bf5f83ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if output is enabled.  <a href="namespacegl.html#a2e1d33777c1fdd32df6bfa73bf5f83ba">More...</a><br /></td></tr>
+<tr class="separator:a2e1d33777c1fdd32df6bfa73bf5f83ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2f67f23d52cb5e671e0026ca92b57a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#ad2f67f23d52cb5e671e0026ca92b57a8">gl::set_output_enabled</a> (bool e) noexcept</td></tr>
+<tr class="memdesc:ad2f67f23d52cb5e671e0026ca92b57a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable output.  <a href="namespacegl.html#ad2f67f23d52cb5e671e0026ca92b57a8">More...</a><br /></td></tr>
+<tr class="separator:ad2f67f23d52cb5e671e0026ca92b57a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12a94dcd3d356ce2edcdd519114ca88d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a12a94dcd3d356ce2edcdd519114ca88d">gl::is_color_enabled</a> () noexcept</td></tr>
+<tr class="memdesc:a12a94dcd3d356ce2edcdd519114ca88d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if ANSI color output is enabled.  <a href="namespacegl.html#a12a94dcd3d356ce2edcdd519114ca88d">More...</a><br /></td></tr>
+<tr class="separator:a12a94dcd3d356ce2edcdd519114ca88d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3dff5ad0c1dc60df07a5ceba0201690"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#ad3dff5ad0c1dc60df07a5ceba0201690">gl::set_color_enabled</a> (bool e) noexcept</td></tr>
+<tr class="memdesc:ad3dff5ad0c1dc60df07a5ceba0201690"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable ANSI color output.  <a href="namespacegl.html#ad3dff5ad0c1dc60df07a5ceba0201690">More...</a><br /></td></tr>
+<tr class="separator:ad3dff5ad0c1dc60df07a5ceba0201690"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c81cded89e0700ca35750a0dbee6515"><td class="memItemLeft" align="right" valign="top">prefix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a5c81cded89e0700ca35750a0dbee6515">gl::operator &amp;</a> (prefix lhs, prefix rhs) noexcept</td></tr>
 <tr class="memdesc:a5c81cded89e0700ca35750a0dbee6515"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitwise <code>and</code> of logging prefix settings.  <a href="namespacegl.html#a5c81cded89e0700ca35750a0dbee6515">More...</a><br /></td></tr>
 <tr class="separator:a5c81cded89e0700ca35750a0dbee6515"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,36 +171,24 @@ Functions</h2></td></tr>
 <tr class="memitem:ac24835967d187758a4a1bc00a13961f2"><td class="memItemLeft" align="right" valign="top">prefix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#ac24835967d187758a4a1bc00a13961f2">gl::operator^=</a> (prefix &amp;lhs, prefix rhs) noexcept</td></tr>
 <tr class="memdesc:ac24835967d187758a4a1bc00a13961f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitwise <code>xor</code> of logging prefix settings.  <a href="namespacegl.html#ac24835967d187758a4a1bc00a13961f2">More...</a><br /></td></tr>
 <tr class="separator:ac24835967d187758a4a1bc00a13961f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6de796b6febaa5ac722ef6a29099ea32"><td class="memItemLeft" align="right" valign="top">prefix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a6de796b6febaa5ac722ef6a29099ea32">gl::get_prefixes</a> () noexcept</td></tr>
-<tr class="memdesc:a6de796b6febaa5ac722ef6a29099ea32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hide this section from doxygen.  <a href="namespacegl.html#a6de796b6febaa5ac722ef6a29099ea32">More...</a><br /></td></tr>
-<tr class="separator:a6de796b6febaa5ac722ef6a29099ea32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a1fa511516348755e3f762ba1c27a26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">gl::set_prefixes</a> (prefix p) noexcept</td></tr>
-<tr class="memdesc:a4a1fa511516348755e3f762ba1c27a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set prefixes of logging output.  <a href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">More...</a><br /></td></tr>
-<tr class="separator:a4a1fa511516348755e3f762ba1c27a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdf7006a4329abcdbd141395868ff7ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#acdf7006a4329abcdbd141395868ff7ba">gl::is_enabled</a> () noexcept</td></tr>
-<tr class="memdesc:acdf7006a4329abcdbd141395868ff7ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if output is enabled.  <a href="namespacegl.html#acdf7006a4329abcdbd141395868ff7ba">More...</a><br /></td></tr>
-<tr class="separator:acdf7006a4329abcdbd141395868ff7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fda69a88cdb48a6663d865f4bf7d79a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegl.html#a1fda69a88cdb48a6663d865f4bf7d79a">gl::set_enabled</a> (bool e) noexcept</td></tr>
-<tr class="memdesc:a1fda69a88cdb48a6663d865f4bf7d79a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable output.  <a href="namespacegl.html#a1fda69a88cdb48a6663d865f4bf7d79a">More...</a><br /></td></tr>
-<tr class="separator:a1fda69a88cdb48a6663d865f4bf7d79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Lightweight logging library. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a77def5d5b9b82e846327b597b64e25c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77def5d5b9b82e846327b597b64e25c6">&#9670;&nbsp;</a></span>GOINGLOGGING_NEWLINE</h2>
+<a id="a7bb159f127972a1c5d011e4f00837112"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bb159f127972a1c5d011e4f00837112">&#9670;&nbsp;</a></span>GL_NEWLINE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GOINGLOGGING_NEWLINE</td>
+          <td class="memname">#define GL_NEWLINE</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Newline character to use after each logging message. </p>
-<p>May e.g. be changed to std::endl to enable flush after each logging message: </p><div class="fragment"><div class="line"><span class="preprocessor">#define GOINGLOGGING_NEWLINE std::endl</span></div><div class="line"><span class="preprocessor">#include &quot;goinglogging/goinglogging.h&quot;</span></div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Defaults to \n, i.e. no flushing. </dd></dl>
+<p>May e.g. be changed to std::endl to enable flush after each logging message: </p><div class="fragment"><div class="line"><span class="preprocessor">#define GL_NEWLINE std::endl</span></div><div class="line"><span class="preprocessor">#include &quot;goinglogging/goinglogging.h&quot;</span></div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Defaults to \n, i.e. no flushing. </dd></dl>
 
 </div>
 </div>
@@ -236,7 +254,7 @@ Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa5115
   </table>
   </dd>
 </dl>
-<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> a[] = {3, 4, 5};</div><div class="line"><a class="code" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac">l_arr</a>(a, 3);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">a: [0] = 3, [1] = 4, [2] = 5</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a>.</dd></dl>
+<p>Used as: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> a[] = {0, 1, 2};</div><div class="line"><a class="code" href="goinglogging_8h.html#a92b9b13daffee9d6a76cb0949374d8ac">l_arr</a>(a, 3);</div></div><!-- fragment --><p>Which outputs: </p><div class="fragment"><div class="line">a: {0, 1, 2}</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Uses prefix information set with <a class="el" href="namespacegl.html#a4a1fa511516348755e3f762ba1c27a26">set_prefixes()</a>.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Behaviour is undefined if <code>n</code> is larger than the allocated array.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6" title="Log variables to stdout. ">l()</a> </dd>
 <dd>
