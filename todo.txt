@@ -26,7 +26,6 @@ Control regexes in ground truth?
 
 Features:
 Add TypeNamer tests for const pointers, normal pointers, const references, normal references, double pointers, void pointers etc.
-Add char stringifiers
 Add specialized type name prefixes for all std classes and for some pointer types. Add tests for this.
 GL_INTERNAL macros can use an intermediate macro to reduce code duplication
 ninja instead of make
@@ -38,7 +37,9 @@ Better looking doxygen theme
 Add test of colored output
 Add c++20 concepts?
 Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
-VS code settings
+VS code build with CMake
+VS code launch binary
+VS code preferences
 VS code clang format
 github create a release
 Add c++17 std::string_view to Stringify template specializations
