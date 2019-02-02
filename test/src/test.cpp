@@ -1,5 +1,4 @@
 #include "test/test.h"
-
 #include <cstdio>
 #include <fstream>
 #include <iostream>
@@ -13,7 +12,7 @@ static const char sep =
     '\\';
 #else
     '/';
-#endif  // _WIN32
+#endif // _WIN32
 
 std::string build_input_string(const std::string& f) {
     size_t idxSep = f.find_last_of(sep);
@@ -22,9 +21,9 @@ std::string build_input_string(const std::string& f) {
         ss << "Failed to find '" << sep << "' in path '" << f << "'";
         throw std::runtime_error(ss.str());
     }
-    std::string s1 = f.substr(idxSep + 1);
-    size_t idxDot = s1.find_last_of('.');
-    std::string s2 = s1.substr(0, idxDot);
+    std::string s1     = f.substr(idxSep + 1);
+    size_t      idxDot = s1.find_last_of('.');
+    std::string s2     = s1.substr(0, idxDot);
     return std::string("tmp_") + s2 + std::string(".txt");
 }
 
@@ -35,15 +34,14 @@ std::string build_ground_truth_string(const std::string& f) {
         ss << "Failed to find '" << sep << "' in path '" << f << "'";
         throw std::runtime_error(ss.str());
     }
-    std::string s1 = f.substr(idxSep + 1);
-    size_t idxDot = s1.find_last_of('.');
-    std::string s2 = s1.substr(0, idxDot);
-    return std::string("..") + sep + "ground_truth" + sep + s2 + std::string(".txt");
+    std::string s1     = f.substr(idxSep + 1);
+    size_t      idxDot = s1.find_last_of('.');
+    std::string s2     = s1.substr(0, idxDot);
+    return std::string("..") + sep + "ground_truth" + sep + s2 +
+           std::string(".txt");
 }
 
-test::test() :
-    m_file_name(""),
-    m_stdout(nullptr) {
+test::test() : m_file_name(""), m_stdout(nullptr) {
 }
 
 test::~test() {
@@ -74,12 +72,12 @@ int test::compare_output(bool regex) {
     std::ifstream fGt(gt);
 
     if (!fOut.is_open()) {
-        std::cout << "Failed to open '" << out <<  "'" << std::endl;
+        std::cout << "Failed to open '" << out << "'" << std::endl;
         return EXIT_FAILURE;
     }
 
     if (!fGt.is_open()) {
-        std::cout << "Failed to open '" << gt <<  "'" << std::endl;
+        std::cout << "Failed to open '" << gt << "'" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -102,34 +100,34 @@ int test::compare_output(bool regex) {
 
         // Output file ended before ground truth
         if (fGt && !fOut) {
-            std::cout << "Ground truth has more lines than output at line " <<
-                         lineIdx << '\n' <<
-                         "'" << lGt <<  "'" << std::endl;
+            std::cout << "Ground truth has more lines than output at line "
+                      << lineIdx << '\n'
+                      << "'" << lGt << "'" << std::endl;
             return EXIT_FAILURE;
         }
 
         // Ground truth ended before output file
         if (!fGt && fOut) {
-            std::cout << "Output has more lines than ground truth at line " <<
-                         lineIdx << '\n' <<
-                         "'" << lOut <<  "'" << std::endl;
+            std::cout << "Output has more lines than ground truth at line "
+                      << lineIdx << '\n'
+                      << "'" << lOut << "'" << std::endl;
             return EXIT_FAILURE;
         }
 
         if (regex) {
             std::regex rx(lGt);
             if (!std::regex_match(lOut, rx)) {
-                std::cout << "Regular expression mismatch at line " <<
-                             lineIdx << '\n' <<
-                             "'" << lOut << "'\n" <<
-                             "'" << lGt << "'" << std::endl;
+                std::cout << "Regular expression mismatch at line " << lineIdx
+                          << '\n'
+                          << "'" << lOut << "'\n"
+                          << "'" << lGt << "'" << std::endl;
                 return EXIT_FAILURE;
             }
         } else {
             if (lOut != lGt) {
-                std::cout << "Mismatch at line " << lineIdx << '\n' <<
-                             "'" << lOut << "'\n" <<
-                             "'" << lGt << "'" << std::endl;
+                std::cout << "Mismatch at line " << lineIdx << '\n'
+                          << "'" << lOut << "'\n"
+                          << "'" << lGt << "'" << std::endl;
                 return EXIT_FAILURE;
             }
         }

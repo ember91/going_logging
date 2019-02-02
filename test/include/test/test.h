@@ -12,7 +12,7 @@ class test {
     test& operator=(const test&) = delete;
     virtual ~test();
     void setup(const std::string& f);
-    int compare_output(bool regex);
+    int  compare_output(bool regex);
 
   private:
     std::string     m_file_name;
@@ -20,4 +20,4 @@ class test {
     std::ofstream   m_output;
 };
 
-#endif  // INCLUDE_TEST_H_
+#endif // INCLUDE_TEST_H_

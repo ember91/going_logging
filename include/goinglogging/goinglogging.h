@@ -116,8 +116,8 @@
 #define INCLUDE_GOINGLOGGING_H_
 
 #include <chrono>
-#include <ctime>
 #include <cstring>
+#include <ctime>
 #include <iomanip>
 #include <ios>
 #include <iostream>
@@ -139,7 +139,7 @@
  *
  */
 #define GL_NEWLINE '\n'
-#endif  // GL_NEWLINE
+#endif // GL_NEWLINE
 
 /** \brief Namespace for goinglogging library  */
 namespace gl {
@@ -156,33 +156,33 @@ namespace gl {
  *
  */
 enum class prefix : uint32_t {
-    NONE      = 0,    /**< No prefix. */
-    FILE      = 1<<0, /**< File name. For example 'main.cpp'. */
-    LINE      = 1<<1, /**< Line number in file. For example 'Line: 16'. */
-    FUNCTION  = 1<<2, /**< Function name. For example 'calculate()'. */
-    TIME      = 1<<3, /**< Current local time as hour:minute:second.millisecond.
-                       *  For example '10:02:13.057'. */
-    THREAD    = 1<<4, /**< ID of current thread. For example 'TID: 12'. */
-    TYPE_NAME = 1<<5  /**< Name of type. For example 'int'. */
+    NONE     = 0,      /**< No prefix. */
+    FILE     = 1 << 0, /**< File name. For example 'main.cpp'. */
+    LINE     = 1 << 1, /**< Line number in file. For example 'Line: 16'. */
+    FUNCTION = 1 << 2, /**< Function name. For example 'calculate()'. */
+    TIME = 1 << 3, /**< Current local time as hour:minute:second.millisecond.
+                    *  For example '10:02:13.057'. */
+    THREAD    = 1 << 4, /**< ID of current thread. For example 'TID: 12'. */
+    TYPE_NAME = 1 << 5  /**< Name of type. For example 'int'. */
 };
 
 namespace internal {
 
 template<class T>
-void array(const char* var_name, const char* file_path, long file_line, const char* func,
-    const T var_val, size_t len) noexcept;
+void array(const char* var_name, const char* file_path, long file_line,
+    const char* func, const T var_val, size_t len) noexcept;
 template<class T>
-void matrix(const char* var_name, const char* file_path, long file_line, const char* func,
-    const T var_val, size_t cols, size_t rows) noexcept;
+void matrix(const char* var_name, const char* file_path, long file_line,
+    const char* func, const T var_val, size_t cols, size_t rows) noexcept;
 
-}  // namespace internal
+} // namespace internal
 
 prefix get_prefixes() noexcept;
-void set_prefixes(prefix p) noexcept;
-bool is_output_enabled() noexcept;
-void set_output_enabled(bool e) noexcept;
-bool is_color_enabled() noexcept;
-void set_color_enabled(bool e) noexcept;
+void   set_prefixes(prefix p) noexcept;
+bool   is_output_enabled() noexcept;
+void   set_output_enabled(bool e) noexcept;
+bool   is_color_enabled() noexcept;
+void   set_color_enabled(bool e) noexcept;
 
 /** \brief Bitwise \c and of logging prefix settings.
  *
@@ -194,8 +194,8 @@ void set_color_enabled(bool e) noexcept;
  *
  */
 inline prefix operator&(prefix lhs, prefix rhs) noexcept {
-    return static_cast<prefix>(static_cast<uint32_t>(lhs) &
-                               static_cast<uint32_t>(rhs));
+    return static_cast<prefix>(
+        static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
 }
 
 /** \brief Bitwise \c and of logging prefix settings.
@@ -221,8 +221,8 @@ inline prefix& operator&=(prefix& lhs, prefix rhs) noexcept {
  *
  */
 inline prefix operator|(prefix lhs, prefix rhs) noexcept {
-    return static_cast<prefix>(static_cast<uint32_t>(lhs) |
-                               static_cast<uint32_t>(rhs));
+    return static_cast<prefix>(
+        static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
 }
 
 /** \brief Bitwise \c or of logging prefix settings.
@@ -248,8 +248,8 @@ inline prefix& operator|=(prefix& lhs, prefix rhs) noexcept {
  *
  */
 inline prefix operator^(prefix lhs, prefix rhs) noexcept {
-    return static_cast<prefix>(static_cast<uint32_t>(lhs) ^
-                               static_cast<uint32_t>(rhs));
+    return static_cast<prefix>(
+        static_cast<uint32_t>(lhs) ^ static_cast<uint32_t>(rhs));
 }
 
 /** \brief Bitwise \c xor of logging prefix settings.
@@ -271,9 +271,12 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
 /** \brief Functionality in this namespace is for internal use */
 namespace internal {
 
-static prefix curPrefixes   = prefix::FILE | prefix::LINE; /**< Current prefixes */
-static bool   outputEnabled = true;  /**< \c true if output is enabled */
-static bool   colorEnabled  = false; /**< \c true if color is enabled */
+/** Current prefixes */
+static prefix curPrefixes = prefix::FILE | prefix::LINE;
+/** \c true if output is enabled */
+static bool outputEnabled = true;
+/** \c true if color is enabled */
+static bool colorEnabled = false;
 
 /** \brief Generate prefix to stream.
  *
@@ -290,12 +293,11 @@ class Prefixer {
      *
      */
     Prefixer(const char* file_path, long file_line, const char* func) noexcept :
-      m_file_path(file_path),
-      m_file_line(file_line),
-      m_func(func) {
-        }
+        m_file_path(file_path), m_file_line(file_line), m_func(func) {
+    }
 
-    friend std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept;
+    friend std::ostream& operator<<(
+        std::ostream& os, const Prefixer& p) noexcept;
 
     /** \brief Get current file path.
      *
@@ -349,16 +351,20 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
             '\\';
 #else
             '/';
-#endif  // _WIN32
+#endif // _WIN32
 
         /** File path */
         const char* path = p.get_file_path();
 
         // Get index of last file path separator
-        size_t str_len = std::strlen(path);                  /**< Length of string */
-        size_t sep_idx = std::numeric_limits<size_t>::max(); /**< File path separator index */
-        // No need to check for str_len = 0 here, since that will stop the for loop anyway
-        for (size_t i = str_len - 1; i != std::numeric_limits<size_t>::max(); --i) {
+        /** Length of string */
+        size_t str_len = std::strlen(path);
+        /** File path separator index */
+        size_t sep_idx = std::numeric_limits<size_t>::max();
+        // No need to check for str_len = 0 here, since that will stop the for
+        // loop anyway
+        for (size_t i = str_len - 1; i != std::numeric_limits<size_t>::max();
+             --i) {
             if (path[i] == sep) {
                 sep_idx = i;
                 break;
@@ -366,7 +372,9 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
         }
 
         // Output
-        os << (sep_idx == std::numeric_limits<size_t>::max() ? path : path + sep_idx + 1);
+        os << (sep_idx == std::numeric_limits<size_t>::max() ?
+                   path :
+                   path + sep_idx + 1);
 
         ++cnt;
     }
@@ -395,18 +403,19 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
     // TIME
     if ((curPrefixes & prefix::TIME) != prefix::NONE) {
         // Get time
-        auto now = std::chrono::system_clock::now();
+        auto        now        = std::chrono::system_clock::now();
         std::time_t sinceEpoch = std::chrono::system_clock::to_time_t(now);
-        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                      now.time_since_epoch()) % 1000;
+        auto        ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                      now.time_since_epoch()) %
+                  1000;
 
         std::tm* local = std::localtime(&sinceEpoch);
         if (local != nullptr) {
             if (cnt != 0) {
                 os << ", ";
             }
-            os << std::put_time(local, "%H:%M:%S") << '.' <<
-                         std::setfill('0') << std::setw(3) << ms.count();
+            os << std::put_time(local, "%H:%M:%S") << '.' << std::setfill('0')
+               << std::setw(3) << ms.count();
             ++cnt;
         }
     }
@@ -442,7 +451,8 @@ class Stringifier {
      * \param t Variable.
      *
      */
-    explicit Stringifier(T& t) noexcept : m_t(t) {}
+    explicit Stringifier(T& t) noexcept : m_t(t) {
+    }
 
     /** \brief Write to stream.
      *
@@ -453,7 +463,8 @@ class Stringifier {
      *
      */
     template<class U>
-    friend std::ostream& operator<<(std::ostream& os, const Stringifier<U>& s) noexcept;
+    friend std::ostream& operator<<(
+        std::ostream& os, const Stringifier<U>& s) noexcept;
 
     /** \brief Get variable.
      *
@@ -491,7 +502,8 @@ std::ostream& operator<<(std::ostream& os, const Stringifier<T>& s) noexcept {
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const Stringifier<char>& s) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<char>& s) noexcept {
     return os << '\'' << s.get_t() << '\'';
 }
 
@@ -504,7 +516,8 @@ std::ostream& operator<<(std::ostream& os, const Stringifier<char>& s) noexcept 
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const Stringifier<char*>& s) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<char*>& s) noexcept {
     return os << '\"' << s.get_t() << '\"';
 }
 
@@ -517,7 +530,8 @@ std::ostream& operator<<(std::ostream& os, const Stringifier<char*>& s) noexcept
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const Stringifier<const char*>& s) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<const char*>& s) noexcept {
     return os << '\"' << s.get_t() << '\"';
 }
 
@@ -530,12 +544,14 @@ std::ostream& operator<<(std::ostream& os, const Stringifier<const char*>& s) no
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const Stringifier<std::string>& s) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::string>& s) noexcept {
     return os << '\"' << s.get_t() << '\"';
 }
 
 /** \brief Create Stringifier from scratch.
- *  This solves the error "cannot refer to class template 'Stringifier' without a template argument list".
+ *  This solves the error "cannot refer to class template 'Stringifier' without
+ * a template argument list".
  *
  * \note For internal use.
  * \tparam T variable type.
@@ -562,7 +578,9 @@ class TypeNamer {
      * \param is_first \c true if first TyepNamer.
      *
      */
-    explicit TypeNamer(T& t, bool is_first) noexcept : m_t(t), m_is_first(is_first) {}
+    explicit TypeNamer(T& t, bool is_first) noexcept :
+        m_t(t), m_is_first(is_first) {
+    }
 
     /** \brief Write to stream.
      *
@@ -573,9 +591,11 @@ class TypeNamer {
      *
      */
     template<class U>
-    friend std::ostream& operator<<(std::ostream& os, const TypeNamer<U>& t) noexcept;
+    friend std::ostream& operator<<(
+        std::ostream& os, const TypeNamer<U>& t) noexcept;
 
-    /** \brief Helper function for insertion stream operator. Outputs a string if enabled.
+    /** \brief Helper function for insertion stream operator. Outputs a string
+     * if enabled.
      *
      * \param os Output stream.
      * \param s  Output string.
@@ -639,7 +659,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<T>& t) noexcept {
  *
  */
 template<class T>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<const T>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<const T>& t) noexcept {
     return t.out(os, typeid(t.get_t()).name());
 }
 
@@ -673,7 +694,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<T*>& t) noexcept {
  *
  */
 template<class T>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<const T*>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<const T*>& t) noexcept {
     if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
         T* non_const = const_cast<T*>(t.get_t());
         os << "const " << TypeNamer<T*>(non_const, false);
@@ -693,7 +715,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<const T*>& t) noexcep
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<uint8_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<uint8_t>& t) noexcept {
     return t.out(os, "uint8_t");
 }
 
@@ -706,7 +729,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<uint8_t>& t) noexcept
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<uint16_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<uint16_t>& t) noexcept {
     return t.out(os, "uint16_t");
 }
 
@@ -719,7 +743,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<uint16_t>& t) noexcep
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<uint32_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<uint32_t>& t) noexcept {
     return t.out(os, "uint32_t");
 }
 
@@ -732,7 +757,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<uint32_t>& t) noexcep
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<uint64_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<uint64_t>& t) noexcept {
     return t.out(os, "uint64_t");
 }
 
@@ -745,7 +771,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<uint64_t>& t) noexcep
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<int8_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<int8_t>& t) noexcept {
     return t.out(os, "int8_t");
 }
 
@@ -758,7 +785,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<int8_t>& t) noexcept 
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<int16_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<int16_t>& t) noexcept {
     return t.out(os, "int16_t");
 }
 
@@ -771,7 +799,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<int16_t>& t) noexcept
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<int32_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<int32_t>& t) noexcept {
     return t.out(os, "int32_t");
 }
 
@@ -784,7 +813,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<int32_t>& t) noexcept
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<int64_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<int64_t>& t) noexcept {
     return t.out(os, "int64_t");
 }
 
@@ -810,7 +840,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<float>& t) noexcept {
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<double>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<double>& t) noexcept {
     return t.out(os, "double");
 }
 
@@ -836,7 +867,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<char>& t) noexcept {
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<char16_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<char16_t>& t) noexcept {
     return t.out(os, "char16_t");
 }
 
@@ -849,7 +881,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<char16_t>& t) noexcep
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<char32_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<char32_t>& t) noexcept {
     return t.out(os, "char32_t");
 }
 
@@ -862,7 +895,8 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<char32_t>& t) noexcep
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<wchar_t>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<wchar_t>& t) noexcept {
     return t.out(os, "wchar_t");
 }
 
@@ -875,12 +909,14 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<wchar_t>& t) noexcept
  *
  */
 template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<std::string>& t) noexcept {
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<std::string>& t) noexcept {
     return t.out(os, "std::string");
 }
 
 /** \brief Create TypeNamer from scratch.
- *  This solves the error "cannot refer to class template 'TypeNamer' without a template argument list".
+ *  This solves the error "cannot refer to class template 'TypeNamer' without a
+ * template argument list".
  *
  * \note For internal use.
  * \tparam T variable type.
@@ -900,8 +936,7 @@ TypeNamer<T> type_name(T& t, bool is_first) {
  * \return Output stream.
  *
  */
-std::ostream& color_start(std::ostream& os) noexcept
-{
+std::ostream& color_start(std::ostream& os) noexcept {
     if (colorEnabled) {
         os << "\033[0;31m";
     }
@@ -915,8 +950,7 @@ std::ostream& color_start(std::ostream& os) noexcept
  * \return Output stream.
  *
  */
-std::ostream& color_end(std::ostream& os) noexcept
-{
+std::ostream& color_end(std::ostream& os) noexcept {
     if (colorEnabled) {
         os << "\033[0m";
     }
@@ -937,11 +971,10 @@ std::ostream& color_end(std::ostream& os) noexcept
  */
 template<class T>
 void array(const char* var_name, const char* file_path, long file_line,
-           const char* func, const T var_val, size_t len) noexcept {
+    const char* func, const T var_val, size_t len) noexcept {
     if (outputEnabled) {
-        std::cout << color_start <<
-                     Prefixer(file_path, file_line, func) <<
-                     type_name(var_val, true) << var_name << " = {";
+        std::cout << color_start << Prefixer(file_path, file_line, func)
+                  << type_name(var_val, true) << var_name << " = {";
         // Print first object without comma
         if (len > 0)
             std::cout << stringify(var_val[0]);
@@ -968,22 +1001,23 @@ void array(const char* var_name, const char* file_path, long file_line,
  */
 template<class T>
 void matrix(const char* var_name, const char* file_path, long file_line,
-            const char* func, const T var_val, size_t cols, size_t rows) noexcept {
+    const char* func, const T var_val, size_t cols, size_t rows) noexcept {
     if (outputEnabled) {
-        std::cout << color_start <<
-                     Prefixer(file_path, file_line, func) <<
-                     type_name(var_val, true) << var_name << ": ";
+        std::cout << color_start << Prefixer(file_path, file_line, func)
+                  << type_name(var_val, true) << var_name << ": ";
         if (cols <= 0 || rows <= 0) {
             std::cout << "{}";
         } else {
             std::cout << "[0,0] = " << stringify(var_val[0][0]);
             for (size_t j = 1; j < cols; ++j) {
-                std::cout << ", " << "[0," << j << "] = " << stringify(var_val[0][j]);
+                std::cout << ", "
+                          << "[0," << j << "] = " << stringify(var_val[0][j]);
             }
             for (size_t i = 1; i < rows; ++i) {
                 for (size_t j = 0; j < cols; ++j) {
-                    std::cout << ", " << "[" << i << ',' << j << "] = " <<
-                                 stringify(var_val[i][j]);
+                    std::cout << ", "
+                              << "[" << i << ',' << j
+                              << "] = " << stringify(var_val[i][j]);
                 }
             }
         }
@@ -991,9 +1025,9 @@ void matrix(const char* var_name, const char* file_path, long file_line,
     }
 }
 
-}  // namespace internal
+} // namespace internal
 
-#endif  // DOXYGEN_HIDDEN
+#endif // DOXYGEN_HIDDEN
 
 /** \brief Get prefixes of logging output.
  *
@@ -1095,32 +1129,35 @@ bool is_color_enabled() noexcept {
  * \sa l_arr() \sa l_mat() \sa set_prefixes().
  *
  */
-#define l(...) do { \
-    if (gl::internal::outputEnabled) { \
-        std::cout << gl::internal::color_start << \
-                     gl::internal::Prefixer(__FILE__, __LINE__, __func__) << \
-                     GL_INTERNAL_GET_MACRO(__VA_ARGS__, GL_INTERNAL_L16, GL_INTERNAL_L15, \
-                         GL_INTERNAL_L14, GL_INTERNAL_L13, GL_INTERNAL_L12, GL_INTERNAL_L11, \
-                         GL_INTERNAL_L10, GL_INTERNAL_L9, GL_INTERNAL_L8, GL_INTERNAL_L7, \
-                         GL_INTERNAL_L6, GL_INTERNAL_L5, GL_INTERNAL_L4, GL_INTERNAL_L3, \
-                         GL_INTERNAL_L2, GL_INTERNAL_L1,)(__VA_ARGS__) << \
-                     gl::internal::color_end << (GL_NEWLINE); \
-    } \
-} while (false)
+#define l(...)                                                                 \
+    do {                                                                       \
+        if (gl::internal::outputEnabled) {                                     \
+            std::cout << gl::internal::color_start                             \
+                      << gl::internal::Prefixer(__FILE__, __LINE__, __func__)  \
+                      << GL_INTERNAL_GET_MACRO(__VA_ARGS__, GL_INTERNAL_L16,   \
+                             GL_INTERNAL_L15, GL_INTERNAL_L14,                 \
+                             GL_INTERNAL_L13, GL_INTERNAL_L12,                 \
+                             GL_INTERNAL_L11, GL_INTERNAL_L10, GL_INTERNAL_L9, \
+                             GL_INTERNAL_L8, GL_INTERNAL_L7, GL_INTERNAL_L6,   \
+                             GL_INTERNAL_L5, GL_INTERNAL_L4, GL_INTERNAL_L3,   \
+                             GL_INTERNAL_L2, GL_INTERNAL_L1, )(__VA_ARGS__)    \
+                      << gl::internal::color_end << (GL_NEWLINE);              \
+        }                                                                      \
+    } while (false)
 
 #ifndef DOXYGEN_HIDDEN
 
 #define GL_INTERNAL_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
-    _12, _13, _14, _15, _16, NAME, ...) NAME
+    _12, _13, _14, _15, _16, NAME, ...)                                     \
+    NAME
 
-#define GL_INTERNAL_LX(v) \
-    gl::internal::type_name((v), true) << (#v) << " = " << gl::internal::stringify((v))
+#define GL_INTERNAL_LX(v)              \
+    gl::internal::type_name((v), true) \
+        << (#v) << " = " << gl::internal::stringify((v))
 
-#define GL_INTERNAL_L1(v1) \
-    GL_INTERNAL_LX(v1)
+#define GL_INTERNAL_L1(v1) GL_INTERNAL_LX(v1)
 
-#define GL_INTERNAL_L2(v1, v2) \
-    GL_INTERNAL_L1(v1) << ", " << GL_INTERNAL_LX(v2)
+#define GL_INTERNAL_L2(v1, v2) GL_INTERNAL_L1(v1) << ", " << GL_INTERNAL_LX(v2)
 
 #define GL_INTERNAL_L3(v1, v2, v3) \
     GL_INTERNAL_L2(v1, v2) << ", " << GL_INTERNAL_LX(v3)
@@ -1141,44 +1178,43 @@ bool is_color_enabled() noexcept {
     GL_INTERNAL_L7(v1, v2, v3, v4, v5, v6, v7) << ", " << GL_INTERNAL_LX(v8)
 
 #define GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9) \
-    GL_INTERNAL_L8(v1, v2, v3, v4, v5, v6, v7, v8) << \
-        ", " << GL_INTERNAL_LX(v9)
+    GL_INTERNAL_L8(v1, v2, v3, v4, v5, v6, v7, v8) << ", " << GL_INTERNAL_LX(v9)
 
 #define GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) \
-    GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9) << \
-        ", " << GL_INTERNAL_LX(v10)
+    GL_INTERNAL_L9(v1, v2, v3, v4, v5, v6, v7, v8, v9)           \
+        << ", " << GL_INTERNAL_LX(v10)
 
 #define GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) \
-    GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) << \
-        ", " << GL_INTERNAL_LX(v11)
+    GL_INTERNAL_L10(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10)          \
+        << ", " << GL_INTERNAL_LX(v11)
 
 #define GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
-    GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) << \
-        ", " << GL_INTERNAL_LX(v12)
+    GL_INTERNAL_L11(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11)          \
+        << ", " << GL_INTERNAL_LX(v12)
 
-#define GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
-                       v13) \
-    GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) << \
-        ", " << GL_INTERNAL_LX(v13)
+#define GL_INTERNAL_L13(                                               \
+    v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13)            \
+    GL_INTERNAL_L12(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) \
+        << ", " << GL_INTERNAL_LX(v13)
 
-#define GL_INTERNAL_L14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
-                       v13, v14) \
-    GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) << \
-        ", " << GL_INTERNAL_LX(v14)
+#define GL_INTERNAL_L14(                                                    \
+    v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14)            \
+    GL_INTERNAL_L13(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) \
+        << ", " << GL_INTERNAL_LX(v14)
 
-#define GL_INTERNAL_L15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
-                       v13, v14, v15) \
-    GL_INTERNAL_L14(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
-                   v14) << \
-        ", " << GL_INTERNAL_LX(v15)
+#define GL_INTERNAL_L15(                                              \
+    v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15) \
+    GL_INTERNAL_L14(                                                  \
+        v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14)  \
+        << ", " << GL_INTERNAL_LX(v15)
 
-#define GL_INTERNAL_L16(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, \
-                       v13, v14, v15, v16) \
-    GL_INTERNAL_L15(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, \
-                   v14, v15) << \
-        ", " << GL_INTERNAL_LX(v16)
+#define GL_INTERNAL_L16(                                                   \
+    v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16) \
+    GL_INTERNAL_L15(                                                       \
+        v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15)  \
+        << ", " << GL_INTERNAL_LX(v16)
 
-#endif  // DOXYGEN_HIDDEN
+#endif // DOXYGEN_HIDDEN
 
 /** \brief Log array to stdout.
  *
@@ -1203,8 +1239,8 @@ bool is_color_enabled() noexcept {
  * \sa l() \sa l_mat() \sa set_prefixes()
  *
  */
-#define l_arr(v, len) \
-    do { \
+#define l_arr(v, len)                                                        \
+    do {                                                                     \
         gl::internal::array((#v), __FILE__, __LINE__, __func__, (v), (len)); \
     } while (false)
 
@@ -1233,12 +1269,12 @@ bool is_color_enabled() noexcept {
  * \sa l() \sa l_arr() \sa set_prefixes()
  *
  */
-#define l_mat(m, cols, rows) \
-    do { \
-        gl::internal::matrix((#m), __FILE__, __LINE__, __func__, (m), (cols), \
-                             (rows)); \
+#define l_mat(m, cols, rows)                                          \
+    do {                                                              \
+        gl::internal::matrix(                                         \
+            (#m), __FILE__, __LINE__, __func__, (m), (cols), (rows)); \
     } while (false)
 
 } // namespace gl
 
-#endif  // INCLUDE_GOINGLOGGING_H_
+#endif // INCLUDE_GOINGLOGGING_H_

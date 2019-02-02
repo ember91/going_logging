@@ -1,8 +1,7 @@
-#include <iostream>
-#include <ostream>
-
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
+#include <iostream>
+#include <ostream>
 
 int main(int argc, const char** argv) {
     if (argc != 1) {
@@ -39,4 +38,3 @@ int main(int argc, const char** argv) {
 
     return t.compare_output(false);
 }
-

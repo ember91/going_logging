@@ -27,4 +27,3 @@ int main(int argc, const char** argv) {
 
     return t.compare_output(false);
 }
-

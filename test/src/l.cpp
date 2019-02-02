@@ -1,13 +1,12 @@
+#include "goinglogging/goinglogging.h"
+#include "test/test.h"
 #include <iostream>
 #include <ostream>
 #include <string>
 
-#include "goinglogging/goinglogging.h"
-#include "test/test.h"
-
 /** Test outputting a class by overriding the << operator */
 class TestOp {
- public:
+  public:
     friend std::ostream& operator<<(std::ostream& out, const TestOp& t);
 };
 

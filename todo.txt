@@ -40,6 +40,5 @@ Redirect all logging to a configurable stream. Make the disable functionality re
 VS code build with CMake
 VS code launch binary
 VS code preferences
-VS code clang format
 github create a release
 Add c++17 std::string_view to Stringify template specializations

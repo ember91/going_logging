@@ -8,8 +8,8 @@
 #include <vector>
 
 std::vector<std::string> get_file_names(const std::string& d) {
-    DIR* dir;
-    struct dirent* ent;
+    DIR*                     dir;
+    struct dirent*           ent;
     std::vector<std::string> rv;
     if ((dir = opendir(d.c_str())) != nullptr) {
         while ((ent = readdir(dir)) != nullptr) {
@@ -32,14 +32,14 @@ int main(int argc, const char** argv) {
     }
 
     std::string path(*argv);
-    const char sep =
+    const char  sep =
 #ifdef _WIN32
         '\\';
 #else
         '/';
 #endif
 
-    size_t idx = path.find_last_of(sep);
+    size_t      idx = path.find_last_of(sep);
     std::string file;
     std::string dir;
     if (idx == std::string::npos) {
