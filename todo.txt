@@ -23,6 +23,7 @@ Don't convert between const char* and std::string too much
 Don't use C-style comments
 Ensure parameters are in a good order
 Control regexes in ground truth?
+Include what's used but nothing more
 
 Features:
 Add TypeNamer tests for const pointers, normal pointers, const references, normal references, double pointers, void pointers etc.

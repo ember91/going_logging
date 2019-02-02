@@ -117,6 +117,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <cstring>
 #include <iomanip>
 #include <ios>
 #include <iostream>
@@ -350,15 +351,22 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
             '/';
 #endif  // _WIN32
 
-        // Convert to std::string
-        // TODO: This is unnecessary. Search for separator instead. Add separator index to file_path.
-        std::string file(p.get_file_path());
+        /** File path */
+        const char* path = p.get_file_path();
 
-        // Start index of file name
-        size_t idx = file.find_last_of(sep);
+        // Get index of last file path separator
+        size_t str_len = std::strlen(path);                  /**< Length of string */
+        size_t sep_idx = std::numeric_limits<size_t>::max(); /**< File path separator index */
+        // No need to check for str_len = 0 here, since that will stop the for loop anyway
+        for (size_t i = str_len - 1; i != std::numeric_limits<size_t>::max(); --i) {
+            if (path[i] == sep) {
+                sep_idx = i;
+                break;
+            }
+        }
 
         // Output
-        os << (idx == std::string::npos ? file : file.substr(idx + 1));
+        os << (sep_idx == std::numeric_limits<size_t>::max() ? path : path + sep_idx + 1);
 
         ++cnt;
     }
