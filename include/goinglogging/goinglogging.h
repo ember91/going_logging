@@ -158,7 +158,7 @@
  */
 #define l(...)                                                                 \
     do {                                                                       \
-        if (gl::internal::outputEnabled) {                                     \
+        if (::gl::internal::outputEnabled) {                                   \
             std::cout << gl::internal::color_start                             \
                       << gl::internal::PrefixFormatter(                        \
                              __FILE__, __LINE__, __func__)                     \
@@ -199,10 +199,10 @@
  * \sa l() \sa l_mat() \sa set_prefixes()
  *
  */
-#define l_arr(v, len)                                                     \
-    do {                                                                  \
-        std::cout << gl::internal::make_array((#v), (v), (len),           \
-            gl::internal::PrefixFormatter(__FILE__, __LINE__, __func__)); \
+#define l_arr(v, len)                                                       \
+    do {                                                                    \
+        std::cout << ::gl::internal::make_array((#v), (v), (len),           \
+            ::gl::internal::PrefixFormatter(__FILE__, __LINE__, __func__)); \
     } while (false)
 
 /** \brief Log matrix.
@@ -232,10 +232,10 @@
  * \sa l() \sa l_arr() \sa set_prefixes()
  *
  */
-#define l_mat(m, cols, rows)                                              \
-    do {                                                                  \
-        std::cout << gl::internal::make_matrix((#m), (m), (cols), (rows), \
-            gl::internal::PrefixFormatter(__FILE__, __LINE__, __func__)); \
+#define l_mat(m, cols, rows)                                                \
+    do {                                                                    \
+        std::cout << ::gl::internal::make_matrix((#m), (m), (cols), (rows), \
+            ::gl::internal::PrefixFormatter(__FILE__, __LINE__, __func__)); \
     } while (false)
 
 #ifndef GL_NEWLINE
@@ -1386,8 +1386,9 @@ bool is_color_enabled() noexcept {
     NAME
 
 /** \brief Output variable name and value. */
-#define GL_INTERNAL_LX(v) \
-    gl::internal::type_name << (#v) << " = " << gl::internal::format_value((v))
+#define GL_INTERNAL_LX(v)                    \
+    gl::internal::type_name << (#v) << " = " \
+                            << ::gl::internal::format_value((v))
 
 #define GL_INTERNAL_L1(v1) GL_INTERNAL_LX(v1)
 

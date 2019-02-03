@@ -13,7 +13,6 @@
 * Check limit of 80 characters
 * Ensure classes are PascalCase, variables camelCase and functions snake_case
 * Inline functions in classes?
-* Change name of of macros to GL_INTERNAL
 * Ensure one character c-strings use single quotes
 * Ensure almost no usage of std::cout
 * Use ::gl::internal instead of gl::internal
