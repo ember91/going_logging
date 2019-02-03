@@ -480,7 +480,7 @@ class Stringifier {
     T& m_t; /**< Variable to stringify. */
 };
 
-/** \brief General Stringifier output function.
+/** \brief General Stringifier output.
  *
  * \note For internal use.
  * \tparam T Variable type.
@@ -494,7 +494,7 @@ std::ostream& operator<<(std::ostream& os, const Stringifier<T>& s) noexcept {
     return os << s.get_t();
 }
 
-/** \brief Stringifier bool specialized output function.
+/** \brief Stringifier bool specialized output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -511,7 +511,7 @@ std::ostream& operator<<(
 // 3.9.1 in C++ standard: Plain char, signed char, and unsigned char are three
 // distinct types
 
-/** \brief Stringifier unsigned char specialized output function.
+/** \brief Stringifier unsigned char specialized output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -525,7 +525,7 @@ std::ostream& operator<<(
     return os << '\'' << s.get_t() << '\'';
 }
 
-/** \brief Stringifier unsigned char specialized output function.
+/** \brief Stringifier unsigned char specialized output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -539,7 +539,7 @@ std::ostream& operator<<(
     return os << '\'' << s.get_t() << '\'';
 }
 
-/** \brief Stringifier signed char specialized output function.
+/** \brief Stringifier signed char specialized output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -553,7 +553,7 @@ std::ostream& operator<<(
     return os << '\'' << s.get_t() << '\'';
 }
 
-/** \brief Stringifier C string specialized output function.
+/** \brief Stringifier C string specialized output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -567,7 +567,7 @@ std::ostream& operator<<(
     return os << '\"' << s.get_t() << '\"';
 }
 
-/** \brief Stringifier C string specialized output function.
+/** \brief Stringifier C string specialized output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -581,7 +581,7 @@ std::ostream& operator<<(
     return os << '\"' << s.get_t() << '\"';
 }
 
-/** \brief Stringifier C++ string specialized output function.
+/** \brief Stringifier C++ string specialized output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -621,7 +621,7 @@ class TypeNamer {
     /** \brief Create object with variable.
      *
      * \param t        Variable.
-     * \param is_first \c true if first TyepNamer.
+     * \param is_first \c true if first TypeNamer.
      *
      */
     explicit TypeNamer(T& t, bool is_first) noexcept :
@@ -681,7 +681,7 @@ class TypeNamer {
     bool m_is_first; /**< \c true if first TypeNamer */
 };
 
-/** \brief General TypeNamer output function.
+/** \brief General TypeNamer output.
  *
  * \note For internal use.
  * \tparam T Variable type.
@@ -695,7 +695,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<T>& t) noexcept {
     return t.out(os, typeid(t.get_t()).name());
 }
 
-/** \brief General TypeNamer output function.
+/** \brief General TypeNamer output.
  *
  * \note For internal use.
  * \tparam T Variable type.
@@ -710,7 +710,7 @@ std::ostream& operator<<(
     return t.out(os, typeid(t.get_t()).name());
 }
 
-/** \brief Pointer TypeNamer output function.
+/** \brief Pointer TypeNamer output.
  *
  * \note For internal use.
  * \tparam T Variable type.
@@ -730,7 +730,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<T*>& t) noexcept {
     return os;
 }
 
-/** \brief Const pointer TypeNamer output function.
+/** \brief Const pointer TypeNamer output.
  *
  * \note For internal use.
  * \tparam T Variable type.
@@ -752,7 +752,7 @@ std::ostream& operator<<(
     return os;
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -765,7 +765,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<bool>& t) noexcept {
     return t.out(os, "bool");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -779,7 +779,7 @@ std::ostream& operator<<(
     return t.out(os, "unsigned char");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -793,7 +793,7 @@ std::ostream& operator<<(
     return t.out(os, "signed char");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -806,7 +806,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<char>& t) noexcept {
     return t.out(os, "char");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -820,7 +820,7 @@ std::ostream& operator<<(
     return t.out(os, "uint16_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -834,7 +834,7 @@ std::ostream& operator<<(
     return t.out(os, "uint32_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -848,7 +848,7 @@ std::ostream& operator<<(
     return t.out(os, "uint64_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -862,7 +862,7 @@ std::ostream& operator<<(
     return t.out(os, "int16_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -876,7 +876,7 @@ std::ostream& operator<<(
     return t.out(os, "int32_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -890,7 +890,7 @@ std::ostream& operator<<(
     return t.out(os, "int64_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -903,7 +903,7 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<float>& t) noexcept {
     return t.out(os, "float");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -917,7 +917,7 @@ std::ostream& operator<<(
     return t.out(os, "double");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -931,7 +931,7 @@ std::ostream& operator<<(
     return t.out(os, "char16_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -945,7 +945,7 @@ std::ostream& operator<<(
     return t.out(os, "char32_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -959,7 +959,7 @@ std::ostream& operator<<(
     return t.out(os, "wchar_t");
 }
 
-/** \brief Specialized TypeNamer output function.
+/** \brief Specialized TypeNamer output.
  *
  * \note For internal use.
  * \param os Output stream.
