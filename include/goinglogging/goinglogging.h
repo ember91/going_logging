@@ -812,6 +812,8 @@ std::ostream& operator<<(
 
 /** \brief Format std::array.
  *
+ * \tparam U Value type.
+ * \tparam N Number of elements.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -825,6 +827,7 @@ std::ostream& operator<<(
 
 /** \brief Format std::vector.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -838,6 +841,7 @@ std::ostream& operator<<(
 
 /** \brief Format std::deque.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -851,6 +855,7 @@ std::ostream& operator<<(
 
 /** \brief Format std::forward_list.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -864,6 +869,7 @@ std::ostream& operator<<(
 
 /** \brief Format std::list.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -877,6 +883,7 @@ std::ostream& operator<<(
 
 /** \brief Format std::set.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -890,6 +897,8 @@ std::ostream& operator<<(
 
 /** \brief Format std::map.
  *
+ * \tparam U Key type.
+ * \tparam V Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -903,6 +912,7 @@ std::ostream& operator<<(
 
 /** \brief Format std::multiset.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -916,6 +926,8 @@ std::ostream& operator<<(
 
 /** \brief Format std::multimap.
  *
+ * \tparam U Key type.
+ * \tparam V Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -929,6 +941,7 @@ std::ostream& operator<<(
 
 /** \brief Format std::unordered_set.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -942,6 +955,8 @@ std::ostream& operator<<(
 
 /** \brief Format std::unordered_map.
  *
+ * \tparam U Key type.
+ * \tparam V Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -955,6 +970,7 @@ std::ostream& operator<<(std::ostream&              os,
 
 /** \brief Format std::unordered_multiset.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -968,6 +984,8 @@ std::ostream& operator<<(std::ostream&                os,
 
 /** \brief Format std::unordered_multimap.
  *
+ * \tparam U Key type.
+ * \tparam V Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -981,6 +999,7 @@ std::ostream& operator<<(std::ostream&                   os,
 
 /** \brief Format std::stack.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -994,6 +1013,7 @@ std::ostream& operator<<(
 
 /** \brief Format std::queue.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -1006,8 +1026,8 @@ std::ostream& operator<<(
 }
 
 /** \brief Format std::priority_queue.
- * output.
  *
+ * \tparam U Value type.
  * \param os Output stream.
  * \param s  ValueFormatter.
  * \return Output stream.
@@ -1122,7 +1142,7 @@ class Array {
 
 /** \brief Write Array to stream.
  *
- * \tparam U Element type.
+ * \tparam U Value type.
  * \param os Output stream.
  * \param a  Array.
  * \return Output stream.
@@ -1151,7 +1171,7 @@ std::ostream& operator<<(std::ostream& os, const Array<U>& a) noexcept {
  *  This solves the error "cannot refer to class template 'Array' without a
  * template argument list".
  *
- * \tparam T Element type.
+ * \tparam T Value type.
  * \param name      Name.
  * \param val       Values.
  * \param len       Number of values.
@@ -1167,7 +1187,7 @@ Array<T> make_array(
 
 /** \brief Matrix.
  *
- * \tparam T Element type.
+ * \tparam T Value type.
  *
  */
 template<class T>
@@ -1275,7 +1295,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix<U>& m) noexcept {
  *  This solves the error "cannot refer to class template 'Matrix' without a
  * template argument list".
  *
- * \tparam T Element type.
+ * \tparam T Value type.
  * \param name      Name.
  * \param val       Values.
  * \param cols      Number of columns.

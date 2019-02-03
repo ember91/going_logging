@@ -4,8 +4,8 @@
 * Compile with all warnings enabled
 * Run static analysis
 * Run valgrind
-* Add noexcept, const, constepxr, explicit to functions.
-* Add const to parameters and members where applicable.
+* Add noexcept, const, constepxr, explicit to functions
+* Add const to parameters and members where applicable
 * No tabs
 * Test on Windows
 * Clean up CMakeLists.txt
@@ -25,11 +25,9 @@
 * Control regexes in ground truth?
 * Include what's used but nothing more
 * Neither getterrs nor setters should use \brief
-* Fix naming of Arrayifier, Matrixifier etc.
-* Ensure template parameters are documented.
-* Remove type data_type information
-* Make functions static that can be static
-* Use C++11 functions
+* Ensure template parameters are documented with \tparam
+* Make functions that can be static static
+* Use C++11 functionality
 
 # Features
 
