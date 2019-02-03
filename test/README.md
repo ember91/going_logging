@@ -4,7 +4,7 @@ Test framework for **goinglogging**.
 ## Requirements
 CMake
 C++11 compiler, e.g. clang
-Build tool, e.g. make
+Build tool, e.g. ninja
 doxygen (optional)
 
 ## Build
@@ -12,7 +12,7 @@ doxygen (optional)
 mkdir build
 cd build
 cmake ..
-make -j 4
+ninja
 ```
 
 ## Run
