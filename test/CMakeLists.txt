@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
 project(goinglogging_test)
 
+message(STATUS "Generator: ${CMAKE_GENERATOR}")
+
 find_program(
     CLANG_TIDY_EXE
     NAMES "clang-tidy"

@@ -31,7 +31,6 @@ Features:
 FIRA code
 Add TypeNamer tests for const pointers, normal pointers, const references, normal references, double pointers, void pointers etc.
 Add specialized type name prefixes for all std classes and for some pointer types. Add tests for this.
-ninja instead of make
 Add problem description (printf("i = %s\n"); vs l(i);)
 Add Stringify support for types in std, such as std::vector
 Run doxygen in cmake
