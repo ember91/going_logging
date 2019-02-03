@@ -136,6 +136,108 @@
 #include <unordered_set>
 #include <vector>
 
+/** \brief Log variables.
+ *
+ * Use as:
+ * \code
+ * int i = 1;
+ * l(i);
+ * std::string s("s");
+ * l(i, s);
+ * \endcode
+ * Which outputs:
+ * \code
+ * i = 1, s = "s"
+ * \endcode
+ *
+ * \note Supports up to 16 variables as parameters.
+ * \note Uses prefix information set with \ref set_prefixes().
+ *
+ * \sa l_arr() \sa l_mat() \sa set_prefixes()
+ *
+ */
+#define l(...)                                                                 \
+    do {                                                                       \
+        if (gl::internal::outputEnabled) {                                     \
+            std::cout << gl::internal::color_start                             \
+                      << gl::internal::PrefixFormatter(                        \
+                             __FILE__, __LINE__, __func__)                     \
+                      << GL_INTERNAL_L_DISPATCH(__VA_ARGS__, GL_INTERNAL_L16,  \
+                             GL_INTERNAL_L15, GL_INTERNAL_L14,                 \
+                             GL_INTERNAL_L13, GL_INTERNAL_L12,                 \
+                             GL_INTERNAL_L11, GL_INTERNAL_L10, GL_INTERNAL_L9, \
+                             GL_INTERNAL_L8, GL_INTERNAL_L7, GL_INTERNAL_L6,   \
+                             GL_INTERNAL_L5, GL_INTERNAL_L4, GL_INTERNAL_L3,   \
+                             GL_INTERNAL_L2, GL_INTERNAL_L1, )(__VA_ARGS__)    \
+                      << gl::internal::color_end << (GL_NEWLINE);              \
+        }                                                                      \
+    } while (false)
+
+/** \brief Log array.
+ *
+ * \param v   Array to print [\p len].
+ * \param len Number of elements.
+ *
+ * Used as:
+ * \code
+ * int a[] = {0, 1, 2};
+ * l_arr(a, 3);
+ * \endcode
+ *
+ * Which outputs:
+ * \code
+ * a = {0, 1, 2}
+ * \endcode
+ *
+ * \note Uses prefix information set with \ref set_prefixes().
+ * \note Unlike \ref l(), this does not support multiple varaibles as
+ * parameters.
+ *
+ * \warning Behaviour is undefined if \p len is larger than the
+ * allocated array.
+ *
+ * \sa l() \sa l_mat() \sa set_prefixes()
+ *
+ */
+#define l_arr(v, len)                                                     \
+    do {                                                                  \
+        std::cout << gl::internal::make_array((#v), (v), (len),           \
+            gl::internal::PrefixFormatter(__FILE__, __LINE__, __func__)); \
+    } while (false)
+
+/** \brief Log matrix.
+ *
+ * \param m    Matrix to print [\p rows x \p cols].
+ * \param cols Number of columns in matrix.
+ * \param rows Number of rows in matrix.
+ *
+ * Used as:
+ * \code
+ * int m[][] = {{11, 12}, {21, 22}};
+ * l_mat(m, 2, 2);
+ * \endcode
+ *
+ * Which outputs:
+ * \code
+ * m: [0,0] = 11, [0,1] = 12, [1,0] = 21, [1,1] = 22
+ * \endcode
+ *
+ * \note Uses prefix information set with \ref set_prefixes()
+ * \note Unlike \ref l(), this does not support multiple variables
+ * as parameters.
+ *
+ * \warning Behaviour is undefined if \p c or \p r is larger than
+ * the allocated matrix.
+ *
+ * \sa l() \sa l_arr() \sa set_prefixes()
+ *
+ */
+#define l_mat(m, cols, rows)                                              \
+    do {                                                                  \
+        std::cout << gl::internal::make_matrix((#m), (m), (cols), (rows), \
+            gl::internal::PrefixFormatter(__FILE__, __LINE__, __func__)); \
+    } while (false)
+
 #ifndef GL_NEWLINE
 /** \brief Newline character to use after each logging message.
  *
@@ -148,11 +250,13 @@
  *
  * \note Defaults to \\n, i.e. no flushing.
  *
+ * \sa l() \sa l_arr() \sa l_mat()
+ *
  */
 #define GL_NEWLINE '\n'
 #endif // GL_NEWLINE
 
-/** \brief Namespace for goinglogging library  */
+/** \brief goinglogging namespace. */
 namespace gl {
 
 /** \brief Prefix of logging output.
@@ -163,27 +267,22 @@ namespace gl {
  * \endcode
  * Bitwise \c and as well as \c xor are also supported.
  *
- * \sa set_prefix()
+ * \sa set_prefixes() \sa get_prefixes()
  *
  */
 enum class prefix : uint32_t {
-    NONE     = 0,      /**< No prefix. */
-    FILE     = 1 << 0, /**< File name. For example 'main.cpp'. */
-    LINE     = 1 << 1, /**< Line number in file. For example 'Line: 16'. */
+    NONE = 0,          /**< No prefix. */
+    FILE = 1 << 0,     /**< File name. For example 'main.cpp'. */
+    LINE = 1 << 1,     /**< Line number in file. For example 'Line:
+                          16'. */
     FUNCTION = 1 << 2, /**< Function name. For example 'calculate()'. */
-    TIME = 1 << 3, /**< Current local time as hour:minute:second.millisecond.
-                    *  For example '10:02:13.057'. */
-    THREAD    = 1 << 4, /**< ID of current thread. For example 'TID: 12'. */
-    TYPE_NAME = 1 << 5  /**< Name of type. For example 'int'. */
+    TIME     = 1 << 3, /**< Current local time as
+                        * hour:minute:second.millisecond.
+                        *  For example '10:02:13.057'. */
+    THREAD = 1 << 4,   /**< ID of current thread. For example
+                          'TID:   12'. */
+    TYPE_NAME = 1 << 5 /**< Name of type. For example 'int'. */
 };
-
-// Forward delarations
-prefix get_prefixes() noexcept;
-void   set_prefixes(prefix p) noexcept;
-bool   is_output_enabled() noexcept;
-void   set_output_enabled(bool e) noexcept;
-bool   is_color_enabled() noexcept;
-void   set_color_enabled(bool e) noexcept;
 
 /** \brief Bitwise \c and of logging prefix settings.
  *
@@ -269,82 +368,77 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
 /** \brief Hide this section from doxygen */
 #ifndef DOXYGEN_HIDDEN
 
-/** \brief Functionality in this namespace is for internal use */
+/** \brief Functionality in this namespace is for internal use
+ */
 namespace internal {
 
 /** Current prefixes */
 static prefix curPrefixes = prefix::FILE | prefix::LINE;
 /** \c true if output is enabled */
 static bool outputEnabled = true;
-/** \c true if color is enabled */
+/** \c true if colored output is enabled */
 static bool colorEnabled = false;
 
-/** \brief Generate prefix to stream.
- *
- */
-class Prefixer {
+/** \brief Prefix formatter. */
+class PrefixFormatter {
   public:
-    /** \brief Create.
+    /** \brief Construct.
      *
      * \param file_path File path including name.
      * \param file_line Line number in file.
      * \param func      Function name.
      *
      */
-    Prefixer(const char* file_path, long file_line, const char* func) noexcept :
-        m_file_path(file_path), m_file_line(file_line), m_func(func) {
+    PrefixFormatter(
+        const char* file_path, long file_line, const char* func) noexcept :
+        m_file_path(file_path),
+        m_file_line(file_line), m_func(func) {
     }
 
     friend std::ostream& operator<<(
-        std::ostream& os, const Prefixer& p) noexcept;
+        std::ostream& os, const PrefixFormatter& p) noexcept;
 
-    /** \brief Get current file path.
-     *
-     * \return Current file path.
-     *
+    /**
+     * \return File path including name.
      */
     const char* get_file_path() const noexcept {
         return m_file_path;
     }
 
-    /** \brief Get current line number in file.
-     *
-     * \return Current line number in file.
-     *
+    /**
+     * \return Line number in file.
      */
     long get_file_line_number() const noexcept {
         return m_file_line;
     }
 
-    /** \brief Get current function name.
-     *
-     * \return Current function name.
-     *
+    /**
+     * \return Function name.
      */
     const char* get_function_name() const noexcept {
         return m_func;
     }
 
   private:
-    const char* m_file_path; /**< File path including name */
-    const long  m_file_line; /**< Line number in file */
-    const char* m_func;      /**< Function name */
+    const char* m_file_path; /**< File path including name. */
+    const long  m_file_line; /**< Line number in file. */
+    const char* m_func;      /**< Function name. */
 };
 
 /** \brief Write to stream.
  *
  * \param os Output stream.
- * \param p  Object to output.
+ * \param p  PrefixFormatter to output.
  * \return Output stream.
  *
  */
-std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
+std::ostream& operator<<(std::ostream& os, const PrefixFormatter& p) noexcept {
     /** Number of prefixes written */
     uint32_t cnt = 0;
 
     // FILE
     if ((curPrefixes & prefix::FILE) != prefix::NONE) {
-        // Path separator
+        /** Platform dependent path separator */
         const char sep =
 #ifdef _WIN32
             '\\';
@@ -360,8 +454,8 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
         size_t str_len = std::strlen(path);
         /** File path separator index */
         size_t sep_idx = std::numeric_limits<size_t>::max();
-        // No need to check for str_len = 0 here, since that will stop the for
-        // loop anyway
+        // No need to check for str_len = 0 here, since that
+        // will stop the for loop anyway
         for (size_t i = str_len - 1; i != std::numeric_limits<size_t>::max();
              --i) {
             if (path[i] == sep) {
@@ -380,6 +474,8 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
 
     // LINE
     if ((curPrefixes & prefix::LINE) != prefix::NONE) {
+        // Output 'Line' prefix only if file name has not been
+        // output
         if (cnt == 0) {
             os << "Line: ";
         } else {
@@ -402,17 +498,20 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
     // TIME
     if ((curPrefixes & prefix::TIME) != prefix::NONE) {
         // Get time
-        auto        now        = std::chrono::system_clock::now();
+        auto now = std::chrono::system_clock::now();
+
+        // Convert
         std::time_t sinceEpoch = std::chrono::system_clock::to_time_t(now);
         auto        ms = std::chrono::duration_cast<std::chrono::milliseconds>(
                       now.time_since_epoch()) %
                   1000;
-
         std::tm* local = std::localtime(&sinceEpoch);
+
         if (local != nullptr) {
             if (cnt != 0) {
                 os << ", ";
             }
+            // Format and output
             os << std::put_time(local, "%H:%M:%S") << '.' << std::setfill('0')
                << std::setw(3) << ms.count();
             ++cnt;
@@ -436,266 +535,261 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
     return os;
 }
 
-/** \brief Stringifies a variable to stream.
+/** \brief Variable value formatter.
  *
- * \tparam T Variable type.
+ * \tparam T Value type.
  *
  */
 template<class T>
-class Stringifier {
+class ValueFormatter {
   public:
-    /** \brief Create object with variable.
+    /** \brief Construct.
      *
-     * \param t Variable.
+     * \param val Value.
      *
      */
-    explicit Stringifier(T& t) noexcept : m_t(t) {
+    explicit ValueFormatter(T& val) noexcept : m_val(val) {
     }
 
+    // Container value helper functions.
     std::ostream& sequence(std::ostream& os) const noexcept;
     std::ostream& map(std::ostream& os) const noexcept;
     std::ostream& stack(std::ostream& os) const noexcept;
     std::ostream& queue(std::ostream& os) const noexcept;
 
-    /** \brief Write to stream.
-     *
-     * \tparam U Variable type.
-     * \param os Output stream.
-     * \param s  Object to output.
-     * \return Output stream.
-     *
-     */
     template<class U>
     friend std::ostream& operator<<(
-        std::ostream& os, const Stringifier<U>& s) noexcept;
+        std::ostream& os, const ValueFormatter<U>& s) noexcept;
 
-    /** \brief Get variable.
-     *
-     * \return Variable
-     *
+    /**
+     * \return Value.
      */
-    T& get_t() const noexcept {
-        return m_t;
+    T& get_value() const noexcept {
+        return m_val;
     }
 
   private:
-    T& m_t; /**< Variable to stringify. */
+    T& m_val; /**< Value to format. Use non-const reference in case operator<<
+                 isn't const. */
 };
 
-/** \brief Create Stringifier from scratch.
- *  This solves the error "cannot refer to class template 'Stringifier' without
- * a template argument list".
+/** \brief Create ValueFormatter with the right template type.
+ *  This solves the error "cannot refer to class template
+ * 'ValueFormatter' without a template argument list".
  *
- * \tparam T variable type.
- * \param t Variable.
- * \return Created Stringifier.
+ * \tparam T Value type.
+ * \param val Value.
+ * \return New ValueFormatter.
  */
 template<class T>
-Stringifier<T> stringify(T& t) {
-    return Stringifier<T>(t);
+ValueFormatter<T> format_value(T& val) {
+    return ValueFormatter<T>(val);
 };
 
-/** Iterate through and stringify a sequence, defined by begin() and end().
+/** \brief Write a sequence, defined by begin() and end(), to stream.
  *
- * \tparam T Variable type.
+ * \tparam T Value type.
  * \param os Output stream.
  * \return Output stream.
  *
  */
 template<class T>
-std::ostream& Stringifier<T>::sequence(std::ostream& os) const noexcept {
+std::ostream& ValueFormatter<T>::sequence(std::ostream& os) const noexcept {
     os << '{';
     // Print first object without comma
-    auto it = m_t.begin();
-    if (it != m_t.end()) {
-        os << stringify(*it);
+    auto it = m_val.begin();
+    if (it != m_val.end()) {
+        os << format_value(*it);
         ++it;
     }
     // Print the rest
-    for (; it != m_t.end(); ++it) {
-        os << ", " << stringify(*it);
+    for (; it != m_val.end(); ++it) {
+        os << ", " << format_value(*it);
     }
     os << '}';
 
     return os;
 }
 
-/** Iterate through and stringify a map, defined by begin() and end().
+/** \brief Write a map, defined by begin() and end(), to stream.
  *
- * \tparam T Variable type.
+ * \tparam T Value type.
  * \param os Output stream.
  * \return Output stream.
  *
  */
 template<class T>
-std::ostream& Stringifier<T>::map(std::ostream& os) const noexcept {
+std::ostream& ValueFormatter<T>::map(std::ostream& os) const noexcept {
     os << '{';
     // Print first object without comma
-    auto it = m_t.begin();
-    if (it != m_t.end()) {
-        os << stringify(it->first) << ": " << stringify(it->second);
+    auto it = m_val.begin();
+    if (it != m_val.end()) {
+        os << format_value(it->first) << ": " << format_value(it->second);
         ++it;
     }
     // Print the rest
-    for (; it != m_t.end(); ++it) {
-        os << ", " << stringify(it->first) << ": " << stringify(it->second);
+    for (; it != m_val.end(); ++it) {
+        os << ", " << format_value(it->first) << ": "
+           << format_value(it->second);
     }
     os << '}';
 
     return os;
 }
 
-/** Stringify a stack, defined by top().
+/** \brief Write a stack, defined by top(), to stream.
  *
- * \tparam T Variable type.
+ * \tparam T Value type.
  * \param os Output stream.
  * \return Output stream.
  *
  */
 template<class T>
-std::ostream& Stringifier<T>::stack(std::ostream& os) const noexcept {
+std::ostream& ValueFormatter<T>::stack(std::ostream& os) const noexcept {
     // Only print first element, if available
     os << '{';
-    if (m_t.size() == 1) {
-        os << stringify(m_t.top());
-    } else if (m_t.size() != 0) {
-        os << stringify(m_t.top()) << ", ...";
+    if (m_val.size() == 1) {
+        os << format_value(m_val.top());
+    } else if (!m_val.empty()) {
+        os << format_value(m_val.top()) << ", ...";
     }
     os << '}';
 
     return os;
 }
 
-/** Stringify a queue, defined by front() and back().
+/** \brief Write a queue, defined by front() and back(), to stream.
  *
- * \tparam T Variable type.
+ * \tparam T Value type.
  * \param os Output stream.
  * \return Output stream.
  *
  */
 template<class T>
-std::ostream& Stringifier<T>::queue(std::ostream& os) const noexcept {
+std::ostream& ValueFormatter<T>::queue(std::ostream& os) const noexcept {
     // Only print first element, if available
     os << '{';
-    if (m_t.size() == 1) {
-        os << stringify(m_t.front());
-    } else if (m_t.size() == 2) {
-        os << stringify(m_t.front()) << ", " << stringify(m_t.back());
-    } else if (m_t.size() != 0) {
-        os << stringify(m_t.front()) << ", ..., " << stringify(m_t.back());
+    if (m_val.size() == 1) {
+        os << format_value(m_val.front());
+    } else if (m_val.size() == 2) {
+        os << format_value(m_val.front()) << ", " << format_value(m_val.back());
+    } else if (!m_val.empty() != 0) {
+        os << format_value(m_val.front()) << ", ..., "
+           << format_value(m_val.back());
     }
     os << '}';
 
     return os;
 }
 
-/** \brief General Stringifier output.
+/** \brief General value formatter.
  *
- * \tparam T Variable type.
+ * \tparam T Value type.
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class T>
-std::ostream& operator<<(std::ostream& os, const Stringifier<T>& s) noexcept {
-    return os << s.get_t();
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<T>& s) noexcept {
+    return os << s.get_value();
 }
 
-/** \brief Stringifier bool specialized output.
+/** \brief Format bool.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<bool>& s) noexcept {
-    return os << (s.get_t() ? "true" : "false");
+    std::ostream& os, const ValueFormatter<bool>& s) noexcept {
+    return os << (s.get_value() ? "true" : "false");
 }
 
-// 3.9.1 in C++ standard: Plain char, signed char, and unsigned char are
-// three distinct types
+// 3.9.1 in C++ standard: Plain char, signed char, and unsigned
+// char are three distinct types
 
-/** \brief Stringifier unsigned char specialized output.
+/** \brief Format char.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<char>& s) noexcept {
-    return os << '\'' << s.get_t() << '\'';
+    std::ostream& os, const ValueFormatter<char>& s) noexcept {
+    return os << '\'' << s.get_value() << '\'';
 }
 
-/** \brief Stringifier unsigned char specialized output.
+/** \brief Format unsigned char.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<unsigned char>& s) noexcept {
-    return os << '\'' << s.get_t() << '\'';
+    std::ostream& os, const ValueFormatter<unsigned char>& s) noexcept {
+    return os << '\'' << s.get_value() << '\'';
 }
 
-/** \brief Stringifier signed char specialized output.
+/** \brief Format signed char.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<signed char>& s) noexcept {
-    return os << '\'' << s.get_t() << '\'';
+    std::ostream& os, const ValueFormatter<signed char>& s) noexcept {
+    return os << '\'' << s.get_value() << '\'';
 }
 
-/** \brief Stringifier C string specialized output.
+/** \brief Format char*.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<char*>& s) noexcept {
-    return os << '\"' << s.get_t() << '\"';
+    std::ostream& os, const ValueFormatter<char*>& s) noexcept {
+    return os << '\"' << s.get_value() << '\"';
 }
 
-/** \brief Stringifier C string specialized output.
+/** \brief Format const char*.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<const char*>& s) noexcept {
-    return os << '\"' << s.get_t() << '\"';
+    std::ostream& os, const ValueFormatter<const char*>& s) noexcept {
+    return os << '\"' << s.get_value() << '\"';
 }
 
-/** \brief Stringifier tm specialized output.
+/** \brief Format std::tm.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::tm>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::tm>& s) noexcept {
     // Format as "YYYY-MM-DD HH:MM:SS", including null pointer
     char buf[20];
-    if (std::strftime(buf, sizeof(buf), "%F %T", &s.get_t()) == 0) {
+    if (std::strftime(buf, sizeof(buf), "%F %T", &s.get_value()) == 0) {
         os << "std::tm format error";
     } else {
         os << buf;
@@ -703,228 +797,229 @@ std::ostream& operator<<(
     return os;
 }
 
-/** \brief Stringifier std::string specialized output.
+/** \brief Format std::string.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::string>& s) noexcept {
-    return os << '\"' << s.get_t() << '\"';
+    std::ostream& os, const ValueFormatter<std::string>& s) noexcept {
+    return os << '\"' << s.get_value() << '\"';
 }
 
-/** \brief Stringifier std::array specialized output.
+/** \brief Format std::array.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, size_t N>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::array<U, N>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::array<U, N>>& s) noexcept {
     return s.sequence(os);
 }
 
-/** \brief Stringifier std::vector specialized output.
+/** \brief Format std::vector.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::vector<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::vector<U>>& s) noexcept {
     return s.sequence(os);
 }
 
-/** \brief Stringifier std::deque specialized output.
+/** \brief Format std::deque.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::deque<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::deque<U>>& s) noexcept {
     return s.sequence(os);
 }
 
-/** \brief Stringifier std::forward_list specialized output.
+/** \brief Format std::forward_list.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::forward_list<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::forward_list<U>>& s) noexcept {
     return s.sequence(os);
 }
 
-/** \brief Stringifier std::list specialized output.
+/** \brief Format std::list.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::list<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::list<U>>& s) noexcept {
     return s.sequence(os);
 }
 
-/** \brief Stringifier std::set specialized output.
+/** \brief Format std::set.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::set<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::set<U>>& s) noexcept {
     return s.sequence(os);
 }
 
-/** \brief Stringifier std::map specialized output.
+/** \brief Format std::map.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, class V>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::map<U, V>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::map<U, V>>& s) noexcept {
     return s.map(os);
 }
 
-/** \brief Stringifier std::multiset specialized output.
+/** \brief Format std::multiset.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::multiset<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::multiset<U>>& s) noexcept {
     return s.sequence(os);
 }
 
-/** \brief Stringifier std::multimap specialized output.
+/** \brief Format std::multimap.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, class V>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::multimap<U, V>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::multimap<U, V>>& s) noexcept {
     return s.map(os);
 }
 
-/** \brief Stringifier std::unordered_set specialized output.
+/** \brief Format std::unordered_set.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::unordered_set<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::unordered_set<U>>& s) noexcept {
     return s.sequence(os);
 }
 
-/** \brief Stringifier std::unordered_map specialized output.
+/** \brief Format std::unordered_map.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, class V>
-std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::unordered_map<U, V>>& s) noexcept {
+std::ostream& operator<<(std::ostream&              os,
+    const ValueFormatter<std::unordered_map<U, V>>& s) noexcept {
     return s.map(os);
 }
 
-/** \brief Stringifier std::unordered_multiset specialized output.
+/** \brief Format std::unordered_multiset.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
-std::ostream& operator<<(std::ostream&             os,
-    const Stringifier<std::unordered_multiset<U>>& s) noexcept {
-    return s.sequence(os);
-}
-
-/** \brief Stringifier std::unordered_multimap specialized output.
- *
- * \param os Output stream.
- * \param s  Stringifier.
- * \return Output stream.
- *
- */
-template<class U, class V>
 std::ostream& operator<<(std::ostream&                os,
-    const Stringifier<std::unordered_multimap<U, V>>& s) noexcept {
+    const ValueFormatter<std::unordered_multiset<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Format std::unordered_multimap.
+ *
+ * \param os Output stream.
+ * \param s  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<class U, class V>
+std::ostream& operator<<(std::ostream&                   os,
+    const ValueFormatter<std::unordered_multimap<U, V>>& s) noexcept {
     return s.map(os);
 }
 
-/** \brief Stringifier std::stack specialized output.
+/** \brief Format std::stack.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::stack<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::stack<U>>& s) noexcept {
     return s.stack(os);
 }
 
-/** \brief Stringifier std::queue specialized output.
+/** \brief Format std::queue.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::queue<U>>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::queue<U>>& s) noexcept {
     return s.queue(os);
 }
 
-/** \brief Stringifier std::priority_queue specialized output.
+/** \brief Format std::priority_queue.
+ * output.
  *
  * \param os Output stream.
- * \param s  Stringifier.
+ * \param s  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
-std::ostream& operator<<(
-    std::ostream& os, const Stringifier<std::priority_queue<U>>& s) noexcept {
+std::ostream& operator<<(std::ostream&            os,
+    const ValueFormatter<std::priority_queue<U>>& s) noexcept {
     return s.stack(os);
 }
 
-/** \brief Output ANSI color start code, if color is enabled.
+/** \brief Write ANSI color start code to stream, if color is enabled.
  *
  * \param os Output stream.
  * \return Output stream.
@@ -932,12 +1027,13 @@ std::ostream& operator<<(
  */
 std::ostream& color_start(std::ostream& os) noexcept {
     if (colorEnabled) {
+        // Red
         os << "\033[0;31m";
     }
     return os;
 }
 
-/** \brief Output ANSI color end code, if color is enabled.
+/** \brief Write ANSI color end code to stream, if color is enabled.
  *
  * \param os Output stream.
  * \return Output stream.
@@ -965,76 +1061,68 @@ std::ostream& type_name(std::ostream& os) {
 
 /** \brief Array.
  *
- * \tparam T Variable type.
+ * \tparam T Value type.
  *
  */
 template<class T>
 class Array {
   public:
-    /** \brief Create array.
+    /** \brief Construct.
      *
      * \param name      Name.
-     * \param val       Values.
+     * \param val       Values [\p len].
      * \param len       Number of values.
-     * \param prefixer  Prefixer.
+     * \param prefixFmt PrefixFormatter.
      *
      */
     explicit Array(const char* name, T& val, size_t len,
-        const Prefixer& prefixer) noexcept :
+        const PrefixFormatter& prefixFmt) noexcept :
         m_name(name),
-        m_val(val), m_len(len), m_prefixer(prefixer) {
+        m_val(val), m_len(len), m_prefixFmt(prefixFmt) {
     }
 
     template<class U>
     friend std::ostream& operator<<(
         std::ostream& os, const Array<U>& a) noexcept;
 
-    /** \brief Get name.
-     *
+    /**
      * \return Name.
-     *
      */
     const char* get_name() const noexcept {
         return m_name;
     }
 
-    /** \brief Get values.
-     *
+    /**
      * \return Values.
-     *
      */
     T& get_values() const noexcept {
         return m_val;
     }
 
-    /** \brief Get number of values.
-     *
+    /**
      * \return Number of values.
-     *
      */
     size_t get_number_of_values() const noexcept {
         return m_len;
     }
 
-    /** \brief Get prefixer.
-     *
-     * \return Prefixer.
-     *
+    /**
+     * \return PrefixFormatter.
      */
-    const Prefixer& get_prefixer() const noexcept {
-        return m_prefixer;
+    const PrefixFormatter& get_prefix_formatter() const noexcept {
+        return m_prefixFmt;
     }
 
   private:
-    const char*     m_name;     /**< Names. */
-    T&              m_val;      /**< Values. */
-    const size_t    m_len;      /**< Number of values. */
-    const Prefixer& m_prefixer; /**< Prefixer. */
+    const char*            m_name;      /**< Name. */
+    T&                     m_val;       /**< Values. */
+    const size_t           m_len;       /**< Number of values. */
+    const PrefixFormatter& m_prefixFmt; /**< PrefixFormatter. */
 };
 
-/** \brief Array output.
+/** \brief Write Array to stream.
  *
- * \tparam U Type.
+ * \tparam U Element type.
  * \param os Output stream.
  * \param a  Array.
  * \return Output stream.
@@ -1043,15 +1131,15 @@ class Array {
 template<class U>
 std::ostream& operator<<(std::ostream& os, const Array<U>& a) noexcept {
     if (outputEnabled) {
-        os << color_start << a.get_prefixer() << type_name << a.get_name()
-           << " = {";
+        os << color_start << a.get_prefix_formatter() << type_name
+           << a.get_name() << " = {";
         // Print first object without comma
         if (a.get_number_of_values() > 0) {
-            os << stringify(a.get_values()[0]);
+            os << format_value(a.get_values()[0]);
         }
         // Print the rest
         for (size_t i = 1; i < a.get_number_of_values(); ++i) {
-            os << ", " << stringify(a.get_values()[i]);
+            os << ", " << format_value(a.get_values()[i]);
         }
         os << '}' << color_end << GL_NEWLINE;
     }
@@ -1060,105 +1148,96 @@ std::ostream& operator<<(std::ostream& os, const Array<U>& a) noexcept {
 }
 
 /** \brief Create array.
- *  This solves the error "cannot refer to class template 'Array' without
- * a template argument list".
+ *  This solves the error "cannot refer to class template 'Array' without a
+ * template argument list".
  *
- * \tparam T Type.
+ * \tparam T Element type.
  * \param name      Name.
  * \param val       Values.
  * \param len       Number of values.
- * \param prefixer  Prefixer.
+ * \param prefixFmt PrefixFormatter.
  * \return Array.
+ *
  */
 template<class T>
 Array<T> make_array(
-    const char* name, T& val, size_t len, const Prefixer& prefixer) {
-    return Array<T>(name, val, len, prefixer);
+    const char* name, T& val, size_t len, const PrefixFormatter& prefixFmt) {
+    return Array<T>(name, val, len, prefixFmt);
 };
 
 /** \brief Matrix.
  *
- * \tparam T Type.
+ * \tparam T Element type.
  *
  */
 template<class T>
 class Matrix {
   public:
-    /** \brief Create matrix.
+    /** \brief Construct.
      *
      * \param name      Name.
-     * \param val       Values.
+     * \param val       Values [\p cols x \p rows].
      * \param cols      Number of columns.
      * \param rows      Number of rows.
-     * \param prefixer  Prefixer.
+     * \param prefixFmt PrefixFormatter.
      *
      */
     explicit Matrix(const char* name, T& val, size_t cols, size_t rows,
-        const Prefixer& prefixer) noexcept :
+        const PrefixFormatter& prefixFmt) noexcept :
         m_name(name),
-        m_val(val), m_cols(cols), m_rows(rows), m_prefixer(prefixer) {
+        m_val(val), m_cols(cols), m_rows(rows), m_prefixFmt(prefixFmt) {
     }
 
     template<class U>
     friend std::ostream& operator<<(
         std::ostream& os, const Matrix<U>& a) noexcept;
 
-    /** \brief Get name.
-     *
+    /**
      * \return Name.
-     *
      */
     const char* get_name() const noexcept {
         return m_name;
     }
 
-    /** \brief Get values.
-     *
+    /**
      * \return Values.
-     *
      */
     T& get_values() const noexcept {
         return m_val;
     }
 
-    /** \brief Get number of columns.
-     *
+    /**
      * \return Number of columns.
-     *
      */
     size_t get_number_of_columns() const noexcept {
         return m_cols;
     }
 
-    /** \brief Get number of rows.
-     *
+    /**
      * \return Number of rows.
-     *
      */
     size_t get_number_of_rows() const noexcept {
         return m_rows;
     }
 
-    /** \brief Get prefixer.
-     *
-     * \return Prefixer.
-     *
+    /**
+     * \return PrefixFormatter.
      */
-    const Prefixer& get_prefixer() const noexcept {
-        return m_prefixer;
+    const PrefixFormatter& get_prefix_formatter() const noexcept {
+        return m_prefixFmt;
     }
 
   private:
-    const char*     m_name;     /**< Names. */
-    T&              m_val;      /**< Values. */
-    const size_t    m_cols;     /**< Number of columns. */
-    const size_t    m_rows;     /**< Number of rows. */
-    const Prefixer& m_prefixer; /**< Prefixer. */
+    const char*            m_name;      /**< Name. */
+    T&                     m_val;       /**< Values. */
+    const size_t           m_cols;      /**< Number of columns. */
+    const size_t           m_rows;      /**< Number of rows. */
+    const PrefixFormatter& m_prefixFmt; /**< PrefixFormatter. */
 };
 
-/** \brief Matrix output.
+/** \brief Write Matrix to stream.
  *
- * \tparam U Type.
+ * \tparam U Value type.
  * \param os Output stream.
  * \param m  Matrix.
  * \return Output stream.
@@ -1167,21 +1246,22 @@ class Matrix {
 template<class U>
 std::ostream& operator<<(std::ostream& os, const Matrix<U>& m) noexcept {
     if (outputEnabled) {
-        os << color_start << m.get_prefixer() << type_name << m.get_name()
-           << ": ";
+        os << color_start << m.get_prefix_formatter() << type_name
+           << m.get_name() << ": ";
         if (m.get_number_of_columns() <= 0 || m.get_number_of_rows() <= 0) {
             os << "{}";
         } else {
-            os << "[0,0] = " << stringify(m.get_values()[0][0]);
+            os << "[0,0] = " << format_value(m.get_values()[0][0]);
             for (size_t j = 1; j < m.get_number_of_columns(); ++j) {
                 os << ", "
-                   << "[0," << j << "] = " << stringify(m.get_values()[0][j]);
+                   << "[0," << j
+                   << "] = " << format_value(m.get_values()[0][j]);
             }
             for (size_t i = 1; i < m.get_number_of_rows(); ++i) {
                 for (size_t j = 0; j < m.get_number_of_columns(); ++j) {
                     os << ", "
                        << "[" << i << ',' << j
-                       << "] = " << stringify(m.get_values()[i][j]);
+                       << "] = " << format_value(m.get_values()[i][j]);
                 }
             }
         }
@@ -1192,30 +1272,32 @@ std::ostream& operator<<(std::ostream& os, const Matrix<U>& m) noexcept {
 }
 
 /** \brief Create matrix.
- *  This solves the error "cannot refer to class template 'Matrix' without
- * a template argument list".
+ *  This solves the error "cannot refer to class template 'Matrix' without a
+ * template argument list".
  *
- * \tparam T Type.
+ * \tparam T Element type.
  * \param name      Name.
  * \param val       Values.
  * \param cols      Number of columns.
  * \param rows      Number of rows.
- * \param prefixer  Prefixer.
- * \return Matrix.
+ * \param prefixFmt PrefixFormatter.
+ *
+ * \return New matrix.
+ *
  */
 template<class T>
 Matrix<T> make_matrix(const char* name, T& val, size_t cols, size_t rows,
-    const Prefixer& prefixer) {
-    return Matrix<T>(name, val, cols, rows, prefixer);
+    const PrefixFormatter& prefixFmt) {
+    return Matrix<T>(name, val, cols, rows, prefixFmt);
 };
 
 } // namespace internal
 
 #endif // DOXYGEN_HIDDEN
 
-/** \brief Get prefixes of logging output.
+/**
  *
- * \return Prefix settings.
+ * \return Bitwise \c or of prefix settings.
  *
  * \sa prefix \sa set_prefixes()
  *
@@ -1226,7 +1308,7 @@ prefix get_prefixes() noexcept {
 
 /** \brief Set prefixes of logging output.
  *
- * Alters the output of \sa l(), \sa l_arr(), and \sa l_mat().
+ * Alters the output of \ref l(), \ref l_arr(), and \ref l_mat().
  *
  * \param p Bitwise \c or of prefix settings.
  *
@@ -1245,7 +1327,7 @@ void set_prefixes(prefix p) noexcept {
     internal::curPrefixes = p;
 }
 
-/** \brief Check if output is enabled.
+/**
  *
  * \return \c true if output is enabled.
  *
@@ -1282,7 +1364,7 @@ void set_color_enabled(bool e) noexcept {
     internal::colorEnabled = e;
 }
 
-/** \brief Check if ANSI color output is enabled.
+/**
  *
  * \return \c true if ANSI color output is enabled.
  *
@@ -1293,50 +1375,19 @@ bool is_color_enabled() noexcept {
     return internal::colorEnabled;
 }
 
-/** \brief Log variables to stdout.
- *
- * Use as:
- * \code
- * int i = 1;
- * l(i);
- * std::string s("s");
- * l(i, s);
- * \endcode
- * Which outputs:
- * \code
- * i = 1, s = s
- * \endcode
- *
- * \note Supports up to 16 variables as parameters.
- * \note Uses prefix information set with \ref set_prefixes().
- *
- * \sa l_arr() \sa l_mat() \sa set_prefixes().
- *
- */
-#define l(...)                                                                 \
-    do {                                                                       \
-        if (gl::internal::outputEnabled) {                                     \
-            std::cout << gl::internal::color_start                             \
-                      << gl::internal::Prefixer(__FILE__, __LINE__, __func__)  \
-                      << GL_INTERNAL_L_DISPATCH(__VA_ARGS__, GL_INTERNAL_L16,  \
-                             GL_INTERNAL_L15, GL_INTERNAL_L14,                 \
-                             GL_INTERNAL_L13, GL_INTERNAL_L12,                 \
-                             GL_INTERNAL_L11, GL_INTERNAL_L10, GL_INTERNAL_L9, \
-                             GL_INTERNAL_L8, GL_INTERNAL_L7, GL_INTERNAL_L6,   \
-                             GL_INTERNAL_L5, GL_INTERNAL_L4, GL_INTERNAL_L3,   \
-                             GL_INTERNAL_L2, GL_INTERNAL_L1, )(__VA_ARGS__)    \
-                      << gl::internal::color_end << (GL_NEWLINE);              \
-        }                                                                      \
-    } while (false)
-
 #ifndef DOXYGEN_HIDDEN
 
+/** \brief Helper function for l(). Dispatch to the right macro depending on
+ * number of arguments.
+ *
+ */
 #define GL_INTERNAL_L_DISPATCH(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
     _12, _13, _14, _15, _16, NAME, ...)                                      \
     NAME
 
+/** \brief Output variable name and value. */
 #define GL_INTERNAL_LX(v) \
-    gl::internal::type_name << (#v) << " = " << gl::internal::stringify((v))
+    gl::internal::type_name << (#v) << " = " << gl::internal::format_value((v))
 
 #define GL_INTERNAL_L1(v1) GL_INTERNAL_LX(v1)
 
@@ -1398,70 +1449,6 @@ bool is_color_enabled() noexcept {
         << ", " << GL_INTERNAL_LX(v16)
 
 #endif // DOXYGEN_HIDDEN
-
-/** \brief Log array to stdout.
- *
- * \param v   Array to print.
- * \param len Number of elements.
- *
- * Used as:
- * \code
- * int a[] = {0, 1, 2};
- * l_arr(a, 3);
- * \endcode
- *
- * Which outputs:
- * \code
- * a: {0, 1, 2}
- * \endcode
- *
- * \note Uses prefix information set with \ref set_prefixes().
- * \note Unlike \ref l(), this does not support multiple varaibles as
- * parameters.
- *
- * \warning Behaviour is undefined if \p n is larger than the allocated array.
- *
- * \sa l() \sa l_mat() \sa set_prefixes()
- *
- */
-#define l_arr(v, len)                                              \
-    do {                                                           \
-        std::cout << gl::internal::make_array((#v), (v), (len),    \
-            gl::internal::Prefixer(__FILE__, __LINE__, __func__)); \
-    } while (false)
-
-/** \brief Log matrix to stdout.
- *
- * \param m    Matrix to print.
- * \param cols Number of columns in matrix.
- * \param rows Number of rows in matrix.
- *
- * Used as:
- * \code
- * int m[][] = {{11, 12}, {21, 22}};
- * l_mat(m, 2, 2);
- * \endcode
- *
- * Which outputs:
- * \code
- * m: [0,0] = 11, [0,1] = 12, [1,0] = 21, [1,1] = 22
- * \endcode
- *
- * \note Uses prefix information set with \ref set_prefixes()
- * \note Unlike \ref l(), this does not support multiple variables as
- * parameters.
- *
- * \warning Behaviour is undefined if \p c or \p r is larger than the
- *          allocated matrix.
- *
- * \sa l() \sa l_arr() \sa set_prefixes()
- *
- */
-#define l_mat(m, cols, rows)                                              \
-    do {                                                                  \
-        std::cout << gl::internal::make_matrix((#m), (m), (cols), (rows), \
-            gl::internal::Prefixer(__FILE__, __LINE__, __func__));        \
-    } while (false)
 
 } // namespace gl
 
