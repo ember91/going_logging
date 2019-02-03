@@ -28,6 +28,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 add_library(libtest src/test.cpp)
 
+add_executable(color          src/color.cpp)
 add_executable(l              src/l.cpp)
 add_executable(l_arr          src/l_arr.cpp)
 add_executable(l_mat          src/l_mat.cpp)
@@ -39,6 +40,10 @@ add_executable(run_all        src/run_all.cpp)
 if(CLANG_TIDY_EXE)
     set_target_properties(
         libtest PROPERTIES
+        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+    )
+    set_target_properties(
+        color PROPERTIES
         CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
     )
     set_target_properties(
@@ -71,6 +76,7 @@ if(CLANG_TIDY_EXE)
     )
 endif()
 
+target_link_libraries(color          libtest)
 target_link_libraries(l              libtest)
 target_link_libraries(l_arr          libtest)
 target_link_libraries(l_mat          libtest)

@@ -36,7 +36,6 @@ Add Stringify support for types in std, such as std::vector
 Doxygen should check for dot (graphviz) support
 Run doxygen in cmake
 Better looking doxygen theme
-Add test of colored output
 Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
 VS code build with CMake
 VS code launch binary
