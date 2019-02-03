@@ -904,355 +904,6 @@ std::ostream& operator<<(
     return s.stack(os);
 }
 
-/** \brief Write name of a type to stream.
- *
- * \tparam T Variable type.
- *
- */
-template<class T>
-class TypeNamer {
-  public:
-    /** \brief Create object with variable.
-     *
-     * \param t        Variable.
-     * \param is_first \c true if first TypeNamer.
-     *
-     */
-    explicit TypeNamer(T& t, bool is_first) noexcept :
-        m_t(t), m_is_first(is_first) {
-    }
-
-    template<class U>
-    friend std::ostream& operator<<(
-        std::ostream& os, const TypeNamer<U>& t) noexcept;
-
-    /** \brief Helper function for insertion stream operator. Outputs a string
-     * if enabled.
-     *
-     * \param os Output stream.
-     * \param s  Output string.
-     * \return Output stream.
-     *
-     */
-    std::ostream& out(std::ostream& os, const char* s) const noexcept {
-        if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-            os << s;
-            if (m_is_first) {
-                os << ' ';
-            }
-        }
-        return os;
-    }
-
-    /** \brief Get variable.
-     *
-     * \return Variable.
-     *
-     */
-    T& get_t() const noexcept {
-        return m_t;
-    }
-
-    /** \brief Check if this is the first TypeNamer.
-     *
-     * \return \c true if first TypeNamer.
-     *
-     */
-    bool is_first() const noexcept {
-        return m_is_first;
-    }
-
-  private:
-    T&         m_t;        /**< Variable to get type name of. */
-    const bool m_is_first; /**< \c true if first TypeNamer */
-};
-
-/** \brief General TypeNamer output.
- *
- * \tparam T Variable type.
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<class T>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<T>& t) noexcept {
-    return t.out(os, typeid(t.get_t()).name());
-}
-
-/** \brief General TypeNamer output.
- *
- * \tparam T Variable type.
- * \param os    Output stream.
- * \param t     TypeNamer.
- * \return Output stream.
- *
- */
-template<class T>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<const T>& t) noexcept {
-    return t.out(os, typeid(t.get_t()).name());
-}
-
-/** \brief Pointer TypeNamer output.
- *
- * \tparam T Variable type.
- * \param os    Output stream.
- * \param t     TypeNamer.
- * \return Output stream.
- *
- */
-template<class T>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<T*>& t) noexcept {
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << TypeNamer<T>(*t.get_t(), false) << '*';
-        if (t.is_first()) {
-            os << ' ';
-        }
-    }
-    return os;
-}
-
-/** \brief Const pointer TypeNamer output.
- *
- * \tparam T Variable type.
- * \param os    Output stream.
- * \param t     TypeNamer.
- * \return Output stream.
- *
- */
-template<class T>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<const T*>& t) noexcept {
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        T* non_const = const_cast<T*>(t.get_t());
-        os << "const " << TypeNamer<T*>(non_const, false);
-        if (t.is_first()) {
-            os << ' ';
-        }
-    }
-    return os;
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<bool>& t) noexcept {
-    return t.out(os, "bool");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<unsigned char>& t) noexcept {
-    return t.out(os, "unsigned char");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<signed char>& t) noexcept {
-    return t.out(os, "signed char");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<char>& t) noexcept {
-    return t.out(os, "char");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<uint16_t>& t) noexcept {
-    return t.out(os, "uint16_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<uint32_t>& t) noexcept {
-    return t.out(os, "uint32_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<uint64_t>& t) noexcept {
-    return t.out(os, "uint64_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<int16_t>& t) noexcept {
-    return t.out(os, "int16_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<int32_t>& t) noexcept {
-    return t.out(os, "int32_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<int64_t>& t) noexcept {
-    return t.out(os, "int64_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<float>& t) noexcept {
-    return t.out(os, "float");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<double>& t) noexcept {
-    return t.out(os, "double");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<char16_t>& t) noexcept {
-    return t.out(os, "char16_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<char32_t>& t) noexcept {
-    return t.out(os, "char32_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<wchar_t>& t) noexcept {
-    return t.out(os, "wchar_t");
-}
-
-/** \brief Specialized TypeNamer output.
- *
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<std::string>& t) noexcept {
-    return t.out(os, "std::string");
-}
-
-/** \brief Create TypeNamer from scratch.
- *  This solves the error "cannot refer to class template 'TypeNamer' without a
- * template argument list".
- *
- * \tparam T variable type.
- * \param t        Variable.
- * \param is_first \c true if first TypeNamer.
- * \return TypeNamer.
- */
-template<class T>
-TypeNamer<T> make_type_name(T& t, bool is_first) {
-    return TypeNamer<T>(t, is_first);
-};
-
 /** \brief Output ANSI color start code, if color is enabled.
  *
  * \param os Output stream.
@@ -1275,6 +926,19 @@ std::ostream& color_start(std::ostream& os) noexcept {
 std::ostream& color_end(std::ostream& os) noexcept {
     if (colorEnabled) {
         os << "\033[0m";
+    }
+    return os;
+}
+
+/** \brief Write type name to stream.
+ *
+ * \param os Output stream.
+ * \return Output stream.
+ *
+ */
+std::ostream& type_name(std::ostream& os) {
+    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
+        os << "type ";
     }
     return os;
 }
@@ -1359,8 +1023,8 @@ class Array {
 template<class U>
 std::ostream& operator<<(std::ostream& os, const Array<U>& a) noexcept {
     if (outputEnabled) {
-        os << color_start << a.get_prefixer()
-           << make_type_name(a.get_values(), true) << a.get_name() << " = {";
+        os << color_start << a.get_prefixer() << type_name << a.get_name()
+           << " = {";
         // Print first object without comma
         if (a.get_number_of_values() > 0) {
             os << stringify(a.get_values()[0]);
@@ -1483,8 +1147,8 @@ class Matrix {
 template<class U>
 std::ostream& operator<<(std::ostream& os, const Matrix<U>& m) noexcept {
     if (outputEnabled) {
-        os << color_start << m.get_prefixer()
-           << make_type_name(m.get_values(), true) << m.get_name() << ": ";
+        os << color_start << m.get_prefixer() << type_name << m.get_name()
+           << ": ";
         if (m.get_number_of_columns() <= 0 || m.get_number_of_rows() <= 0) {
             os << "{}";
         } else {
@@ -1651,9 +1315,8 @@ bool is_color_enabled() noexcept {
     _12, _13, _14, _15, _16, NAME, ...)                                      \
     NAME
 
-#define GL_INTERNAL_LX(v)                   \
-    gl::internal::make_type_name((v), true) \
-        << (#v) << " = " << gl::internal::stringify((v))
+#define GL_INTERNAL_LX(v) \
+    gl::internal::type_name << (#v) << " = " << gl::internal::stringify((v))
 
 #define GL_INTERNAL_L1(v1) GL_INTERNAL_LX(v1)
 

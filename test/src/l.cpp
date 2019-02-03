@@ -81,13 +81,13 @@ int main(int argc, const char** argv) {
     st.push(1);
     st.push(0);
     std::queue<int> que;
-    que.push(2);
-    que.push(1);
     que.push(0);
+    que.push(1);
+    que.push(2);
     std::priority_queue<int> pque;
-    pque.push(2);
-    pque.push(1);
     pque.push(0);
+    pque.push(1);
+    pque.push(2);
 
     l(arr);
     l(deq);
