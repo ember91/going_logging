@@ -35,7 +35,6 @@
 
 ## VS code
 
-* Use FIRA Code font with ligatures
 * Build with CMake from IDE
 * Launch binary from IDE
 
