@@ -52,7 +52,8 @@
 			"optional": "cpp",
 			"algorithm": "cpp",
 			"forward_list": "cpp",
-			"list": "cpp"
+			"list": "cpp",
+			"unordered_set": "cpp"
 		},
 		"C_Cpp.clang_format_fallbackStyle": "LLVM",
 		"C_Cpp.default.cppStandard": "c++11",

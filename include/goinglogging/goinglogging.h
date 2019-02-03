@@ -566,7 +566,7 @@ std::ostream& Stringifier<T>::stack(std::ostream& os) const noexcept {
     return os;
 }
 
-/** Stringify a queue, defined by front and back().
+/** Stringify a queue, defined by front() and back().
  *
  * \tparam T Variable type.
  * \param os Output stream.
@@ -615,8 +615,8 @@ std::ostream& operator<<(
     return os << (s.get_t() ? "true" : "false");
 }
 
-// 3.9.1 in C++ standard: Plain char, signed char, and unsigned char are three
-// distinct types
+// 3.9.1 in C++ standard: Plain char, signed char, and unsigned char are
+// three distinct types
 
 /** \brief Stringifier unsigned char specialized output.
  *
@@ -681,6 +681,26 @@ template<>
 std::ostream& operator<<(
     std::ostream& os, const Stringifier<const char*>& s) noexcept {
     return os << '\"' << s.get_t() << '\"';
+}
+
+/** \brief Stringifier tm specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::tm>& s) noexcept {
+    // Format as "YYYY-MM-DD HH:MM:SS", including null pointer
+    char buf[20];
+    if (std::strftime(buf, sizeof(buf), "%F %T", &s.get_t()) == 0) {
+        os << "std::tm format error";
+    } else {
+        os << buf;
+    }
+    return os;
 }
 
 /** \brief Stringifier std::string specialized output.

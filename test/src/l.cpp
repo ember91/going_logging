@@ -67,6 +67,12 @@ int main(int argc, const char** argv) {
     l(a, b, c, d, e, f, g, h, i, j, *g, a);
     l(a, b, c, d, e, f, g, h, i, j, *g, a, b);
 
+    // Test C types
+    time_t     curtime = time(nullptr);
+    struct tm* tm      = std::localtime(&curtime);
+    l(*tm);
+
+    // Test C++ types
     std::array<int, 3>      arr  = {0, 1, 2};
     std::deque<int>         deq  = {0, 1, 2};
     std::vector<int>        vec  = {0, 1, 2};

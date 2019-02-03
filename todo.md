@@ -30,6 +30,7 @@
 * Ensure template parameters are documented.
 * Remove type data_type information
 * Make functions static that can be static
+* Use C++11 functions
 
 # Features
 
@@ -40,7 +41,6 @@
 
 ## Stringification
 
-* Add complex numbers, atomic type(?) and time.h types from C standard library
 * Add C++ types
 
 ## Documentation
