@@ -8,6 +8,11 @@ to make it as effortless as possible to output the name and value of a variable.
 Note that goinglogging is a logging library for debugging when a debugger is a
 worse alternative. It is not for heavy logging. Use a proper library for that.
 
+## Status
+
+goinglogging is currently in development. It means that the API is
+subject to change and that bugs galore. Just so you know :)
+
 ## Usage
 
 ```
