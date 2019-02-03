@@ -166,17 +166,6 @@ enum class prefix : uint32_t {
     TYPE_NAME = 1 << 5  /**< Name of type. For example 'int'. */
 };
 
-namespace internal {
-
-template<class T>
-void array(const char* var_name, const char* file_path, long file_line,
-    const char* func, const T var_val, size_t len) noexcept;
-template<class T>
-void matrix(const char* var_name, const char* file_path, long file_line,
-    const char* func, const T var_val, size_t cols, size_t rows) noexcept;
-
-} // namespace internal
-
 // Forward delarations
 prefix get_prefixes() noexcept;
 void   set_prefixes(prefix p) noexcept;
@@ -329,7 +318,7 @@ class Prefixer {
 
   private:
     const char* m_file_path; /**< File path including name */
-    long        m_file_line; /**< Line number in file */
+    const long  m_file_line; /**< Line number in file */
     const char* m_func;      /**< Function name */
 };
 
@@ -628,14 +617,6 @@ class TypeNamer {
         m_t(t), m_is_first(is_first) {
     }
 
-    /** \brief Write to stream.
-     *
-     * \tparam U Variable type.
-     * \param os Output stream.
-     * \param t  Object to output.
-     * \return Output stream.
-     *
-     */
     template<class U>
     friend std::ostream& operator<<(
         std::ostream& os, const TypeNamer<U>& t) noexcept;
@@ -677,8 +658,8 @@ class TypeNamer {
     }
 
   private:
-    T&   m_t;        /**< Variable to get type name of. */
-    bool m_is_first; /**< \c true if first TypeNamer */
+    T&         m_t;        /**< Variable to get type name of. */
+    const bool m_is_first; /**< \c true if first TypeNamer */
 };
 
 /** \brief General TypeNamer output.
@@ -981,10 +962,10 @@ std::ostream& operator<<(
  * \tparam T variable type.
  * \param t        Variable.
  * \param is_first \c true if first TypeNamer.
- * \return Created TypeNamer.
+ * \return TypeNamer.
  */
 template<class T>
-TypeNamer<T> type_name(T& t, bool is_first) {
+TypeNamer<T> make_type_name(T& t, bool is_first) {
     return TypeNamer<T>(t, is_first);
 };
 
@@ -1016,73 +997,257 @@ std::ostream& color_end(std::ostream& os) noexcept {
     return os;
 }
 
-/** \brief Log array.
+/** \brief Array.
  *
  * \note For internal use.
  * \tparam T Variable type.
- * \param var_name  Variable name.
- * \param file_path Current File path including name.
- * \param file_line Current line number in file.
- * \param func      Current function name.
- * \param var_val   Variable values.
- * \param len       Number of elements.
  *
  */
 template<class T>
-void array(const char* var_name, const char* file_path, long file_line,
-    const char* func, const T var_val, size_t len) noexcept {
-    if (outputEnabled) {
-        std::cout << color_start << Prefixer(file_path, file_line, func)
-                  << type_name(var_val, true) << var_name << " = {";
-        // Print first object without comma
-        if (len > 0)
-            std::cout << stringify(var_val[0]);
-        // Print the rest
-        for (size_t i = 1; i < len; ++i) {
-            std::cout << ", " << stringify(var_val[i]);
-        }
-        std::cout << '}' << color_end << GL_NEWLINE;
+class Array {
+  public:
+    /** \brief Create array.
+     *
+     * \param name      Name.
+     * \param val       Values.
+     * \param len       Number of values.
+     * \param prefixer  Prefixer.
+     *
+     */
+    explicit Array(const char* name, T& val, size_t len,
+        const Prefixer& prefixer) noexcept :
+        m_name(name),
+        m_val(val), m_len(len), m_prefixer(prefixer) {
     }
+
+    template<class U>
+    friend std::ostream& operator<<(
+        std::ostream& os, const Array<U>& a) noexcept;
+
+    /** \brief Get name.
+     *
+     * \return Name.
+     *
+     */
+    const char* get_name() const noexcept {
+        return m_name;
+    }
+
+    /** \brief Get values.
+     *
+     * \return Values.
+     *
+     */
+    T& get_values() const noexcept {
+        return m_val;
+    }
+
+    /** \brief Get number of values.
+     *
+     * \return Number of values.
+     *
+     */
+    size_t get_number_of_values() const noexcept {
+        return m_len;
+    }
+
+    /** \brief Get prefixer.
+     *
+     * \return Prefixer.
+     *
+     */
+    const Prefixer& get_prefixer() const noexcept {
+        return m_prefixer;
+    }
+
+  private:
+    const char*     m_name;     /**< Names. */
+    T&              m_val;      /**< Values. */
+    const size_t    m_len;      /**< Number of values. */
+    const Prefixer& m_prefixer; /**< Prefixer. */
+};
+
+/** \brief Array output.
+ *
+ * \note For internal use.
+ * \tparam U Type.
+ * \param os Output stream.
+ * \param a  Array.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(std::ostream& os, const Array<U>& a) noexcept {
+    if (outputEnabled) {
+        os << color_start << a.get_prefixer()
+           << make_type_name(a.get_values(), true) << a.get_name() << " = {";
+        // Print first object without comma
+        if (a.get_number_of_values() > 0) {
+            os << stringify(a.get_values()[0]);
+        }
+        // Print the rest
+        for (size_t i = 1; i < a.get_number_of_values(); ++i) {
+            os << ", " << stringify(a.get_values()[i]);
+        }
+        os << '}' << color_end << GL_NEWLINE;
+    }
+
+    return os;
 }
 
-/** \brief Log matrix with dimensions \p c * \p r.
+/** \brief Create array.
+ *  This solves the error "cannot refer to class template 'Array' without
+ * a template argument list".
  *
  * \note For internal use.
- * \tparam T Variable type.
- * \param var_name  Variable name.
- * \param file_path Current file path including name.
- * \param file_line Current line number in file.
- * \param func      Current function name.
- * \param var_val   Variable values.
- * \param cols      Number of columns.
- * \param rows      Number of rows.
+ * \tparam T Type.
+ * \param name      Name.
+ * \param val       Values.
+ * \param len       Number of values.
+ * \param prefixer  Prefixer.
+ * \return Array.
+ */
+template<class T>
+Array<T> make_array(
+    const char* name, T& val, size_t len, const Prefixer& prefixer) {
+    return Array<T>(name, val, len, prefixer);
+};
+
+/** \brief Matrix.
+ *
+ * \note For internal use.
+ * \tparam T Type.
  *
  */
 template<class T>
-void matrix(const char* var_name, const char* file_path, long file_line,
-    const char* func, const T var_val, size_t cols, size_t rows) noexcept {
+class Matrix {
+  public:
+    /** \brief Create matrix.
+     *
+     * \param name      Name.
+     * \param val       Values.
+     * \param cols      Number of columns.
+     * \param rows      Number of rows.
+     * \param prefixer  Prefixer.
+     *
+     */
+    explicit Matrix(const char* name, T& val, size_t cols, size_t rows,
+        const Prefixer& prefixer) noexcept :
+        m_name(name),
+        m_val(val), m_cols(cols), m_rows(rows), m_prefixer(prefixer) {
+    }
+
+    template<class U>
+    friend std::ostream& operator<<(
+        std::ostream& os, const Matrix<U>& a) noexcept;
+
+    /** \brief Get name.
+     *
+     * \return Name.
+     *
+     */
+    const char* get_name() const noexcept {
+        return m_name;
+    }
+
+    /** \brief Get values.
+     *
+     * \return Values.
+     *
+     */
+    T& get_values() const noexcept {
+        return m_val;
+    }
+
+    /** \brief Get number of columns.
+     *
+     * \return Number of columns.
+     *
+     */
+    size_t get_number_of_columns() const noexcept {
+        return m_cols;
+    }
+
+    /** \brief Get number of rows.
+     *
+     * \return Number of rows.
+     *
+     */
+    size_t get_number_of_rows() const noexcept {
+        return m_rows;
+    }
+
+    /** \brief Get prefixer.
+     *
+     * \return Prefixer.
+     *
+     */
+    const Prefixer& get_prefixer() const noexcept {
+        return m_prefixer;
+    }
+
+  private:
+    const char*     m_name;     /**< Names. */
+    T&              m_val;      /**< Values. */
+    const size_t    m_cols;     /**< Number of columns. */
+    const size_t    m_rows;     /**< Number of rows. */
+    const Prefixer& m_prefixer; /**< Prefixer. */
+};
+
+/** \brief Matrix output.
+ *
+ * \note For internal use.
+ * \tparam U Type.
+ * \param os Output stream.
+ * \param m  Matrix.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(std::ostream& os, const Matrix<U>& m) noexcept {
     if (outputEnabled) {
-        std::cout << color_start << Prefixer(file_path, file_line, func)
-                  << type_name(var_val, true) << var_name << ": ";
-        if (cols <= 0 || rows <= 0) {
-            std::cout << "{}";
+        os << color_start << m.get_prefixer()
+           << make_type_name(m.get_values(), true) << m.get_name() << ": ";
+        if (m.get_number_of_columns() <= 0 || m.get_number_of_rows() <= 0) {
+            os << "{}";
         } else {
-            std::cout << "[0,0] = " << stringify(var_val[0][0]);
-            for (size_t j = 1; j < cols; ++j) {
-                std::cout << ", "
-                          << "[0," << j << "] = " << stringify(var_val[0][j]);
+            os << "[0,0] = " << stringify(m.get_values()[0][0]);
+            for (size_t j = 1; j < m.get_number_of_columns(); ++j) {
+                os << ", "
+                   << "[0," << j << "] = " << stringify(m.get_values()[0][j]);
             }
-            for (size_t i = 1; i < rows; ++i) {
-                for (size_t j = 0; j < cols; ++j) {
-                    std::cout << ", "
-                              << "[" << i << ',' << j
-                              << "] = " << stringify(var_val[i][j]);
+            for (size_t i = 1; i < m.get_number_of_rows(); ++i) {
+                for (size_t j = 0; j < m.get_number_of_columns(); ++j) {
+                    os << ", "
+                       << "[" << i << ',' << j
+                       << "] = " << stringify(m.get_values()[i][j]);
                 }
             }
         }
-        std::cout << color_end << GL_NEWLINE;
+        os << color_end << GL_NEWLINE;
     }
+
+    return os;
 }
+
+/** \brief Create matrix.
+ *  This solves the error "cannot refer to class template 'Matrix' without
+ * a template argument list".
+ *
+ * \note For internal use.
+ * \tparam T Type.
+ * \param name      Name.
+ * \param val       Values.
+ * \param cols      Number of columns.
+ * \param rows      Number of rows.
+ * \param prefixer  Prefixer.
+ * \return Matrix.
+ */
+template<class T>
+Matrix<T> make_matrix(const char* name, T& val, size_t cols, size_t rows,
+    const Prefixer& prefixer) {
+    return Matrix<T>(name, val, cols, rows, prefixer);
+};
 
 } // namespace internal
 
@@ -1210,8 +1375,8 @@ bool is_color_enabled() noexcept {
     _12, _13, _14, _15, _16, NAME, ...)                                     \
     NAME
 
-#define GL_INTERNAL_LX(v)              \
-    gl::internal::type_name((v), true) \
+#define GL_INTERNAL_LX(v)                   \
+    gl::internal::make_type_name((v), true) \
         << (#v) << " = " << gl::internal::stringify((v))
 
 #define GL_INTERNAL_L1(v1) GL_INTERNAL_LX(v1)
@@ -1298,9 +1463,10 @@ bool is_color_enabled() noexcept {
  * \sa l() \sa l_mat() \sa set_prefixes()
  *
  */
-#define l_arr(v, len)                                                        \
-    do {                                                                     \
-        gl::internal::array((#v), __FILE__, __LINE__, __func__, (v), (len)); \
+#define l_arr(v, len)                                              \
+    do {                                                           \
+        std::cout << gl::internal::make_array((#v), (v), (len),    \
+            gl::internal::Prefixer(__FILE__, __LINE__, __func__)); \
     } while (false)
 
 /** \brief Log matrix to stdout.
@@ -1328,10 +1494,10 @@ bool is_color_enabled() noexcept {
  * \sa l() \sa l_arr() \sa set_prefixes()
  *
  */
-#define l_mat(m, cols, rows)                                          \
-    do {                                                              \
-        gl::internal::matrix(                                         \
-            (#m), __FILE__, __LINE__, __func__, (m), (cols), (rows)); \
+#define l_mat(m, cols, rows)                                              \
+    do {                                                                  \
+        std::cout << gl::internal::make_matrix((#m), (m), (cols), (rows), \
+            gl::internal::Prefixer(__FILE__, __LINE__, __func__));        \
     } while (false)
 
 } // namespace gl
