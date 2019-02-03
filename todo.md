@@ -28,6 +28,7 @@
 * Ensure template parameters are documented with \tparam
 * Make functions that can be static static
 * Use C++11 functionality
+* Ensure relevant features are listed in both doxygen and README
 
 # Features
 
