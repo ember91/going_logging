@@ -115,12 +115,21 @@ int test::compare_output(bool regex) {
         }
 
         if (regex) {
-            std::regex rx(lGt);
-            if (!std::regex_match(lOut, rx)) {
-                std::cout << "Regular expression mismatch at line " << lineIdx
+            try {
+                std::regex rx(lGt);
+                if (!std::regex_match(lOut, rx)) {
+                    std::cout << "Regular expression mismatch at line "
+                              << lineIdx << '\n'
+                              << "'" << lOut << "'\n"
+                              << "'" << lGt << "'" << std::endl;
+                    return EXIT_FAILURE;
+                }
+            } catch (const std::regex_error& exc) {
+                std::cout << "Regular expression exception at line " << lineIdx
                           << '\n'
                           << "'" << lOut << "'\n"
-                          << "'" << lGt << "'" << std::endl;
+                          << "'" << lGt << "'\n"
+                          << exc.what() << std::endl;
                 return EXIT_FAILURE;
             }
         } else {
