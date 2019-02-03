@@ -1305,7 +1305,7 @@ bool is_color_enabled() noexcept {
  * i = 1, s = s
  * \endcode
  *
- * \note Supports up to 16 variables on the same line.
+ * \note Supports up to 16 variables as parameters.
  * \note Uses prefix information set with \ref set_prefixes().
  *
  * \sa l_arr() \sa l_mat() \sa set_prefixes().
@@ -1316,7 +1316,7 @@ bool is_color_enabled() noexcept {
         if (gl::internal::outputEnabled) {                                     \
             std::cout << gl::internal::color_start                             \
                       << gl::internal::Prefixer(__FILE__, __LINE__, __func__)  \
-                      << GL_INTERNAL_GET_MACRO(__VA_ARGS__, GL_INTERNAL_L16,   \
+                      << GL_INTERNAL_L_DISPATCH(__VA_ARGS__, GL_INTERNAL_L16,  \
                              GL_INTERNAL_L15, GL_INTERNAL_L14,                 \
                              GL_INTERNAL_L13, GL_INTERNAL_L12,                 \
                              GL_INTERNAL_L11, GL_INTERNAL_L10, GL_INTERNAL_L9, \
@@ -1329,8 +1329,8 @@ bool is_color_enabled() noexcept {
 
 #ifndef DOXYGEN_HIDDEN
 
-#define GL_INTERNAL_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
-    _12, _13, _14, _15, _16, NAME, ...)                                     \
+#define GL_INTERNAL_L_DISPATCH(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, \
+    _12, _13, _14, _15, _16, NAME, ...)                                      \
     NAME
 
 #define GL_INTERNAL_LX(v)                   \
@@ -1415,6 +1415,8 @@ bool is_color_enabled() noexcept {
  * \endcode
  *
  * \note Uses prefix information set with \ref set_prefixes().
+ * \note Unlike \ref l(), this does not support multiple varaibles as
+ * parameters.
  *
  * \warning Behaviour is undefined if \p n is larger than the allocated array.
  *
@@ -1445,6 +1447,8 @@ bool is_color_enabled() noexcept {
  * \endcode
  *
  * \note Uses prefix information set with \ref set_prefixes()
+ * \note Unlike \ref l(), this does not support multiple variables as
+ * parameters.
  *
  * \warning Behaviour is undefined if \p c or \p r is larger than the
  *          allocated matrix.
