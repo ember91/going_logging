@@ -41,5 +41,6 @@ Redirect all logging to a configurable stream. Make the disable functionality re
 VS code build with CMake
 VS code launch binary
 github create a release
+Add macros l_until(cond), l_until(int), l_when(cond), l_regularly(time), l_regularly(int)
 Add c++17 std::string_view to Stringify template specializations
 Add c++20 concepts?
