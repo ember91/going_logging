@@ -15,7 +15,6 @@ Inline functions in classes?
 Change name of of macros to GL_INTERNAL
 Ensure one character c-strings use single quotes
 Ensure almost no usage of std::cout
-Remove "\note For internal use."
 Use ::gl::internal instead of gl::internal
 Fix order of functions and classes
 Pass std::string by reference only when necessary
@@ -41,7 +40,6 @@ Add test of colored output
 Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
 VS code build with CMake
 VS code launch binary
-Add 128 bit int for supported compilers
 github create a release
 Add c++17 std::string_view to Stringify template specializations
 Add c++20 concepts?

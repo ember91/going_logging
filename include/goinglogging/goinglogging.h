@@ -270,8 +270,6 @@ static bool colorEnabled = false;
 
 /** \brief Generate prefix to stream.
  *
- * \note For internal use.
- *
  */
 class Prefixer {
   public:
@@ -429,7 +427,6 @@ std::ostream& operator<<(std::ostream& os, const Prefixer& p) noexcept {
 
 /** \brief Stringifies a variable to stream.
  *
- * \note For internal use.
  * \tparam T Variable type.
  *
  */
@@ -471,7 +468,6 @@ class Stringifier {
 
 /** \brief General Stringifier output.
  *
- * \note For internal use.
  * \tparam T Variable type.
  * \param os Output stream.
  * \param s  Stringifier.
@@ -485,7 +481,6 @@ std::ostream& operator<<(std::ostream& os, const Stringifier<T>& s) noexcept {
 
 /** \brief Stringifier bool specialized output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param s  Stringifier.
  * \return Output stream.
@@ -502,7 +497,6 @@ std::ostream& operator<<(
 
 /** \brief Stringifier unsigned char specialized output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param s  Stringifier.
  * \return Output stream.
@@ -516,7 +510,6 @@ std::ostream& operator<<(
 
 /** \brief Stringifier unsigned char specialized output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param s  Stringifier.
  * \return Output stream.
@@ -530,7 +523,6 @@ std::ostream& operator<<(
 
 /** \brief Stringifier signed char specialized output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param s  Stringifier.
  * \return Output stream.
@@ -544,7 +536,6 @@ std::ostream& operator<<(
 
 /** \brief Stringifier C string specialized output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param s  Stringifier.
  * \return Output stream.
@@ -558,7 +549,6 @@ std::ostream& operator<<(
 
 /** \brief Stringifier C string specialized output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param s  Stringifier.
  * \return Output stream.
@@ -572,7 +562,6 @@ std::ostream& operator<<(
 
 /** \brief Stringifier C++ string specialized output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param s  Stringifier.
  * \return Output stream.
@@ -588,7 +577,6 @@ std::ostream& operator<<(
  *  This solves the error "cannot refer to class template 'Stringifier' without
  * a template argument list".
  *
- * \note For internal use.
  * \tparam T variable type.
  * \param t Variable.
  * \return Created Stringifier.
@@ -600,7 +588,6 @@ Stringifier<T> stringify(T& t) {
 
 /** \brief Write name of a type to stream.
  *
- * \note For internal use.
  * \tparam T Variable type.
  *
  */
@@ -664,7 +651,6 @@ class TypeNamer {
 
 /** \brief General TypeNamer output.
  *
- * \note For internal use.
  * \tparam T Variable type.
  * \param os Output stream.
  * \param t  TypeNamer.
@@ -678,7 +664,6 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<T>& t) noexcept {
 
 /** \brief General TypeNamer output.
  *
- * \note For internal use.
  * \tparam T Variable type.
  * \param os    Output stream.
  * \param t     TypeNamer.
@@ -693,7 +678,6 @@ std::ostream& operator<<(
 
 /** \brief Pointer TypeNamer output.
  *
- * \note For internal use.
  * \tparam T Variable type.
  * \param os    Output stream.
  * \param t     TypeNamer.
@@ -713,7 +697,6 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<T*>& t) noexcept {
 
 /** \brief Const pointer TypeNamer output.
  *
- * \note For internal use.
  * \tparam T Variable type.
  * \param os    Output stream.
  * \param t     TypeNamer.
@@ -735,7 +718,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -748,7 +730,6 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<bool>& t) noexcept {
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -762,7 +743,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -776,7 +756,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -789,7 +768,6 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<char>& t) noexcept {
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -803,7 +781,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -817,7 +794,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -831,7 +807,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -845,7 +820,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -859,7 +833,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -873,7 +846,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -886,7 +858,6 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<float>& t) noexcept {
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -900,7 +871,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -914,7 +884,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -928,7 +897,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -942,7 +910,6 @@ std::ostream& operator<<(
 
 /** \brief Specialized TypeNamer output.
  *
- * \note For internal use.
  * \param os Output stream.
  * \param t  TypeNamer.
  * \return Output stream.
@@ -958,7 +925,6 @@ std::ostream& operator<<(
  *  This solves the error "cannot refer to class template 'TypeNamer' without a
  * template argument list".
  *
- * \note For internal use.
  * \tparam T variable type.
  * \param t        Variable.
  * \param is_first \c true if first TypeNamer.
@@ -971,7 +937,6 @@ TypeNamer<T> make_type_name(T& t, bool is_first) {
 
 /** \brief Output ANSI color start code, if color is enabled.
  *
- * \note For internal use.
  * \param os Output stream.
  * \return Output stream.
  *
@@ -985,7 +950,6 @@ std::ostream& color_start(std::ostream& os) noexcept {
 
 /** \brief Output ANSI color end code, if color is enabled.
  *
- * \note For internal use.
  * \param os Output stream.
  * \return Output stream.
  *
@@ -999,7 +963,6 @@ std::ostream& color_end(std::ostream& os) noexcept {
 
 /** \brief Array.
  *
- * \note For internal use.
  * \tparam T Variable type.
  *
  */
@@ -1069,7 +1032,6 @@ class Array {
 
 /** \brief Array output.
  *
- * \note For internal use.
  * \tparam U Type.
  * \param os Output stream.
  * \param a  Array.
@@ -1099,7 +1061,6 @@ std::ostream& operator<<(std::ostream& os, const Array<U>& a) noexcept {
  *  This solves the error "cannot refer to class template 'Array' without
  * a template argument list".
  *
- * \note For internal use.
  * \tparam T Type.
  * \param name      Name.
  * \param val       Values.
@@ -1115,7 +1076,6 @@ Array<T> make_array(
 
 /** \brief Matrix.
  *
- * \note For internal use.
  * \tparam T Type.
  *
  */
@@ -1196,7 +1156,6 @@ class Matrix {
 
 /** \brief Matrix output.
  *
- * \note For internal use.
  * \tparam U Type.
  * \param os Output stream.
  * \param m  Matrix.
@@ -1234,7 +1193,6 @@ std::ostream& operator<<(std::ostream& os, const Matrix<U>& m) noexcept {
  *  This solves the error "cannot refer to class template 'Matrix' without
  * a template argument list".
  *
- * \note For internal use.
  * \tparam T Type.
  * \param name      Name.
  * \param val       Values.
