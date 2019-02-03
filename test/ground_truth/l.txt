@@ -2,12 +2,12 @@ a = 1
 a = 1, b = "hej"
 a = 1, b = "hej", c = 7
 a = 1, b = "hej", c = 7, d = 0
-a = 1, b = "hej", c = 7, d = 0, e = 1
-a = 1, b = "hej", c = 7, d = 0, e = 1, f = "asdsa"
-a = 1, b = "hej", c = 7, d = 0, e = 1, f = "asdsa", g = 0x[0-9A-Fa-f]+
-a = 1, b = "hej", c = 7, d = 0, e = 1, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp
-a = 1, b = "hej", c = 7, d = 0, e = 1, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1
-a = 1, b = "hej", c = 7, d = 0, e = 1, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j'
-a = 1, b = "hej", c = 7, d = 0, e = 1, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1
-a = 1, b = "hej", c = 7, d = 0, e = 1, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1, a = 1
-a = 1, b = "hej", c = 7, d = 0, e = 1, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1, a = 1, b = "hej"
+a = 1, b = "hej", c = 7, d = 0, e = true
+a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa"
+a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+
+a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp
+a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1
+a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j'
+a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1
+a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1, a = 1
+a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1, a = 1, b = "hej"

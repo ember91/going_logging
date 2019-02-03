@@ -177,6 +177,7 @@ void matrix(const char* var_name, const char* file_path, long file_line,
 
 } // namespace internal
 
+// Forward delarations
 prefix get_prefixes() noexcept;
 void   set_prefixes(prefix p) noexcept;
 bool   is_output_enabled() noexcept;
@@ -493,6 +494,20 @@ std::ostream& operator<<(std::ostream& os, const Stringifier<T>& s) noexcept {
     return os << s.get_t();
 }
 
+/** \brief Stringifier bool specialized output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<bool>& s) noexcept {
+    return os << (s.get_t() ? "true" : "false");
+}
+
 /** \brief Stringifier char specialized output function.
  *
  * \note For internal use.
@@ -704,6 +719,19 @@ std::ostream& operator<<(
         }
     }
     return os;
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<bool>& t) noexcept {
+    return t.out(os, "bool");
 }
 
 /** \brief Specialized TypeNamer output function.

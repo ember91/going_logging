@@ -47,6 +47,7 @@ int main(int argc, const char** argv) {
     }
 
     // Test type name output
+    bool b = true;
     // uint8_t        u8  = 8;
     uint16_t u16 = 16;
     uint32_t u32 = 32;
@@ -71,6 +72,7 @@ int main(int argc, const char** argv) {
 
     gl::set_prefixes(gl::prefix::TYPE_NAME);
 
+    l(b);
     // l(u8);
     l(u16);
     l(u32);
@@ -92,8 +94,9 @@ int main(int argc, const char** argv) {
     l(ppi32);
     // l(ri32);
     // l(cri32);
-    l(/*u8, */ u16, u32, u64, /*i8, */ i16, i32, i64, f32, f64);
-    l(c8, c16, c32, wc, s1, s2, s3, /*ri32, cri32, */ pi32, ppi32);
+    l(b, /*u8, */ u16, u32, u64, /*i8, */ i16, i32, i64, f32, f64);
+    l(c8, c16, c32, wc, s1, s2, s3);
+    l(/*ri32, cri32, */ pi32, ppi32);
 
     return t.compare_output(true);
 }
