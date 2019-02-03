@@ -508,7 +508,10 @@ std::ostream& operator<<(
     return os << (s.get_t() ? "true" : "false");
 }
 
-/** \brief Stringifier char specialized output function.
+// 3.9.1 in C++ standard: Plain char, signed char, and unsigned char are three
+// distinct types
+
+/** \brief Stringifier unsigned char specialized output function.
  *
  * \note For internal use.
  * \param os Output stream.
@@ -519,6 +522,34 @@ std::ostream& operator<<(
 template<>
 std::ostream& operator<<(
     std::ostream& os, const Stringifier<char>& s) noexcept {
+    return os << '\'' << s.get_t() << '\'';
+}
+
+/** \brief Stringifier unsigned char specialized output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<unsigned char>& s) noexcept {
+    return os << '\'' << s.get_t() << '\'';
+}
+
+/** \brief Stringifier signed char specialized output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<signed char>& s) noexcept {
     return os << '\'' << s.get_t() << '\'';
 }
 
@@ -744,8 +775,35 @@ std::ostream& operator<<(std::ostream& os, const TypeNamer<bool>& t) noexcept {
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<uint8_t>& t) noexcept {
-    return t.out(os, "uint8_t");
+    std::ostream& os, const TypeNamer<unsigned char>& t) noexcept {
+    return t.out(os, "unsigned char");
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const TypeNamer<signed char>& t) noexcept {
+    return t.out(os, "signed char");
+}
+
+/** \brief Specialized TypeNamer output function.
+ *
+ * \note For internal use.
+ * \param os Output stream.
+ * \param t  TypeNamer.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(std::ostream& os, const TypeNamer<char>& t) noexcept {
+    return t.out(os, "char");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -788,20 +846,6 @@ template<>
 std::ostream& operator<<(
     std::ostream& os, const TypeNamer<uint64_t>& t) noexcept {
     return t.out(os, "uint64_t");
-}
-
-/** \brief Specialized TypeNamer output function.
- *
- * \note For internal use.
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(
-    std::ostream& os, const TypeNamer<int8_t>& t) noexcept {
-    return t.out(os, "int8_t");
 }
 
 /** \brief Specialized TypeNamer output function.
@@ -871,19 +915,6 @@ template<>
 std::ostream& operator<<(
     std::ostream& os, const TypeNamer<double>& t) noexcept {
     return t.out(os, "double");
-}
-
-/** \brief Specialized TypeNamer output function.
- *
- * \note For internal use.
- * \param os Output stream.
- * \param t  TypeNamer.
- * \return Output stream.
- *
- */
-template<>
-std::ostream& operator<<(std::ostream& os, const TypeNamer<char>& t) noexcept {
-    return t.out(os, "char");
 }
 
 /** \brief Specialized TypeNamer output function.

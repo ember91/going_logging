@@ -53,20 +53,22 @@ int main(int argc, const char** argv) {
     uint32_t u32 = 32;
     uint64_t u64 = 64;
     // int8_t         i8    = 8;
-    int16_t     i16   = 16;
-    int32_t     i32   = 32;
-    int64_t     i64   = 64;
-    float       f32   = 32.0f;
-    double      f64   = 64.0;
-    char        c8    = '1';
-    char16_t    c16   = '4';
-    char32_t    c32   = '5';
-    wchar_t     wc    = 'w';
-    const char* s1    = "s1";
-    char*       s2    = const_cast<char*>(s1);
-    std::string s3    = "s3";
-    int32_t*    pi32  = &i32;
-    int32_t**   ppi32 = &pi32;
+    int16_t       i16   = 16;
+    int32_t       i32   = 32;
+    int64_t       i64   = 64;
+    float         f32   = 32.0f;
+    double        f64   = 64.0;
+    unsigned char uc    = 'u';
+    signed char   sc    = 's';
+    char          c8    = '1';
+    char16_t      c16   = '4';
+    char32_t      c32   = '5';
+    wchar_t       wc    = 'w';
+    const char*   s1    = "s1";
+    char*         s2    = const_cast<char*>(s1);
+    std::string   s3    = "s3";
+    int32_t*      pi32  = &i32;
+    int32_t**     ppi32 = &pi32;
     // int32_t&       ri32  = i32;
     // const int32_t& cri32 = i32;
 
@@ -83,6 +85,8 @@ int main(int argc, const char** argv) {
     l(i64);
     l(f32);
     l(f64);
+    l(uc);
+    l(sc);
     l(c8);
     l(c16);
     l(c32);
@@ -95,7 +99,7 @@ int main(int argc, const char** argv) {
     // l(ri32);
     // l(cri32);
     l(b, /*u8, */ u16, u32, u64, /*i8, */ i16, i32, i64, f32, f64);
-    l(c8, c16, c32, wc, s1, s2, s3);
+    l(uc, sc, c8, c16, c32, wc, s1, s2, s3);
     l(/*ri32, cri32, */ pi32, ppi32);
 
     return t.compare_output(true);
