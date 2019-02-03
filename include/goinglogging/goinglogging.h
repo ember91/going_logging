@@ -115,15 +115,26 @@
 #ifndef INCLUDE_GOINGLOGGING_H_
 #define INCLUDE_GOINGLOGGING_H_
 
+#include <array>
 #include <chrono>
 #include <cstring>
 #include <ctime>
+#include <deque>
+#include <forward_list>
 #include <iomanip>
 #include <ios>
 #include <iostream>
+#include <list>
+#include <map>
 #include <ostream>
+#include <queue>
+#include <set>
+#include <stack>
 #include <string>
 #include <thread>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #ifndef GL_NEWLINE
 /** \brief Newline character to use after each logging message.
@@ -441,6 +452,11 @@ class Stringifier {
     explicit Stringifier(T& t) noexcept : m_t(t) {
     }
 
+    std::ostream& sequence(std::ostream& os) const noexcept;
+    std::ostream& map(std::ostream& os) const noexcept;
+    std::ostream& stack(std::ostream& os) const noexcept;
+    std::ostream& queue(std::ostream& os) const noexcept;
+
     /** \brief Write to stream.
      *
      * \tparam U Variable type.
@@ -465,6 +481,113 @@ class Stringifier {
   private:
     T& m_t; /**< Variable to stringify. */
 };
+
+/** \brief Create Stringifier from scratch.
+ *  This solves the error "cannot refer to class template 'Stringifier' without
+ * a template argument list".
+ *
+ * \tparam T variable type.
+ * \param t Variable.
+ * \return Created Stringifier.
+ */
+template<class T>
+Stringifier<T> stringify(T& t) {
+    return Stringifier<T>(t);
+};
+
+/** Iterate through and stringify a sequence, defined by begin() and end().
+ *
+ * \tparam T Variable type.
+ * \param os Output stream.
+ * \return Output stream.
+ *
+ */
+template<class T>
+std::ostream& Stringifier<T>::sequence(std::ostream& os) const noexcept {
+    os << '{';
+    // Print first object without comma
+    auto it = m_t.begin();
+    if (it != m_t.end()) {
+        os << stringify(*it);
+        ++it;
+    }
+    // Print the rest
+    for (; it != m_t.end(); ++it) {
+        os << ", " << stringify(*it);
+    }
+    os << '}';
+
+    return os;
+}
+
+/** Iterate through and stringify a map, defined by begin() and end().
+ *
+ * \tparam T Variable type.
+ * \param os Output stream.
+ * \return Output stream.
+ *
+ */
+template<class T>
+std::ostream& Stringifier<T>::map(std::ostream& os) const noexcept {
+    os << '{';
+    // Print first object without comma
+    auto it = m_t.begin();
+    if (it != m_t.end()) {
+        os << stringify(it->first) << ": " << stringify(it->second);
+        ++it;
+    }
+    // Print the rest
+    for (; it != m_t.end(); ++it) {
+        os << ", " << stringify(it->first) << ": " << stringify(it->second);
+    }
+    os << '}';
+
+    return os;
+}
+
+/** Stringify a stack, defined by top().
+ *
+ * \tparam T Variable type.
+ * \param os Output stream.
+ * \return Output stream.
+ *
+ */
+template<class T>
+std::ostream& Stringifier<T>::stack(std::ostream& os) const noexcept {
+    // Only print first element, if available
+    os << '{';
+    if (m_t.size() == 1) {
+        os << stringify(m_t.top());
+    } else if (m_t.size() != 0) {
+        os << stringify(m_t.top()) << ", ...";
+    }
+    os << '}';
+
+    return os;
+}
+
+/** Stringify a queue, defined by front and back().
+ *
+ * \tparam T Variable type.
+ * \param os Output stream.
+ * \return Output stream.
+ *
+ */
+template<class T>
+std::ostream& Stringifier<T>::queue(std::ostream& os) const noexcept {
+    // Only print first element, if available
+    os << '{';
+    if (m_t.size() == 1) {
+        os << stringify(m_t.front());
+    } else if (m_t.size() != 2) {
+        os << stringify(m_t.front()) << ", " << stringify(m_t.back());
+    } else if (m_t.size() != 0) {
+        os << stringify(m_t.front()) << ", ..., " << stringify(m_t.back());
+    }
+    os << '}';
+
+    return os;
+}
 
 /** \brief General Stringifier output.
  *
@@ -560,7 +683,7 @@ std::ostream& operator<<(
     return os << '\"' << s.get_t() << '\"';
 }
 
-/** \brief Stringifier C++ string specialized output.
+/** \brief Stringifier std::string specialized output.
  *
  * \param os Output stream.
  * \param s  Stringifier.
@@ -573,18 +696,213 @@ std::ostream& operator<<(
     return os << '\"' << s.get_t() << '\"';
 }
 
-/** \brief Create Stringifier from scratch.
- *  This solves the error "cannot refer to class template 'Stringifier' without
- * a template argument list".
+/** \brief Stringifier std::array specialized output.
  *
- * \tparam T variable type.
- * \param t Variable.
- * \return Created Stringifier.
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
  */
-template<class T>
-Stringifier<T> stringify(T& t) {
-    return Stringifier<T>(t);
-};
+template<class U, size_t N>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::array<U, N>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::vector specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::vector<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::deque specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::deque<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::forward_list specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::forward_list<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::list specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::list<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::set specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::set<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::map specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U, class V>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::map<U, V>>& s) noexcept {
+    return s.map(os);
+}
+
+/** \brief Stringifier std::multiset specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::multiset<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::multimap specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U, class V>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::multimap<U, V>>& s) noexcept {
+    return s.map(os);
+}
+
+/** \brief Stringifier std::unordered_set specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::unordered_set<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::unordered_map specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U, class V>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::unordered_map<U, V>>& s) noexcept {
+    return s.map(os);
+}
+
+/** \brief Stringifier std::unordered_multiset specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(std::ostream&             os,
+    const Stringifier<std::unordered_multiset<U>>& s) noexcept {
+    return s.sequence(os);
+}
+
+/** \brief Stringifier std::unordered_multimap specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U, class V>
+std::ostream& operator<<(std::ostream&                os,
+    const Stringifier<std::unordered_multimap<U, V>>& s) noexcept {
+    return s.map(os);
+}
+
+/** \brief Stringifier std::stack specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::stack<U>>& s) noexcept {
+    return s.stack(os);
+}
+
+/** \brief Stringifier std::queue specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::queue<U>>& s) noexcept {
+    return s.queue(os);
+}
+
+/** \brief Stringifier std::priority_queue specialized output.
+ *
+ * \param os Output stream.
+ * \param s  Stringifier.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const Stringifier<std::priority_queue<U>>& s) noexcept {
+    return s.stack(os);
+}
 
 /** \brief Write name of a type to stream.
  *

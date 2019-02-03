@@ -26,9 +26,12 @@ Control regexes in ground truth?
 Include what's used but nothing more
 Neither getterrs nor setters should use \brief
 Fix naming of Arrayifier, Matrixifier etc.
+Ensure template parameters are documented.
+Remove type data_type information
 
 Features:
 FIRA code font
+From C library, add: Complex numbers, atomic types?, time.h types,
 Add TypeNamer tests for const pointers, normal pointers, const references, normal references, double pointers, void pointers etc.
 Add specialized type name prefixes for all std classes and for some pointer types. Add tests for this.
 Add problem description (printf("i = %s\n"); vs l(i);)

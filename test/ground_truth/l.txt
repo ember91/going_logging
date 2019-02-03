@@ -11,3 +11,12 @@ a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = T
 a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1
 a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1, a = 1
 a = 1, b = "hej", c = 7, d = 0, e = true, f = "asdsa", g = 0x[0-9A-Fa-f]+, h = TestOp, i = 1, j = 'j', \*g = 1, a = 1, b = "hej"
+arr = \{0, 1, 2\}
+deq = \{0, 1, 2\}
+vec = \{0, 1, 2\}
+fl = \{0, 1, 2\}
+lst = \{0, 1, 2\}
+set = \{0, 1, 2\}
+map = \{0: 1, 2: 3, 4: 5\}
+mset = \{0, 1, 2\}
+mmap = \{0: 1, 2: 3, 4: 5\}
