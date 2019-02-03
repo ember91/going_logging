@@ -22,7 +22,7 @@
 * Don't convert between const char* and std::string too much
 * Don't use C-style comments
 * Ensure parameters are in a good order
-* Control regexes in ground truth?
+* Control regexes in test ground truth
 * Include what's used but nothing more
 * Neither getterrs nor setters should use \brief
 * Ensure template parameters are documented with \tparam
