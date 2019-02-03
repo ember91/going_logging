@@ -72,6 +72,9 @@ gl::set_output_enabled(false);
 gl::set_color_enabled(true);
 ```
 
+## External dependencies
+goinglogging only depends on the C++ standard library.
+
 ## License
 
 Copyright 2018 Emil Berg
