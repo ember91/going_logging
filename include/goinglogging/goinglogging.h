@@ -579,7 +579,7 @@ std::ostream& Stringifier<T>::queue(std::ostream& os) const noexcept {
     os << '{';
     if (m_t.size() == 1) {
         os << stringify(m_t.front());
-    } else if (m_t.size() != 2) {
+    } else if (m_t.size() == 2) {
         os << stringify(m_t.front()) << ", " << stringify(m_t.back());
     } else if (m_t.size() != 0) {
         os << stringify(m_t.front()) << ", ..., " << stringify(m_t.back());
