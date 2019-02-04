@@ -76,3 +76,4 @@
 ## Error handling
 
 * Add and use exception type
+* Give a useful error message when operator<< isn't overloaded
