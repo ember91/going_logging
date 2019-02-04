@@ -1,40 +1,50 @@
 # Cleanup
 
-* Improve documentation
+## Tools
+
+* Static analysis
 * Compile with all warnings enabled
-* Run static analysis
-* Run valgrind
-* Add noexcept, const, constepxr, explicit to functions
-* Add const to parameters and members where applicable
-* No tabs
-* Test on Windows
+* Valgrind
 * Clean up CMakeLists.txt
+
+## Testing
+
+* Test on Windows
+* Control regexes in test ground truth
+
+## Documentation
+
+* Improve
+* Neither getters nor setters should use \brief
+* Ensure template parameters are documented with \tparam
+* Ensure relevant features are listed in both doxygen and README
+* Ensure documentation such as \param ends with dot
+
+## Consistency
+
+* Add noexcept, const, constepxr, explicit to functions
+* Don't overuse noexcept
+* Add const to parameters and members where applicable
 * Forward declare all functions
-* Check limit of 80 characters
 * Ensure classes are PascalCase, variables camelCase and functions snake_case
 * Inline functions in classes?
+* Use C++11 functionality
 * Ensure one character c-strings use single quotes
 * Ensure almost no usage of std::cout
 * Use ::gl::internal instead of gl::internal
 * Fix order of functions and classes
 * Pass std::string by reference only when necessary
-* Ensure documentation such as \param ends with dot
 * Don't convert between const char* and std::string too much
 * Don't use C-style comments
 * Ensure parameters are in a good order
-* Control regexes in test ground truth
 * Include what's used but nothing more
-* Neither getterrs nor setters should use \brief
-* Ensure template parameters are documented with \tparam
 * Make functions that can be static static
-* Use C++11 functionality
-* Ensure relevant features are listed in both doxygen and README
 
 # Features
 
-# Data type prefix
+## Data type prefix
 
-* Readd functionality for this, but this time smarter
+* Readd functionality for this with __cxa_demangle in GCC, clang
 
 ## VS code
 
@@ -58,7 +68,11 @@
 
 * Github create a release
 
-# Base functionality
+## Base functionality
 
 * Add macros l_until(cond), l_until(int), l_when(cond), l_regularly(time), l_regularly(int)
 * Redirect all logging to a configurable stream. Make the disable functionality redirect it to no stream.
+
+## Error handling
+
+* Add and use exception type
