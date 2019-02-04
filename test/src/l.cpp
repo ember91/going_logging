@@ -1,35 +1,5 @@
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
-#include <array>
-#include <deque>
-#include <forward_list>
-#include <iostream>
-#include <list>
-#include <map>
-#include <ostream>
-#include <queue>
-#include <stack>
-#include <string>
-#include <vector>
-
-/** Test outputting a class by overriding the << operator */
-class TestOp {
-  public:
-    friend std::ostream& operator<<(std::ostream& out, const TestOp& t);
-};
-
-/** Output class information
- *
- * \param out Output stream
- * \param t   Object to output
- * \return    Stream
- *
- */
-std::ostream& operator<<(std::ostream& out, const TestOp& t) {
-    (void)(t);
-    out << "TestOp";
-    return out;
-}
 
 int main(int argc, const char** argv) {
     if (argc != 1) {
@@ -42,71 +12,45 @@ int main(int argc, const char** argv) {
     test t;
     t.setup(__FILE__);
 
-    int         a = 1;
-    const char* b = "hej";
-    uint32_t    c = 7;
-    int*        d = nullptr;
-    bool        e = true;
-    std::string f("asdsa");
-    int*        g = &a;
-    TestOp      h;
-    int&        i = a;
-    char        j = 'j';
+    int i0  = 0;
+    int i1  = 1;
+    int i2  = 2;
+    int i3  = 3;
+    int i4  = 4;
+    int i5  = 5;
+    int i6  = 6;
+    int i7  = 7;
+    int i8  = 8;
+    int i9  = 9;
+    int i10 = 10;
+    int i11 = 11;
+    int i12 = 12;
+    int i13 = 13;
+    int i14 = 14;
+    int i15 = 15;
 
-    l(a);
-    l(a, b);
-    l(a, b, c);
-    l(a, b, c, d);
-    l(a, b, c, d, e);
-    l(a, b, c, d, e, f);
-    l(a, b, c, d, e, f, g);
-    l(a, b, c, d, e, f, g, h);
-    l(a, b, c, d, e, f, g, h, i);
-    l(a, b, c, d, e, f, g, h, i, j);
-    l(a, b, c, d, e, f, g, h, i, j, *g);
-    l(a, b, c, d, e, f, g, h, i, j, *g, a);
-    l(a, b, c, d, e, f, g, h, i, j, *g, a, b);
+    l(i0);
+    l(i0, i1);
+    l(i0, i1, i2);
+    l(i0, i1, i2, i3);
+    l(i0, i1, i2, i3, i4);
+    l(i0, i1, i2, i3, i4, i5);
+    l(i0, i1, i2, i3, i4, i5, i6);
+    l(i0, i1, i2, i3, i4, i5, i6, i7);
+    l(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+    l(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+    l(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10);
+    l(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11);
+    l(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12);
+    l(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13);
+    l(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14);
+    l(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15);
 
-    // Test C types
-    time_t     curtime = time(nullptr);
-    struct tm* tm      = std::localtime(&curtime);
-    l(*tm);
+    const char* s1 = "s1";
+    const char* s2 = "s2";
 
-    // Test C++ types
-    std::array<int, 3>      arr  = {0, 1, 2};
-    std::deque<int>         deq  = {0, 1, 2};
-    std::vector<int>        vec  = {0, 1, 2};
-    std::forward_list<int>  fl   = {0, 1, 2};
-    std::list<int>          lst  = {0, 1, 2};
-    std::set<int>           set  = {0, 1, 2};
-    std::map<int, int>      map  = {{0, 1}, {2, 3}, {4, 5}};
-    std::multiset<int>      mset = {0, 1, 2};
-    std::multimap<int, int> mmap = {{0, 1}, {2, 3}, {4, 5}};
-    std::stack<int>         st;
-    st.push(2);
-    st.push(1);
-    st.push(0);
-    std::queue<int> que;
-    que.push(0);
-    que.push(1);
-    que.push(2);
-    std::priority_queue<int> pque;
-    pque.push(0);
-    pque.push(1);
-    pque.push(2);
-
-    l(arr);
-    l(deq);
-    l(vec);
-    l(fl);
-    l(lst);
-    l(set);
-    l(map);
-    l(mset);
-    l(mmap);
-    l(st);
-    l(que);
-    l(pque);
+    l(s1);
+    l(s1, s2);
 
     return t.compare_output(true);
 }

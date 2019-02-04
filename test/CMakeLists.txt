@@ -28,7 +28,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 add_library(libtest src/test.cpp)
 
+add_executable(c_types        src/c_types.cpp)
 add_executable(color          src/color.cpp)
+add_executable(cpp_types      src/cpp_types.cpp)
+add_executable(custom         src/custom.cpp)
 add_executable(l              src/l.cpp)
 add_executable(l_arr          src/l_arr.cpp)
 add_executable(l_mat          src/l_mat.cpp)
@@ -37,13 +40,25 @@ add_executable(postfix        src/postfix.cpp)
 add_executable(prefixes       src/prefixes.cpp)
 add_executable(run_all        src/run_all.cpp)
 
-if(CLANG_TIDY_EXE)
+if(false)
     set_target_properties(
         libtest PROPERTIES
         CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
     )
     set_target_properties(
+        c_types PROPERTIES
+        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+    )
+    set_target_properties(
         color PROPERTIES
+        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+    )
+    set_target_properties(
+        cpp_types PROPERTIES
+        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+    )
+    set_target_properties(
+        custom PROPERTIES
         CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
     )
     set_target_properties(
@@ -76,7 +91,10 @@ if(CLANG_TIDY_EXE)
     )
 endif()
 
+target_link_libraries(c_types        libtest)
 target_link_libraries(color          libtest)
+target_link_libraries(cpp_types      libtest)
+target_link_libraries(custom         libtest)
 target_link_libraries(l              libtest)
 target_link_libraries(l_arr          libtest)
 target_link_libraries(l_mat          libtest)

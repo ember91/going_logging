@@ -102,7 +102,7 @@ int test::compare_output(bool regex) {
         if (fGt && !fOut) {
             std::cout << "Ground truth has more lines than output at line "
                       << lineIdx << '\n'
-                      << "'" << lGt << "'" << std::endl;
+                      << "Grt: '" << lGt << '\'' << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -110,7 +110,7 @@ int test::compare_output(bool regex) {
         if (!fGt && fOut) {
             std::cout << "Output has more lines than ground truth at line "
                       << lineIdx << '\n'
-                      << "'" << lOut << "'" << std::endl;
+                      << "Out: '" << lOut << '\'' << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -120,23 +120,21 @@ int test::compare_output(bool regex) {
                 if (!std::regex_match(lOut, rx)) {
                     std::cout << "Regular expression mismatch at line "
                               << lineIdx << '\n'
-                              << "'" << lOut << "'\n"
-                              << "'" << lGt << "'" << std::endl;
+                              << "Out: '" << lOut << "'\n"
+                              << "Grt: '" << lGt << '\'' << std::endl;
                     return EXIT_FAILURE;
                 }
             } catch (const std::regex_error& exc) {
                 std::cout << "Regular expression exception at line " << lineIdx
                           << '\n'
-                          << "'" << lOut << "'\n"
-                          << "'" << lGt << "'\n"
-                          << exc.what() << std::endl;
+                          << "Grt: '" << lGt << '\'' << exc.what() << std::endl;
                 return EXIT_FAILURE;
             }
         } else {
             if (lOut != lGt) {
                 std::cout << "Mismatch at line " << lineIdx << '\n'
-                          << "'" << lOut << "'\n"
-                          << "'" << lGt << "'" << std::endl;
+                          << "Out: '" << lOut << "'\n"
+                          << "Grt: '" << lGt << '\'' << std::endl;
                 return EXIT_FAILURE;
             }
         }
