@@ -1,6 +1,6 @@
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
-#include <stdint.h>
+#include <cstdint>
 
 int main(int argc, const char** argv) {
     if (argc != 1) {

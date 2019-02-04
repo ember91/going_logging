@@ -20,10 +20,10 @@ class CustInsOp {
      * \param i Test value.
      *
      */
-    CustInsOp(int i) : m_i(i) {
+    explicit CustInsOp(int i) : m_i(i) {
     }
 
-    friend std::ostream& operator<<(std::ostream& out, const CustInsOp& t);
+    friend std::ostream& operator<<(std::ostream& os, const CustInsOp& c);
 
   private:
     int m_i; /**< Test value. */

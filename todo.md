@@ -77,3 +77,7 @@
 
 * Add and use exception type
 * Give a useful error message when operator<< isn't overloaded
+
+## C++ > 14
+
+* std::string_view
