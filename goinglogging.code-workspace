@@ -54,7 +54,8 @@
 			"forward_list": "cpp",
 			"list": "cpp",
 			"unordered_set": "cpp",
-			"complex": "cpp"
+			"complex": "cpp",
+			"string": "cpp"
 		},
 		"C_Cpp.clang_format_fallbackStyle": "LLVM",
 		"C_Cpp.default.cppStandard": "c++11",

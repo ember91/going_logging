@@ -40,7 +40,7 @@ add_executable(postfix        src/postfix.cpp)
 add_executable(prefixes       src/prefixes.cpp)
 add_executable(run_all        src/run_all.cpp)
 
-if(false)
+if(DO_CLANG_TIDY)
     set_target_properties(
         libtest PROPERTIES
         CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
