@@ -127,7 +127,8 @@ int test::compare_output(bool regex) {
             } catch (const std::regex_error& exc) {
                 std::cout << "Regular expression exception at line " << lineIdx
                           << '\n'
-                          << "Grt: '" << lGt << '\'' << exc.what() << std::endl;
+                          << "Grt: '" << lGt << "': " << exc.what()
+                          << std::endl;
                 return EXIT_FAILURE;
             }
         } else {
