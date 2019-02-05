@@ -559,14 +559,7 @@ class ValueFormatter {
 
     template<class U>
     friend std::ostream& operator<<(
-        std::ostream& os, const ValueFormatter<U>& s) noexcept;
-
-    /**
-     * \return Value.
-     */
-    T& get_value() const noexcept {
-        return m_val;
-    }
+        std::ostream& os, const ValueFormatter<U>& f) noexcept;
 
   private:
     T& m_val; /**< Value to format. Use non-const reference in case operator<<
@@ -686,27 +679,27 @@ std::ostream& ValueFormatter<T>::queue(std::ostream& os) const noexcept {
  *
  * \tparam T Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class T>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<T>& s) noexcept {
-    return os << s.get_value();
+    std::ostream& os, const ValueFormatter<T>& f) noexcept {
+    return os << f.m_val;
 }
 
 /** \brief Format bool.
  *
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<bool>& s) noexcept {
-    return os << (s.get_value() ? "true" : "false");
+    std::ostream& os, const ValueFormatter<bool>& f) noexcept {
+    return os << (f.m_val ? "true" : "false");
 }
 
 // 3.9.1 in C++ standard: Plain char, signed char, and unsigned
@@ -715,81 +708,81 @@ std::ostream& operator<<(
 /** \brief Format char.
  *
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<char>& s) noexcept {
-    return os << '\'' << s.get_value() << '\'';
+    std::ostream& os, const ValueFormatter<char>& f) noexcept {
+    return os << '\'' << f.m_val << '\'';
 }
 
 /** \brief Format unsigned char.
  *
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<unsigned char>& s) noexcept {
-    return os << '\'' << s.get_value() << '\'';
+    std::ostream& os, const ValueFormatter<unsigned char>& f) noexcept {
+    return os << '\'' << f.m_val << '\'';
 }
 
 /** \brief Format signed char.
  *
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<signed char>& s) noexcept {
-    return os << '\'' << s.get_value() << '\'';
+    std::ostream& os, const ValueFormatter<signed char>& f) noexcept {
+    return os << '\'' << f.m_val << '\'';
 }
 
 /** \brief Format char*.
  *
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<char*>& s) noexcept {
-    return os << '\"' << s.get_value() << '\"';
+    std::ostream& os, const ValueFormatter<char*>& f) noexcept {
+    return os << '\"' << f.m_val << '\"';
 }
 
 /** \brief Format const char*.
  *
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<const char*>& s) noexcept {
-    return os << '\"' << s.get_value() << '\"';
+    std::ostream& os, const ValueFormatter<const char*>& f) noexcept {
+    return os << '\"' << f.m_val << '\"';
 }
 
 /** \brief Format std::tm.
  *
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::tm>& s) noexcept {
+    std::ostream& os, const ValueFormatter<std::tm>& f) noexcept {
     // Format as "YYYY-MM-DD HH:MM:SS", including null pointer
     char buf[20];
-    if (std::strftime(buf, sizeof(buf), "%F %T", &s.get_value()) == 0) {
+    if (std::strftime(buf, sizeof(buf), "%F %T", &f.m_val) == 0) {
         os << "std::tm format error";
     } else {
         os << buf;
@@ -797,17 +790,56 @@ std::ostream& operator<<(
     return os;
 }
 
-/** \brief Format std::string.
+/** \brief Format std::div_t.
  *
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::string>& s) noexcept {
-    return os << '\"' << s.get_value() << '\"';
+    std::ostream& os, const ValueFormatter<std::div_t>& f) noexcept {
+    return os << "{quot = " << f.m_val.quot << ", rem = " << f.m_val.rem << '}';
+}
+
+/** \brief Format std::ldiv_t.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::ldiv_t>& f) noexcept {
+    return os << "{quot = " << f.m_val.quot << ", rem = " << f.m_val.rem << '}';
+}
+
+/** \brief Format std::lldiv_t.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::lldiv_t>& f) noexcept {
+    return os << "{quot = " << f.m_val.quot << ", rem = " << f.m_val.rem << '}';
+}
+
+/** \brief Format std::string.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::string>& f) noexcept {
+    return os << '\"' << f.m_val << '\"';
 }
 
 /** \brief Format std::array.
@@ -815,84 +847,84 @@ std::ostream& operator<<(
  * \tparam U Value type.
  * \tparam N Number of elements.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, size_t N>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::array<U, N>>& s) noexcept {
-    return s.sequence(os);
+    std::ostream& os, const ValueFormatter<std::array<U, N>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::vector.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::vector<U>>& s) noexcept {
-    return s.sequence(os);
+    std::ostream& os, const ValueFormatter<std::vector<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::deque.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::deque<U>>& s) noexcept {
-    return s.sequence(os);
+    std::ostream& os, const ValueFormatter<std::deque<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::forward_list.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::forward_list<U>>& s) noexcept {
-    return s.sequence(os);
+    std::ostream& os, const ValueFormatter<std::forward_list<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::list.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::list<U>>& s) noexcept {
-    return s.sequence(os);
+    std::ostream& os, const ValueFormatter<std::list<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::set.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::set<U>>& s) noexcept {
-    return s.sequence(os);
+    std::ostream& os, const ValueFormatter<std::set<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::map.
@@ -900,28 +932,28 @@ std::ostream& operator<<(
  * \tparam U Key type.
  * \tparam V Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, class V>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::map<U, V>>& s) noexcept {
-    return s.map(os);
+    std::ostream& os, const ValueFormatter<std::map<U, V>>& f) noexcept {
+    return f.map(os);
 }
 
 /** \brief Format std::multiset.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::multiset<U>>& s) noexcept {
-    return s.sequence(os);
+    std::ostream& os, const ValueFormatter<std::multiset<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::multimap.
@@ -929,28 +961,28 @@ std::ostream& operator<<(
  * \tparam U Key type.
  * \tparam V Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, class V>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::multimap<U, V>>& s) noexcept {
-    return s.map(os);
+    std::ostream& os, const ValueFormatter<std::multimap<U, V>>& f) noexcept {
+    return f.map(os);
 }
 
 /** \brief Format std::unordered_set.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::unordered_set<U>>& s) noexcept {
-    return s.sequence(os);
+    std::ostream& os, const ValueFormatter<std::unordered_set<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::unordered_map.
@@ -958,28 +990,28 @@ std::ostream& operator<<(
  * \tparam U Key type.
  * \tparam V Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, class V>
 std::ostream& operator<<(std::ostream&              os,
-    const ValueFormatter<std::unordered_map<U, V>>& s) noexcept {
-    return s.map(os);
+    const ValueFormatter<std::unordered_map<U, V>>& f) noexcept {
+    return f.map(os);
 }
 
 /** \brief Format std::unordered_multiset.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(std::ostream&                os,
-    const ValueFormatter<std::unordered_multiset<U>>& s) noexcept {
-    return s.sequence(os);
+    const ValueFormatter<std::unordered_multiset<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format std::unordered_multimap.
@@ -987,56 +1019,56 @@ std::ostream& operator<<(std::ostream&                os,
  * \tparam U Key type.
  * \tparam V Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U, class V>
 std::ostream& operator<<(std::ostream&                   os,
-    const ValueFormatter<std::unordered_multimap<U, V>>& s) noexcept {
-    return s.map(os);
+    const ValueFormatter<std::unordered_multimap<U, V>>& f) noexcept {
+    return f.map(os);
 }
 
 /** \brief Format std::stack.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::stack<U>>& s) noexcept {
-    return s.stack(os);
+    std::ostream& os, const ValueFormatter<std::stack<U>>& f) noexcept {
+    return f.stack(os);
 }
 
 /** \brief Format std::queue.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(
-    std::ostream& os, const ValueFormatter<std::queue<U>>& s) noexcept {
-    return s.queue(os);
+    std::ostream& os, const ValueFormatter<std::queue<U>>& f) noexcept {
+    return f.queue(os);
 }
 
 /** \brief Format std::priority_queue.
  *
  * \tparam U Value type.
  * \param os Output stream.
- * \param s  ValueFormatter.
+ * \param f  ValueFormatter.
  * \return Output stream.
  *
  */
 template<class U>
 std::ostream& operator<<(std::ostream&            os,
-    const ValueFormatter<std::priority_queue<U>>& s) noexcept {
-    return s.stack(os);
+    const ValueFormatter<std::priority_queue<U>>& f) noexcept {
+    return f.stack(os);
 }
 
 /** \brief Write ANSI color start code to stream, if color is enabled.

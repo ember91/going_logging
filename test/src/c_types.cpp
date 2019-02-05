@@ -1,6 +1,7 @@
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
 #include <cstdint>
+#include <cstdlib>
 
 int main(int argc, const char** argv) {
     if (argc != 1) {
@@ -38,12 +39,16 @@ int main(int argc, const char** argv) {
     int32_t          i32 = 32;
     int64_t          i64 = 64;
 
-    // Floating point types
+    // Other integer types
+    size_t    sz = 1000;
+    ptrdiff_t pd = 5;
+
+    // Floating point
     float       f32  = 32.0f;
     double      f64  = 64.0;
     long double f128 = 128.0L;
 
-    // String types
+    // String
     char        c8  = '1';
     char16_t    c16 = '4';
     char32_t    c32 = '5';
@@ -51,9 +56,26 @@ int main(int argc, const char** argv) {
     const char* s1  = "s1";
     char*       s2  = const_cast<char*>(s1);
 
-    // Other types
-    time_t    curtime = time(nullptr);
-    struct tm tm      = *std::localtime(&curtime);
+    // Time
+    time_t    t1 = time(nullptr);
+    clock_t   cl = clock();
+    struct tm t2 = *std::localtime(&t1);
+
+    // Math
+    div_t   di   = {0, 1};
+    ldiv_t  ldi  = {2, 3};
+    lldiv_t lldi = {4, 5};
+
+    // Atomic
+    // No need to test, since they work the same as other types
+
+    // Exclusions
+    // Don't test <stdatomic.h>, <stdnoreturn.h>, and <threads.h>, since they
+    // are only in C but not in C++
+    // Don't test <ccomplex>, <complex.h>, <ctgmath>, and <tgmath.h>, since they
+    // are empty, or deprecated.
+    // Don't test <ciso646>, <iso646.h>, <cstdalign>, <stdalign.h>, <cstdbool>,
+    // <stdbool.h>, sinze they are meaningless in C++
 
     // Log
     l(b);
@@ -66,7 +88,6 @@ int main(int argc, const char** argv) {
     l(u16);
     l(u32);
     l(u64);
-
     l(sc);
     l(ss);
     l(si);
@@ -76,6 +97,8 @@ int main(int argc, const char** argv) {
     l(i16);
     l(i32);
     l(i64);
+    l(sz);
+    l(pd);
     l(f32);
     l(f64);
     l(f128);
@@ -85,7 +108,12 @@ int main(int argc, const char** argv) {
     l(wc);
     l(s1);
     l(s2);
-    l(tm);
+    l(t1);
+    l(cl);
+    l(t2);
+    l(di);
+    l(ldi);
+    l(lldi);
 
     return t.compare_output(true);
 }
