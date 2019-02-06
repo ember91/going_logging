@@ -55,7 +55,10 @@
 			"list": "cpp",
 			"unordered_set": "cpp",
 			"complex": "cpp",
-			"string": "cpp"
+			"string": "cpp",
+			"atomic": "cpp",
+			"valarray": "cpp",
+			"codecvt": "cpp"
 		},
 		"C_Cpp.clang_format_fallbackStyle": "LLVM",
 		"C_Cpp.default.cppStandard": "c++11",
