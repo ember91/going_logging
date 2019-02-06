@@ -40,8 +40,8 @@ int main(int argc, const char** argv) {
     int64_t          i64 = 64;
 
     // Other integer types
-    size_t    sz = 1000;
-    ptrdiff_t pd = 5;
+    std::size_t    sz = 1000;
+    std::ptrdiff_t pd = 5;
 
     // Floating point
     float       f32  = 32.0f;
@@ -57,14 +57,14 @@ int main(int argc, const char** argv) {
     char*       s2  = const_cast<char*>(s1);
 
     // Time
-    time_t    t1 = time(nullptr);
-    clock_t   cl = clock();
-    struct tm t2 = *std::localtime(&t1);
+    std::time_t  t1 = time(nullptr);
+    std::clock_t cl = clock();
+    std::tm      t2 = *std::localtime(&t1);
 
     // Math
-    div_t   di   = {0, 1};
-    ldiv_t  ldi  = {2, 3};
-    lldiv_t lldi = {4, 5};
+    std::div_t   di   = {0, 1};
+    std::ldiv_t  ldi  = {2, 3};
+    std::lldiv_t lldi = {4, 5};
 
     // Atomic
     // No need to test, since they work the same as other types

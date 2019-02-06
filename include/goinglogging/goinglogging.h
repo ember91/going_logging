@@ -117,6 +117,8 @@
 
 #include <array>
 #include <chrono>
+#include <codecvt>
+#include <complex>
 #include <cstring>
 #include <ctime>
 #include <deque>
@@ -126,14 +128,18 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <memory>
 #include <ostream>
 #include <queue>
+#include <ratio>
 #include <set>
+#include <sstream>
 #include <stack>
 #include <string>
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
+#include <valarray>
 #include <vector>
 
 /** \brief Log variables.
@@ -561,6 +567,13 @@ class ValueFormatter {
     friend std::ostream& operator<<(
         std::ostream& os, const ValueFormatter<U>& f) noexcept;
 
+    /**
+     * \return Value to format.
+     */
+    T& get_value() const {
+        return m_val;
+    }
+
   private:
     T& m_val; /**< Value to format. Use non-const reference in case operator<<
                  isn't const. */
@@ -590,13 +603,13 @@ template<class T>
 std::ostream& ValueFormatter<T>::sequence(std::ostream& os) const noexcept {
     os << '{';
     // Print first object without comma
-    auto it = m_val.begin();
-    if (it != m_val.end()) {
+    auto it = std::begin(m_val);
+    if (it != std::end(m_val)) {
         os << format_value(*it);
         ++it;
     }
     // Print the rest
-    for (; it != m_val.end(); ++it) {
+    for (; it != std::end(m_val); ++it) {
         os << ", " << format_value(*it);
     }
     os << '}';
@@ -687,6 +700,116 @@ template<class T>
 std::ostream& operator<<(
     std::ostream& os, const ValueFormatter<T>& f) noexcept {
     return os << f.m_val;
+}
+
+/** \brief Format std::pair.
+ *
+ * \tparam U First type of pair.
+ * \tparam V Second type of pair.
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<class U, class V>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::pair<U, V>>& f) noexcept {
+    return os << '{' << format_value(f.get_value().first) << ", "
+              << format_value(f.get_value().second) << '}';
+}
+
+/** \brief Format std::tuple.
+ *
+ * \tparam U First type of tuple.
+ * \tparam V Second type of tuple.
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<class U, class V>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::tuple<U, V>>& f) noexcept {
+    return os << '{' << format_value(std::get<0>(f.get_value())) << ", "
+              << format_value(std::get<1>(f.get_value())) << '}';
+}
+
+/** \brief Format std::unique_ptr.
+ *
+ * \tparam U Pointer type.
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::unique_ptr<U>>& f) noexcept {
+    return os << f.get_value().get();
+}
+
+/** \brief Format std::shared_ptr.
+ *
+ * \tparam U Pointer type.
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::shared_ptr<U>>& f) noexcept {
+    return os << f.get_value().get();
+}
+
+/** \brief Format std::weak_ptr.
+ *
+ * \tparam U Pointer type.
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::weak_ptr<U>>& f) noexcept {
+    // Convert to temporary shared_ptr in order to get value.
+    std::shared_ptr<U> tmp = f.get_value().lock();
+    return os << tmp.get();
+}
+
+/** \brief Format std::complex.
+ *
+ * \tparam U Pointer type.
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::complex<U>>& f) noexcept {
+    os << f.get_value().real();
+    if (f.get_value().imag() >= 0) {
+        os << " + " << f.get_value().imag();
+    } else {
+        os << " - " << -f.get_value().imag();
+    }
+    return os << 'i';
+}
+
+/** \brief Format std::valarray.
+ *
+ * \tparam U Element type.
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<class U>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::valarray<U>>& f) noexcept {
+    return f.sequence(os);
 }
 
 /** \brief Format bool.
@@ -829,6 +952,113 @@ std::ostream& operator<<(
     return os << "{quot = " << f.m_val.quot << ", rem = " << f.m_val.rem << '}';
 }
 
+/** \brief Format std::ratio.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<std::intmax_t U, std::intmax_t V>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::ratio<U, V>>& f) noexcept {
+    return os << f.get_value().num << " / " << f.get_value().den;
+}
+
+/** \brief Format std::stringbuf.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::stringbuf>& f) noexcept {
+    return os << '\"' << f.m_val.str() << '\"';
+}
+
+/** \brief Format std::wstringbuf.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::wstringbuf>& f) noexcept {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+    return os << '\"' << converter.to_bytes(f.m_val.str()) << '\"';
+}
+
+/** \brief Format std::ostringstream.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::ostringstream>& f) noexcept {
+    return os << '\"' << f.m_val.str() << '\"';
+}
+
+/** \brief Format std::wostringstream.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::wostringstream>& f) noexcept {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+    return os << '\"' << converter.to_bytes(f.m_val.str()) << '\"';
+}
+
+/** \brief Format std::stringstream.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::stringstream>& f) noexcept {
+    return os << '\"' << f.m_val.str() << '\"';
+}
+
+/** \brief Format std::wstringstream.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::wstringstream>& f) noexcept {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+    return os << '\"' << converter.to_bytes(f.m_val.str()) << '\"';
+}
+
+/** \brief Format std::locale.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::locale>& f) noexcept {
+    return os << '"' << f.m_val.name() << '"';
+}
+
 /** \brief Format std::string.
  *
  * \param os Output stream.
@@ -840,6 +1070,48 @@ template<>
 std::ostream& operator<<(
     std::ostream& os, const ValueFormatter<std::string>& f) noexcept {
     return os << '\"' << f.m_val << '\"';
+}
+
+/** \brief Format std::u16string.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::u16string>& f) noexcept {
+    std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> converter;
+    return os << '\"' << converter.to_bytes(f.m_val) << '\"';
+}
+
+/** \brief Format std::u32string.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::u32string>& f) noexcept {
+    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
+    return os << '\"' << converter.to_bytes(f.m_val) << '\"';
+}
+
+/** \brief Format std::wstring.
+ *
+ * \param os Output stream.
+ * \param f  ValueFormatter.
+ * \return Output stream.
+ *
+ */
+template<>
+std::ostream& operator<<(
+    std::ostream& os, const ValueFormatter<std::wstring>& f) noexcept {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+    return os << '\"' << converter.to_bytes(f.m_val) << '\"';
 }
 
 /** \brief Format std::array.
