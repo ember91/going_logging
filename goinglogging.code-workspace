@@ -66,7 +66,7 @@
 		"editor.formatOnSave": true,
 		"doxdocgen.cpp.tparamTemplate": "\\tparam {param} ",
 		"doxdocgen.generic.dateTemplate": "\\date {date}",
-		"doxdocgen.generic.returnTemplate": "\\return {type} ",
+		"doxdocgen.generic.returnTemplate": "\\return",
 		"doxdocgen.generic.paramTemplate": "\\param {param} ",
 		"doxdocgen.generic.briefTemplate": "\\brief {text}",
 		"doxdocgen.generic.authorTag": "\\author {author} ({email})",
