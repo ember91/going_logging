@@ -39,7 +39,6 @@
 * Ensure parameters are in a good order
 * Include what's used but nothing more
 * Make functions that can be static static
-* Make all documentation be like doxygen extension configured
 * Move goinglogging from include/goinglogging to include
 * Break out conversion to UTF-8 to function
 * Why do some functions need to use get_value)?

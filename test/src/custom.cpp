@@ -12,10 +12,13 @@
 #include <string>
 #include <vector>
 
-/** \brief Overrides the stream insertion operator */
+/**
+ * \brief Overrides the stream insertion operator.
+ */
 class CustInsOp {
   public:
-    /** \brief Constructor.
+    /**
+     * \brief Constructor.
      *
      * \param i Test value.
      *
@@ -29,7 +32,8 @@ class CustInsOp {
     int m_i; /**< Test value. */
 };
 
-/** Insert into stream.
+/**
+ * \brief Insert into stream.
  *
  * \param os Output stream.
  * \param c  Custom insertion operator object.

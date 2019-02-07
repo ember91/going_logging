@@ -142,7 +142,8 @@
 #include <valarray>
 #include <vector>
 
-/** \brief Log variables.
+/**
+ * \brief Log variables.
  *
  * Use as:
  * \code
@@ -179,7 +180,8 @@
         }                                                                      \
     } while (false)
 
-/** \brief Log array.
+/**
+ * \brief Log array.
  *
  * \param v   Array to print [\p len].
  * \param len Number of elements.
@@ -211,7 +213,8 @@
             ::gl::internal::PrefixFormatter(__FILE__, __LINE__, __func__)); \
     } while (false)
 
-/** \brief Log matrix.
+/**
+ * \brief Log matrix.
  *
  * \param m    Matrix to print [\p rows x \p cols].
  * \param cols Number of columns in matrix.
@@ -245,7 +248,8 @@
     } while (false)
 
 #ifndef GL_NEWLINE
-/** \brief Newline character to use after each logging message.
+/**
+ * \brief Newline character to use after each logging message.
  *
  * May e.g. be changed to std::endl to enable flush after each
  * logging message:
@@ -262,10 +266,12 @@
 #define GL_NEWLINE '\n'
 #endif // GL_NEWLINE
 
-/** \brief goinglogging namespace. */
+/**
+ * \brief goinglogging namespace. */
 namespace gl {
 
-/** \brief Prefix of logging output.
+/**
+ * \brief Prefix of logging output.
  *
  * Use bitwise \c or for multiple prefixes at the same time:
  * \code
@@ -290,7 +296,8 @@ enum class prefix : uint32_t {
     TYPE_NAME = 1 << 5 /**< Name of type. For example 'int'. */
 };
 
-/** \brief Bitwise \c and of logging prefix settings.
+/**
+ * \brief Bitwise \c and of logging prefix settings.
  *
  * \param lhs First element.
  * \param rhs Second element.
@@ -304,7 +311,8 @@ inline prefix operator&(prefix lhs, prefix rhs) noexcept {
         static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
 }
 
-/** \brief Bitwise \c and of logging prefix settings.
+/**
+ * \brief Bitwise \c and of logging prefix settings.
  *
  * \param lhs First element.
  * \param rhs Second element.
@@ -317,7 +325,8 @@ inline prefix& operator&=(prefix& lhs, prefix rhs) noexcept {
     return lhs = lhs & rhs;
 }
 
-/** \brief Bitwise \c or of logging prefix settings.
+/**
+ * \brief Bitwise \c or of logging prefix settings.
  *
  * \param lhs First element.
  * \param rhs Second element.
@@ -331,7 +340,8 @@ inline prefix operator|(prefix lhs, prefix rhs) noexcept {
         static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
 }
 
-/** \brief Bitwise \c or of logging prefix settings.
+/**
+ * \brief Bitwise \c or of logging prefix settings.
  *
  * \param lhs First element.
  * \param rhs Second element.
@@ -344,7 +354,8 @@ inline prefix& operator|=(prefix& lhs, prefix rhs) noexcept {
     return lhs = lhs | rhs;
 }
 
-/** \brief Bitwise \c xor of logging prefix settings.
+/**
+ * \brief Bitwise \c xor of logging prefix settings.
  *
  * \param lhs First element.
  * \param rhs Second element.
@@ -358,7 +369,8 @@ inline prefix operator^(prefix lhs, prefix rhs) noexcept {
         static_cast<uint32_t>(lhs) ^ static_cast<uint32_t>(rhs));
 }
 
-/** \brief Bitwise \c xor of logging prefix settings.
+/**
+ * \brief Bitwise \c xor of logging prefix settings.
  *
  * \param lhs First element.
  * \param rhs Second element.
@@ -371,10 +383,12 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
     return lhs = lhs ^ rhs;
 }
 
-/** \brief Hide this section from doxygen */
+/**
+ * \brief Hide this section from doxygen */
 #ifndef DOXYGEN_HIDDEN
 
-/** \brief Functionality in this namespace is for internal use
+/**
+ * \brief Functionality in this namespace is for internal use
  */
 namespace internal {
 
@@ -385,10 +399,12 @@ static bool outputEnabled = true;
 /** \c true if colored output is enabled */
 static bool colorEnabled = false;
 
-/** \brief Prefix formatter. */
+/**
+ * \brief Prefix formatter. */
 class PrefixFormatter {
   public:
-    /** \brief Construct.
+    /**
+     * \brief Constructor.
      *
      * \param file_path File path including name.
      * \param file_line Line number in file.
@@ -431,7 +447,8 @@ class PrefixFormatter {
     const char* m_func;      /**< Function name. */
 };
 
-/** \brief Write to stream.
+/**
+ * \brief Write to stream.
  *
  * \param os Output stream.
  * \param p  PrefixFormatter to output.
@@ -541,7 +558,8 @@ std::ostream& operator<<(std::ostream& os, const PrefixFormatter& p) noexcept {
     return os;
 }
 
-/** \brief Variable value formatter.
+/**
+ * \brief Variable value formatter.
  *
  * \tparam T Value type.
  *
@@ -549,7 +567,8 @@ std::ostream& operator<<(std::ostream& os, const PrefixFormatter& p) noexcept {
 template<class T>
 class ValueFormatter {
   public:
-    /** \brief Construct.
+    /**
+     * \brief Constructor.
      *
      * \param val Value.
      *
@@ -579,7 +598,8 @@ class ValueFormatter {
                  isn't const. */
 };
 
-/** \brief Create ValueFormatter with the right template type.
+/**
+ * \brief Create ValueFormatter with the right template type.
  *  This solves the error "cannot refer to class template
  * 'ValueFormatter' without a template argument list".
  *
@@ -592,7 +612,8 @@ ValueFormatter<T> format_value(T& val) {
     return ValueFormatter<T>(val);
 };
 
-/** \brief Write a sequence, defined by begin() and end(), to stream.
+/**
+ * \brief Write a sequence, defined by begin() and end(), to stream.
  *
  * \tparam T Value type.
  * \param os Output stream.
@@ -617,7 +638,8 @@ std::ostream& ValueFormatter<T>::sequence(std::ostream& os) const noexcept {
     return os;
 }
 
-/** \brief Write a map, defined by begin() and end(), to stream.
+/**
+ * \brief Write a map, defined by begin() and end(), to stream.
  *
  * \tparam T Value type.
  * \param os Output stream.
@@ -643,7 +665,8 @@ std::ostream& ValueFormatter<T>::map(std::ostream& os) const noexcept {
     return os;
 }
 
-/** \brief Write a stack, defined by top(), to stream.
+/**
+ * \brief Write a stack, defined by top(), to stream.
  *
  * \tparam T Value type.
  * \param os Output stream.
@@ -664,7 +687,8 @@ std::ostream& ValueFormatter<T>::stack(std::ostream& os) const noexcept {
     return os;
 }
 
-/** \brief Write a queue, defined by front() and back(), to stream.
+/**
+ * \brief Write a queue, defined by front() and back(), to stream.
  *
  * \tparam T Value type.
  * \param os Output stream.
@@ -688,7 +712,8 @@ std::ostream& ValueFormatter<T>::queue(std::ostream& os) const noexcept {
     return os;
 }
 
-/** \brief General value formatter.
+/**
+ * \brief General value formatter.
  *
  * \tparam T Value type.
  * \param os Output stream.
@@ -702,7 +727,8 @@ std::ostream& operator<<(
     return os << f.m_val;
 }
 
-/** \brief Format std::pair.
+/**
+ * \brief Format std::pair.
  *
  * \tparam U First type of pair.
  * \tparam V Second type of pair.
@@ -718,7 +744,8 @@ std::ostream& operator<<(
               << format_value(f.get_value().second) << '}';
 }
 
-/** \brief Format std::tuple.
+/**
+ * \brief Format std::tuple.
  *
  * \tparam U First type of tuple.
  * \tparam V Second type of tuple.
@@ -734,7 +761,8 @@ std::ostream& operator<<(
               << format_value(std::get<1>(f.get_value())) << '}';
 }
 
-/** \brief Format std::unique_ptr.
+/**
+ * \brief Format std::unique_ptr.
  *
  * \tparam U Pointer type.
  * \param os Output stream.
@@ -748,7 +776,8 @@ std::ostream& operator<<(
     return os << f.get_value().get();
 }
 
-/** \brief Format std::shared_ptr.
+/**
+ * \brief Format std::shared_ptr.
  *
  * \tparam U Pointer type.
  * \param os Output stream.
@@ -762,7 +791,8 @@ std::ostream& operator<<(
     return os << f.get_value().get();
 }
 
-/** \brief Format std::weak_ptr.
+/**
+ * \brief Format std::weak_ptr.
  *
  * \tparam U Pointer type.
  * \param os Output stream.
@@ -778,7 +808,8 @@ std::ostream& operator<<(
     return os << tmp.get();
 }
 
-/** \brief Format std::complex.
+/**
+ * \brief Format std::complex.
  *
  * \tparam U Pointer type.
  * \param os Output stream.
@@ -798,7 +829,8 @@ std::ostream& operator<<(
     return os << 'i';
 }
 
-/** \brief Format std::valarray.
+/**
+ * \brief Format std::valarray.
  *
  * \tparam U Element type.
  * \param os Output stream.
@@ -812,7 +844,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format bool.
+/**
+ * \brief Format bool.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -828,7 +861,8 @@ std::ostream& operator<<(
 // 3.9.1 in C++ standard: Plain char, signed char, and unsigned
 // char are three distinct types
 
-/** \brief Format char.
+/**
+ * \brief Format char.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -841,7 +875,8 @@ std::ostream& operator<<(
     return os << '\'' << f.m_val << '\'';
 }
 
-/** \brief Format unsigned char.
+/**
+ * \brief Format unsigned char.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -854,7 +889,8 @@ std::ostream& operator<<(
     return os << '\'' << f.m_val << '\'';
 }
 
-/** \brief Format signed char.
+/**
+ * \brief Format signed char.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -867,7 +903,8 @@ std::ostream& operator<<(
     return os << '\'' << f.m_val << '\'';
 }
 
-/** \brief Format char*.
+/**
+ * \brief Format char*.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -880,7 +917,8 @@ std::ostream& operator<<(
     return os << '\"' << f.m_val << '\"';
 }
 
-/** \brief Format const char*.
+/**
+ * \brief Format const char*.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -893,7 +931,8 @@ std::ostream& operator<<(
     return os << '\"' << f.m_val << '\"';
 }
 
-/** \brief Format std::tm.
+/**
+ * \brief Format std::tm.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -913,7 +952,8 @@ std::ostream& operator<<(
     return os;
 }
 
-/** \brief Format std::div_t.
+/**
+ * \brief Format std::div_t.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -926,7 +966,8 @@ std::ostream& operator<<(
     return os << "{quot = " << f.m_val.quot << ", rem = " << f.m_val.rem << '}';
 }
 
-/** \brief Format std::ldiv_t.
+/**
+ * \brief Format std::ldiv_t.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -939,7 +980,8 @@ std::ostream& operator<<(
     return os << "{quot = " << f.m_val.quot << ", rem = " << f.m_val.rem << '}';
 }
 
-/** \brief Format std::lldiv_t.
+/**
+ * \brief Format std::lldiv_t.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -952,7 +994,8 @@ std::ostream& operator<<(
     return os << "{quot = " << f.m_val.quot << ", rem = " << f.m_val.rem << '}';
 }
 
-/** \brief Format std::ratio.
+/**
+ * \brief Format std::ratio.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -965,7 +1008,8 @@ std::ostream& operator<<(
     return os << f.get_value().num << " / " << f.get_value().den;
 }
 
-/** \brief Format std::stringbuf.
+/**
+ * \brief Format std::stringbuf.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -978,7 +1022,8 @@ std::ostream& operator<<(
     return os << '\"' << f.m_val.str() << '\"';
 }
 
-/** \brief Format std::wstringbuf.
+/**
+ * \brief Format std::wstringbuf.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -992,7 +1037,8 @@ std::ostream& operator<<(
     return os << '\"' << converter.to_bytes(f.m_val.str()) << '\"';
 }
 
-/** \brief Format std::ostringstream.
+/**
+ * \brief Format std::ostringstream.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1005,7 +1051,8 @@ std::ostream& operator<<(
     return os << '\"' << f.m_val.str() << '\"';
 }
 
-/** \brief Format std::wostringstream.
+/**
+ * \brief Format std::wostringstream.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1019,7 +1066,8 @@ std::ostream& operator<<(
     return os << '\"' << converter.to_bytes(f.m_val.str()) << '\"';
 }
 
-/** \brief Format std::stringstream.
+/**
+ * \brief Format std::stringstream.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1032,7 +1080,8 @@ std::ostream& operator<<(
     return os << '\"' << f.m_val.str() << '\"';
 }
 
-/** \brief Format std::wstringstream.
+/**
+ * \brief Format std::wstringstream.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1046,7 +1095,8 @@ std::ostream& operator<<(
     return os << '\"' << converter.to_bytes(f.m_val.str()) << '\"';
 }
 
-/** \brief Format std::locale.
+/**
+ * \brief Format std::locale.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1059,7 +1109,8 @@ std::ostream& operator<<(
     return os << '"' << f.m_val.name() << '"';
 }
 
-/** \brief Format std::string.
+/**
+ * \brief Format std::string.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1072,7 +1123,8 @@ std::ostream& operator<<(
     return os << '\"' << f.m_val << '\"';
 }
 
-/** \brief Format std::u16string.
+/**
+ * \brief Format std::u16string.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1086,7 +1138,8 @@ std::ostream& operator<<(
     return os << '\"' << converter.to_bytes(f.m_val) << '\"';
 }
 
-/** \brief Format std::u32string.
+/**
+ * \brief Format std::u32string.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1100,7 +1153,8 @@ std::ostream& operator<<(
     return os << '\"' << converter.to_bytes(f.m_val) << '\"';
 }
 
-/** \brief Format std::wstring.
+/**
+ * \brief Format std::wstring.
  *
  * \param os Output stream.
  * \param f  ValueFormatter.
@@ -1114,7 +1168,8 @@ std::ostream& operator<<(
     return os << '\"' << converter.to_bytes(f.m_val) << '\"';
 }
 
-/** \brief Format std::array.
+/**
+ * \brief Format std::array.
  *
  * \tparam U Value type.
  * \tparam N Number of elements.
@@ -1129,7 +1184,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format std::vector.
+/**
+ * \brief Format std::vector.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1143,7 +1199,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format std::deque.
+/**
+ * \brief Format std::deque.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1157,7 +1214,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format std::forward_list.
+/**
+ * \brief Format std::forward_list.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1171,7 +1229,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format std::list.
+/**
+ * \brief Format std::list.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1185,7 +1244,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format std::set.
+/**
+ * \brief Format std::set.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1199,7 +1259,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format std::map.
+/**
+ * \brief Format std::map.
  *
  * \tparam U Key type.
  * \tparam V Value type.
@@ -1214,7 +1275,8 @@ std::ostream& operator<<(
     return f.map(os);
 }
 
-/** \brief Format std::multiset.
+/**
+ * \brief Format std::multiset.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1228,7 +1290,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format std::multimap.
+/**
+ * \brief Format std::multimap.
  *
  * \tparam U Key type.
  * \tparam V Value type.
@@ -1243,7 +1306,8 @@ std::ostream& operator<<(
     return f.map(os);
 }
 
-/** \brief Format std::unordered_set.
+/**
+ * \brief Format std::unordered_set.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1257,7 +1321,8 @@ std::ostream& operator<<(
     return f.sequence(os);
 }
 
-/** \brief Format std::unordered_map.
+/**
+ * \brief Format std::unordered_map.
  *
  * \tparam U Key type.
  * \tparam V Value type.
@@ -1272,7 +1337,8 @@ std::ostream& operator<<(std::ostream&              os,
     return f.map(os);
 }
 
-/** \brief Format std::unordered_multiset.
+/**
+ * \brief Format std::unordered_multiset.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1286,7 +1352,8 @@ std::ostream& operator<<(std::ostream&                os,
     return f.sequence(os);
 }
 
-/** \brief Format std::unordered_multimap.
+/**
+ * \brief Format std::unordered_multimap.
  *
  * \tparam U Key type.
  * \tparam V Value type.
@@ -1301,7 +1368,8 @@ std::ostream& operator<<(std::ostream&                   os,
     return f.map(os);
 }
 
-/** \brief Format std::stack.
+/**
+ * \brief Format std::stack.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1315,7 +1383,8 @@ std::ostream& operator<<(
     return f.stack(os);
 }
 
-/** \brief Format std::queue.
+/**
+ * \brief Format std::queue.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1329,7 +1398,8 @@ std::ostream& operator<<(
     return f.queue(os);
 }
 
-/** \brief Format std::priority_queue.
+/**
+ * \brief Format std::priority_queue.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1343,7 +1413,8 @@ std::ostream& operator<<(std::ostream&            os,
     return f.stack(os);
 }
 
-/** \brief Write ANSI color start code to stream, if color is enabled.
+/**
+ * \brief Write ANSI color start code to stream, if color is enabled.
  *
  * \param os Output stream.
  * \return Output stream.
@@ -1357,7 +1428,8 @@ std::ostream& color_start(std::ostream& os) noexcept {
     return os;
 }
 
-/** \brief Write ANSI color end code to stream, if color is enabled.
+/**
+ * \brief Write ANSI color end code to stream, if color is enabled.
  *
  * \param os Output stream.
  * \return Output stream.
@@ -1370,7 +1442,8 @@ std::ostream& color_end(std::ostream& os) noexcept {
     return os;
 }
 
-/** \brief Write type name to stream.
+/**
+ * \brief Write type name to stream.
  *
  * \param os Output stream.
  * \return Output stream.
@@ -1383,7 +1456,8 @@ std::ostream& type_name(std::ostream& os) {
     return os;
 }
 
-/** \brief Array.
+/**
+ * \brief Array.
  *
  * \tparam T Value type.
  *
@@ -1391,7 +1465,8 @@ std::ostream& type_name(std::ostream& os) {
 template<class T>
 class Array {
   public:
-    /** \brief Construct.
+    /**
+     * \brief Constructor.
      *
      * \param name      Name.
      * \param val       Values [\p len].
@@ -1444,7 +1519,8 @@ class Array {
     const PrefixFormatter& m_prefixFmt; /**< PrefixFormatter. */
 };
 
-/** \brief Write Array to stream.
+/**
+ * \brief Write Array to stream.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1471,7 +1547,8 @@ std::ostream& operator<<(std::ostream& os, const Array<U>& a) noexcept {
     return os;
 }
 
-/** \brief Create array.
+/**
+ * \brief Create array.
  *  This solves the error "cannot refer to class template 'Array' without a
  * template argument list".
  *
@@ -1489,7 +1566,8 @@ Array<T> make_array(
     return Array<T>(name, val, len, prefixFmt);
 };
 
-/** \brief Matrix.
+/**
+ * \brief Matrix.
  *
  * \tparam T Value type.
  *
@@ -1497,7 +1575,8 @@ Array<T> make_array(
 template<class T>
 class Matrix {
   public:
-    /** \brief Construct.
+    /**
+     * \brief Constructor.
      *
      * \param name      Name.
      * \param val       Values [\p cols x \p rows].
@@ -1559,7 +1638,8 @@ class Matrix {
     const PrefixFormatter& m_prefixFmt; /**< PrefixFormatter. */
 };
 
-/** \brief Write Matrix to stream.
+/**
+ * \brief Write Matrix to stream.
  *
  * \tparam U Value type.
  * \param os Output stream.
@@ -1595,7 +1675,8 @@ std::ostream& operator<<(std::ostream& os, const Matrix<U>& m) noexcept {
     return os;
 }
 
-/** \brief Create matrix.
+/**
+ * \brief Create matrix.
  *  This solves the error "cannot refer to class template 'Matrix' without a
  * template argument list".
  *
@@ -1630,7 +1711,8 @@ prefix get_prefixes() noexcept {
     return internal::curPrefixes;
 }
 
-/** \brief Set prefixes of logging output.
+/**
+ * \brief Set prefixes of logging output.
  *
  * Alters the output of \ref l(), \ref l_arr(), and \ref l_mat().
  *
@@ -1662,7 +1744,8 @@ bool is_output_enabled() noexcept {
     return internal::outputEnabled;
 }
 
-/** \brief Enable or disable output.
+/**
+ * \brief Enable or disable output.
  *
  * \param e \c true if output shall be enabled.
  *
@@ -1675,7 +1758,8 @@ void set_output_enabled(bool e) noexcept {
     internal::outputEnabled = e;
 }
 
-/** \brief Enable or disable ANSI color output.
+/**
+ * \brief Enable or disable ANSI color output.
  *
  * \param e \c true if output shall be colored.
  *
@@ -1701,7 +1785,8 @@ bool is_color_enabled() noexcept {
 
 #ifndef DOXYGEN_HIDDEN
 
-/** \brief Helper function for l(). Dispatch to the right macro depending on
+/**
+ * \brief Helper function for l(). Dispatch to the right macro depending on
  * number of arguments.
  *
  */
@@ -1709,7 +1794,8 @@ bool is_color_enabled() noexcept {
     _12, _13, _14, _15, _16, NAME, ...)                                      \
     NAME
 
-/** \brief Output variable name and value. */
+/**
+ * \brief Output variable name and value. */
 #define GL_INTERNAL_LX(v)                    \
     gl::internal::type_name << (#v) << " = " \
                             << ::gl::internal::format_value((v))
