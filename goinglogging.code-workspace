@@ -63,6 +63,16 @@
 		"C_Cpp.clang_format_fallbackStyle": "LLVM",
 		"C_Cpp.default.cppStandard": "c++11",
 		"C_Cpp.default.cStandard": "c11",
-		"editor.formatOnSave": true
+		"editor.formatOnSave": true,
+		"doxdocgen.cpp.tparamTemplate": "\\tparam {param} ",
+		"doxdocgen.generic.dateTemplate": "\\date {date}",
+		"doxdocgen.generic.returnTemplate": "\\return {type} ",
+		"doxdocgen.generic.paramTemplate": "\\param {param} ",
+		"doxdocgen.generic.briefTemplate": "\\brief {text}",
+		"doxdocgen.generic.authorTag": "\\author {author} ({email})",
+		"doxdocgen.file.versionTag": "\\version 0.1",
+		"doxdocgen.file.fileTemplate": "\\file {name}",
+		"doxdocgen.c.factoryMethodText": "Constructor.",
+		"doxdocgen.cpp.dtorText": "Destructor"
 	}
 }
