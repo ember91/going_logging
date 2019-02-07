@@ -8,13 +8,21 @@
          (n)           = static_cast<gl::prefix>(      \
              static_cast<uint32_t>((n)) + static_cast<uint32_t>((p))))
 
+/**
+ * \brief Test entry point.
+ *
+ * \param argc Number of arguments.
+ * \param argv Arguments.
+ * \return EXIT_SUCCESS if success.
+ */
 int main(int argc, const char** argv) {
+    // Check number of arguments
     if (argc != 1) {
         std::cout << "Usage: " << *argv << std::endl;
         return EXIT_SUCCESS;
     }
 
-    test t;
+    Test t;
     t.setup(__FILE__);
 
     // Outputs
@@ -102,5 +110,6 @@ int main(int argc, const char** argv) {
     l(uc, sc, c8, c16, c32, wc, s1, s2, s3);
     l(/*ri32, cri32, */ pi32, ppi32);
 
-    return t.compare_output(true);
+    // Compare output
+    return t.compare_output(Test::ComparisonMode::REGEX);
 }

@@ -19,15 +19,24 @@
 #include <valarray>
 #include <vector>
 
+/**
+ * \brief Test entry point.
+ *
+ * \param argc Number of arguments.
+ * \param argv Arguments.
+ * \return EXIT_SUCCESS if success.
+ */
 int main(int argc, const char** argv) {
+    // Check number of arguments
     if (argc != 1) {
         std::cout << "Usage: " << *argv << std::endl;
         return EXIT_SUCCESS;
     }
 
+    // Disable prefixes for easier output comparison.
     gl::set_prefixes(gl::prefix::NONE);
 
-    test t;
+    Test t;
     t.setup(__FILE__);
 
     std::bitset<8>         bs(0xaa);
@@ -120,5 +129,6 @@ int main(int argc, const char** argv) {
     l(que);
     l(pque);
 
-    return t.compare_output(true);
+    // Compare output
+    return t.compare_output(Test::ComparisonMode::REGEX);
 }

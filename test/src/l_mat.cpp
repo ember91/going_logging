@@ -3,15 +3,24 @@
 #include <iostream>
 #include <ostream>
 
+/**
+ * \brief Test entry point.
+ *
+ * \param argc Number of arguments.
+ * \param argv Arguments.
+ * \return EXIT_SUCCESS if success.
+ */
 int main(int argc, const char** argv) {
+    // Check number of arguments
     if (argc != 1) {
         std::cout << "Usage: " << *argv << std::endl;
         return EXIT_SUCCESS;
     }
 
+    // Disable prefixes for easier output comparison.
     gl::set_prefixes(gl::prefix::NONE);
 
-    test t;
+    Test t;
     t.setup(__FILE__);
 
     int         a[2][2] = {{0, 1}, {2, 3}};
@@ -26,5 +35,6 @@ int main(int argc, const char** argv) {
     l_mat(a, 2, 2);
     l_mat(b, 2, 2);
 
-    return t.compare_output(false);
+    // Compare output
+    return t.compare_output(Test::ComparisonMode::EXACT);
 }

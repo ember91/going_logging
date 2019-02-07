@@ -25,7 +25,15 @@ std::vector<std::string> get_file_names(const std::string& d) {
     return rv;
 }
 
+/**
+ * \brief Test entry point.
+ *
+ * \param argc Number of arguments.
+ * \param argv Arguments.
+ * \return EXIT_SUCCESS if success.
+ */
 int main(int argc, const char** argv) {
+    // Check number of arguments
     if (argc != 1) {
         std::cout << "Usage: " << *argv << std::endl;
         return EXIT_SUCCESS;

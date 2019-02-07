@@ -1,16 +1,11 @@
 #include "goinglogging/goinglogging.h"
 #include "test/test.h"
-#include <array>
-#include <deque>
-#include <forward_list>
-#include <iostream>
-#include <list>
-#include <map>
 #include <ostream>
-#include <queue>
-#include <stack>
-#include <string>
-#include <vector>
+
+/**
+ * \file
+ * Test custom types with overloaded stream insertion operator.
+ */
 
 /**
  * \brief Overrides the stream insertion operator.
@@ -37,26 +32,37 @@ class CustInsOp {
  *
  * \param os Output stream.
  * \param c  Custom insertion operator object.
- * \return   Stream.
+ * \return   Output stream.
  *
  */
 std::ostream& operator<<(std::ostream& os, const CustInsOp& c) {
     return os << "<CustInsOp: " << c.m_i << '>';
 }
 
+/**
+ * \brief Test entry point.
+ *
+ * \param argc Number of arguments.
+ * \param argv Arguments.
+ * \return EXIT_SUCCESS if success.
+ */
 int main(int argc, const char** argv) {
+    // Check number of arguments
     if (argc != 1) {
         std::cout << "Usage: " << *argv << std::endl;
         return EXIT_SUCCESS;
     }
 
+    // Disable prefixes for easier output comparison.
     gl::set_prefixes(gl::prefix::NONE);
 
-    test t;
+    Test t;
     t.setup(__FILE__);
 
+    // Log
     CustInsOp c(5);
     l(c);
 
-    return t.compare_output(false);
+    // Compare output
+    return t.compare_output(Test::ComparisonMode::EXACT);
 }
