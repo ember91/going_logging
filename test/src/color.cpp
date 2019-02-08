@@ -1,4 +1,4 @@
-#include "goinglogging/goinglogging.h"
+#include "goinglogging.h"
 #include "test/test.h"
 #include <iostream>
 #include <string>

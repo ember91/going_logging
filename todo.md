@@ -33,17 +33,15 @@
 * Ensure classes are PascalCase, variables camelCase and functions snake_case
 * Inline functions in classes?
 * Use C++11 functionality
-* Ensure one character c-strings use single quotes
 * Ensure almost no usage of std::cout
 * Use ::gl::internal instead of gl::internal
 * Fix order of functions and classes
 * Pass std::string by reference only when necessary
 * Don't convert between const char* and std::string too much
 * Don't use C-style comments
-* Ensure parameters are in a good order
+* Ensure parameters are ordered nicely
 * Include what's used but nothing more
 * Make functions that can be static static
-* Move goinglogging from include/goinglogging to include
 * Break out conversion to UTF-8 to function
 * Why do some functions need to use get_value()?
 * Add advanced test, such as std::map<std::pair<int, std::string>, std::vector<float>>

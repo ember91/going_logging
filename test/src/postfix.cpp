@@ -2,7 +2,7 @@
 #include <ostream>
 
 #define GL_NEWLINE " end\n"
-#include "goinglogging/goinglogging.h"
+#include "goinglogging.h"
 #include "test/test.h"
 
 /**

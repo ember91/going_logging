@@ -16,7 +16,7 @@ subject to change and that bugs galore. Just so you know :)
 ## Usage
 
 ```
-#include "goinglogging/goinglogging.h"
+#include "goinglogging.h"
 ```
 
 ### A variable

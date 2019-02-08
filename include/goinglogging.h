@@ -21,7 +21,7 @@
  * \section section_usage Usage
  *
  * \code
- * #include "goinglogging/goinglogging.h"
+ * #include "goinglogging.h"
  * \endcode
  *
  * \subsection section_a_variable A variable
@@ -87,7 +87,7 @@
  * goinglogging will not flush output by default. To ensure it flushes, use:
  * \code
  * #define GL_NEWLINE std::endl
- * #include "goinglogging/goinglogging.h"
+ * #include "goinglogging.h"
  * \endcode
  *
  * \subsection section_redirect Redirect
@@ -255,7 +255,7 @@
  * logging message:
  * \code
  * #define GL_NEWLINE std::endl
- * #include "goinglogging/goinglogging.h"
+ * #include "goinglogging.h"
  * \endcode
  *
  * \note Defaults to \\n, i.e. no flushing.
