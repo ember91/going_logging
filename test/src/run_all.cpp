@@ -21,6 +21,27 @@ static const char sep =
 #endif
 
 /**
+ * \brief Split file path into directory and file name + extension.
+ * \param file_path File path.
+ * \return {Directory, File name}
+ */
+std::pair<std::string, std::string> split_file_path(
+    const std::string& file_path) {
+    size_t      idx = file_path.find_last_of(sep);
+    std::string file;
+    std::string dir;
+    if (idx == std::string::npos) {
+        file = file_path;
+        dir  = "";
+    } else {
+        file = file_path.substr(idx + 1);
+        dir  = file_path.substr(0, idx);
+    }
+
+    return {dir, file};
+}
+
+/**
  * \brief Get all files in a directory.
  *
  * \param d Directory path.
@@ -43,27 +64,6 @@ std::vector<std::string> get_directory_files(const std::string& d) {
     }
 
     return rv;
-}
-
-/**
- * \brief Split file path into directory and file name + extension.
- * \param file_path File path.
- * \return {Directory, File name}
- */
-std::pair<std::string, std::string> split_file_path(
-    const std::string& file_path) {
-    size_t      idx = file_path.find_last_of(sep);
-    std::string file;
-    std::string dir;
-    if (idx == std::string::npos) {
-        file = file_path;
-        dir  = "";
-    } else {
-        file = file_path.substr(idx + 1);
-        dir  = file_path.substr(0, idx);
-    }
-
-    return {file, dir};
 }
 
 /**
