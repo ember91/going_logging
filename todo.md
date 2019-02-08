@@ -41,7 +41,8 @@
 * Make functions that can be static static
 * Move goinglogging from include/goinglogging to include
 * Break out conversion to UTF-8 to function
-* Why do some functions need to use get_value)?
+* Why do some functions need to use get_value()?
+* Add advanced test, such as std::map<std::pair<int, std::string>, std::vector<float>>
 
 # Features
 

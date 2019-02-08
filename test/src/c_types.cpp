@@ -5,7 +5,7 @@
 
 /**
  * \file
- * Test output of types in the C standard library.
+ * Test logging output of types in the C standard library.
  */
 
 /**
@@ -151,6 +151,7 @@ int main(int argc, const char** argv) {
     Test t;
     t.setup(__FILE__);
 
+    // Log
     log_bool();
     log_unsigned();
     log_signed();
