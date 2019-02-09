@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>going_logging: Main Page</title>
+<title>goinglogging: Main Page</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">going_logging
+   <div id="projectname">goinglogging
    </div>
    <div id="projectbrief">Lightweight logging library</div>
   </td>
@@ -60,7 +60,7 @@ $(function() {
 
 <div class="header">
   <div class="headertitle">
-<div class="title">going_logging Documentation</div>  </div>
+<div class="title">goinglogging Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Lightweight logging library.</p>
@@ -72,7 +72,7 @@ Description</h1>
 <dl class="section author"><dt>Author</dt><dd>Emil Berg</dd></dl>
 <h1><a class="anchor" id="section_usage"></a>
 Usage</h1>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="goinglogging_8h.html">goinglogging/goinglogging.h</a>&quot;</span></div></div><!-- fragment --><h2><a class="anchor" id="section_a_variable"></a>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="goinglogging_8h.html">goinglogging.h</a>&quot;</span></div></div><!-- fragment --><h2><a class="anchor" id="section_a_variable"></a>
 A variable</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> i = 1;</div><div class="line"><a class="code" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6">l</a>(i);</div></div><!-- fragment --><p> Which outputs: </p><div class="fragment"><div class="line">i = 1</div></div><!-- fragment --> <dl class="section see"><dt>See also</dt><dd><a class="el" href="goinglogging_8h.html#af406485346ddd0f2085c674ef16617a6" title="Log variables. ">l()</a></dd></dl>
 <h2><a class="anchor" id="section_multiple_variables"></a>
@@ -95,7 +95,7 @@ Disable output</h2>
 <div class="fragment"><div class="line"><a class="code" href="namespacegl.html#ad2f67f23d52cb5e671e0026ca92b57a8">gl::set_output_enabled</a>(<span class="keyword">false</span>);</div></div><!-- fragment --> <dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacegl.html#ad2f67f23d52cb5e671e0026ca92b57a8" title="Enable or disable output. ">set_output_enabled()</a></dd></dl>
 <h2><a class="anchor" id="section_flush_output"></a>
 Flush output</h2>
-<p>goinglogging will not flush output by default. To ensure it flushes, use: </p><div class="fragment"><div class="line"><span class="preprocessor">#define GL_NEWLINE std::endl</span></div><div class="line"><span class="preprocessor">#include &quot;goinglogging/goinglogging.h&quot;</span></div></div><!-- fragment --><h2><a class="anchor" id="section_redirect"></a>
+<p>goinglogging will not flush output by default. To ensure it flushes, use: </p><div class="fragment"><div class="line"><span class="preprocessor">#define GL_NEWLINE std::endl</span></div><div class="line"><span class="preprocessor">#include &quot;goinglogging.h&quot;</span></div></div><!-- fragment --><h2><a class="anchor" id="section_redirect"></a>
 Redirect</h2>
 <p>Redirect output to file: </p><div class="fragment"><div class="line">std::ofstream f(<span class="stringliteral">&quot;f.txt&quot;</span>);</div><div class="line">std::cout.rdbuf(f.rdbuf());</div></div><!-- fragment --><h2><a class="anchor" id="section_color"></a>
 Color</h2>
