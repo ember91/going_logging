@@ -55,6 +55,10 @@
 * Rip out cxx-pretty-print if permissible by license
 * Rip out type name library?
 
+## Testing
+
+* Docker framework
+
 ## VS code
 
 * Build with CMake from IDE
@@ -68,6 +72,7 @@
 ## Build system
 
 * Run doxygen in cmake for both main library and test
+* ninja install
 
 ## Version control
 

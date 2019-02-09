@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
 project(goinglogging_test)
 
+option(BUILD_DOC "Build documentation" ON)
+
 message(STATUS "Generator: ${CMAKE_GENERATOR}")
 
 find_program(
@@ -14,6 +16,7 @@ else()
     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
     set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=*,-fuchsia-default-arguments,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-hicpp-no-array-decay,-fuchsia-overloaded-operator,-cert-env33-c")
 endif()
+find_package(Doxygen)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -101,3 +104,24 @@ target_link_libraries(l_mat          libtest)
 target_link_libraries(output_enabled libtest)
 target_link_libraries(postfix        libtest)
 target_link_libraries(prefixes       libtest)
+
+# From https://vicrucann.github.io/tutorials/quick-cmake-doxygen/
+if(BUILD_DOC AND DOXYGEN_FOUND)
+    # set input and output files
+    message(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+    # request to configure the file
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    message("Testing framework doxygen build started")
+
+    # note the option ALL which allows to build the docs together with the application
+    add_custom_target(doc_doxygen_test ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating testing framework API documentation with Doxygen"
+        VERBATIM)
+else()
+  message("Doxygen need to be installed to generate doxygen documentation")
+endif()
