@@ -1,109 +1,73 @@
+# Setup
 cmake_minimum_required(VERSION 3.6)
 project(goinglogging_test)
+set(CMAKE_CXX_STANDARD 11)
 
+# Options
 option(BUILD_DOC "Build documentation" ON)
 
+# Info
 message(STATUS "Generator: ${CMAKE_GENERATOR}")
 
+# Check existence of programs and libraries
 find_program(
     CLANG_TIDY_EXE
     NAMES "clang-tidy"
     DOC "Path to clang-tidy executable"
 )
 if(NOT CLANG_TIDY_EXE)
-    message(STATUS "clang-tidy not found.")
+    message(STATUS "clang-tidy not found")
 else()
     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
     set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=*,-fuchsia-default-arguments,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-hicpp-no-array-decay,-fuchsia-overloaded-operator,-cert-env33-c")
 endif()
 find_package(Doxygen)
 
-set(CMAKE_CXX_STANDARD 11)
-
-if (CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Weffc++ -Wshadow")
-endif()
-
+# Include directories
 include_directories(include)
 include_directories(../include)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+# All executables
+set(executables
+    "src/c_types.cpp"
+    "src/color.cpp"
+    "src/cpp_types.cpp"
+    "src/custom.cpp"
+    "src/l.cpp"
+    "src/l_arr.cpp"
+    "src/l_mat.cpp"
+    "src/output_enabled.cpp"
+    "src/postfix.cpp"
+    "src/prefixes.cpp"
+    "src/run_all.cpp"
+)
+
+# Add libraries
 add_library(libtest src/test.cpp)
 
-add_executable(c_types        src/c_types.cpp)
-add_executable(color          src/color.cpp)
-add_executable(cpp_types      src/cpp_types.cpp)
-add_executable(custom         src/custom.cpp)
-add_executable(l              src/l.cpp)
-add_executable(l_arr          src/l_arr.cpp)
-add_executable(l_mat          src/l_mat.cpp)
-add_executable(output_enabled src/output_enabled.cpp)
-add_executable(postfix        src/postfix.cpp)
-add_executable(prefixes       src/prefixes.cpp)
-add_executable(run_all        src/run_all.cpp)
+# Add executables
+foreach(file ${executables})
+  # Convert filename to executable name
+  get_filename_component(exe ${file} NAME_WE)
+  # Add
+  add_executable(${exe} ${file})
+  # Use static analysis if enabled
+  if(CLANG_TIDY_EXE)
+    set_target_properties(
+        ${exe} PROPERTIES
+        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+    )
+  endif()
+  # Link to library
+  target_link_libraries(${exe} libtest)
+endforeach()
 
-if(DO_CLANG_TIDY)
-    set_target_properties(
-        libtest PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        c_types PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        color PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        cpp_types PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        custom PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        l PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        l_arr PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        l_mat PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        output_enabled PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        postfix PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        prefixes PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
-    set_target_properties(
-        run_all PROPERTIES
-        CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-    )
+# Enable compiler specific warnings
+if (CMAKE_COMPILER_IS_GNUCC)
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Weffc++ -Wshadow")
 endif()
-
-target_link_libraries(c_types        libtest)
-target_link_libraries(color          libtest)
-target_link_libraries(cpp_types      libtest)
-target_link_libraries(custom         libtest)
-target_link_libraries(l              libtest)
-target_link_libraries(l_arr          libtest)
-target_link_libraries(l_mat          libtest)
-target_link_libraries(output_enabled libtest)
-target_link_libraries(postfix        libtest)
-target_link_libraries(prefixes       libtest)
 
 # From https://vicrucann.github.io/tutorials/quick-cmake-doxygen/
 if(BUILD_DOC AND DOXYGEN_FOUND)

@@ -5,7 +5,6 @@
 * Static analysis
 * Compile with all warnings enabled
 * Valgrind
-* Clean up CMakeLists.txt
 * Cmake check if __cxa_demangle exists
 
 ## Testing
