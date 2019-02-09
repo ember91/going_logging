@@ -2,6 +2,13 @@
 #include "test/test.h"
 
 /**
+ * \file
+ * Test output of l().
+ */
+
+using namespace gl::test;
+
+/**
  * \brief Test entry point.
  *
  * \param argc Number of arguments.

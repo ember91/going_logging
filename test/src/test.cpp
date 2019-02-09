@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <string>
 
+namespace gl {
+namespace test {
+
 /** File separator character. */
 static const char sep =
 #ifdef _WIN32
@@ -182,3 +185,6 @@ int Test::compare_output(ComparisonMode cmp) {
 
     return EXIT_SUCCESS;
 }
+
+} // namespace test
+} // namespace gl

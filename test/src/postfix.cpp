@@ -11,6 +11,8 @@
  * Test postfix.
  */
 
+using namespace gl::test;
+
 /**
  * \brief Test entry point.
  *

@@ -7,6 +7,8 @@
  * Test custom types with overloaded stream insertion operator.
  */
 
+using namespace gl::test;
+
 /**
  * \brief Overrides the stream insertion operator.
  */

@@ -19,6 +19,7 @@
 * Ensure template parameters are documented with \tparam
 * Ensure relevant features are listed in both doxygen and README
 * Ensure documentation such as \param ends with dot
+* Add mainpage to testing framework
 
 ## Consistency
 
@@ -41,7 +42,6 @@
 * Break out conversion to UTF-8 to function
 * Why do some functions need to use get_value()?
 * Add advanced test, such as std::map<std::pair<int, std::string>, std::vector<float>>
-* namespace testing framework
 
 # Features
 

@@ -9,6 +9,8 @@
  *
  */
 
+using namespace gl::test;
+
 /**
  * \brief Run code in a block with prefix disabled and enabled.
  * \param v Variable to put prefix in.

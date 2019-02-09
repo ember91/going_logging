@@ -24,6 +24,8 @@
  * Test logging output of types in the C++ standard library.
  */
 
+using namespace gl::test;
+
 /**
  * \brief Log std:.bitset.
  */

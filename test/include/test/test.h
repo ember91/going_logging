@@ -5,6 +5,9 @@
 #include <streambuf>
 #include <string>
 
+namespace gl {
+namespace test {
+
 /**
  * \brief Setup testing environment for comparing logging output to ground
  * truth.
@@ -32,5 +35,8 @@ class Test {
     /** Log output file. */
     std::ofstream m_output;
 };
+
+} // namespace test
+} // namespace gl
 
 #endif // INCLUDE_TEST_H_

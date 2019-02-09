@@ -8,6 +8,8 @@
  * Test colored output functionality.
  */
 
+using namespace gl::test;
+
 /**
  * \brief Log variables.
  *

@@ -4,6 +4,13 @@
 #include <ostream>
 
 /**
+ * \file
+ * Test output of l_arr().
+ */
+
+using namespace gl::test;
+
+/**
  * \brief Test entry point.
  *
  * \param argc Number of arguments.

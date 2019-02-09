@@ -8,6 +8,8 @@
  * Test enabling and disabling output.
  */
 
+using namespace gl::test;
+
 /**
  * \brief Log variables.
  *
