@@ -1,11 +1,18 @@
 #include <cstdlib>
-#include <dirent.h>
 #include <iostream>
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
+#include <string.h>
 #include <string>
 #include <vector>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif // _WIN32
 
 /**
  * \file
@@ -48,13 +55,46 @@ std::pair<std::string, std::string> split_file_path(
  * \return File names.
  */
 std::vector<std::string> get_directory_files(const std::string& d) {
-    DIR*                     dir;
-    struct dirent*           ent;
     std::vector<std::string> rv;
+
+#ifdef _WIN32
+    std::stringstream ss;
+    ss << d << sep << "*";
+
+    WIN32_FIND_DATA fileData;
+    HANDLE          handle = FindFirstFile(ss.str().c_str(), &fileData);
+    if (handle != INVALID_HANDLE_VALUE) {
+        // Iterate through all files in directory
+        do {
+            // Add to list if not folder
+            if ((fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) !=
+                FILE_ATTRIBUTE_DIRECTORY) {
+                rv.emplace_back(fileData.cFileName);
+            }
+        } while (FindNextFile(handle, &fileData));
+    }
+
+    if (handle != INVALID_HANDLE_VALUE) {
+        FindClose(handle);
+    }
+#else
+    DIR*           dir;
+    struct dirent* ent;
     if ((dir = opendir(d.c_str())) != nullptr) {
         while ((ent = readdir(dir)) != nullptr) {
-            // TODO: Check if directory
-            rv.emplace_back(ent->d_name);
+            std::string       file_name(ent->d_name);
+            std::stringstream path;
+            path << d << sep << file_name;
+            struct stat statbuf; // Must use struct before variable name
+            if (stat(path.str().c_str(), &statbuf) != 0) {
+                std::stringstream ss;
+                ss << "Failed to open directory '" << d
+                   << "': " << strerror(errno);
+                throw std::runtime_error(ss.str());
+            }
+            if (S_ISDIR(statbuf.st_mode))
+                continue;
+            rv.emplace_back(file_name);
         }
         closedir(dir);
     } else {
@@ -62,6 +102,7 @@ std::vector<std::string> get_directory_files(const std::string& d) {
         ss << "Failed to open directory '" << d << "'";
         throw std::runtime_error(ss.str());
     }
+#endif // _WIN32
 
     return rv;
 }
@@ -93,9 +134,8 @@ int main(int argc, const char** argv) {
 
     // Run all tests in directory
     for (const std::string& f : files) {
-        // Sort out directories and this files
-        // TODO: No need to check for . and .. if directories are sorted out
-        if (f != "." && f != ".." && f != name) {
+        // Sort out this file
+        if (f != name) {
             int rv = std::system((dir + sep + f).c_str());
             if (rv == -1) {
                 std::cout << "Failed to execute binary " << f << std::endl;

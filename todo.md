@@ -20,10 +20,6 @@
 * Ensure relevant features are listed in both doxygen and README
 * Ensure documentation such as \param ends with dot
 
-## Portability
-
-* Don't use dirent.h
-
 ## Consistency
 
 * Add noexcept, const, constepxr, explicit to functions
