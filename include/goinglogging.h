@@ -142,6 +142,10 @@
 #include <valarray>
 #include <vector>
 
+#ifdef __GNUC__
+#include <cxxabi.h>
+#endif // __GNUC__
+
 /**
  * \brief Log variables.
  *
@@ -392,12 +396,85 @@ inline prefix& operator^=(prefix& lhs, prefix rhs) noexcept {
  */
 namespace internal {
 
+#ifdef __GNUC__
+/**
+ * \brief Demangler of variable type names.
+ */
+class Demangler {
+  public:
+    /**
+     * \brief Constructor.
+     */
+    Demangler() : m_buf(nullptr), m_buf_len(0) {
+    }
+
+    /**
+     * \brief Destructor. Free any allocated memory.
+     */
+    ~Demangler() {
+        // OK even if buf = nullptr
+        free(m_buf);
+    }
+
+    /**
+     * \brief Demangle type name.
+     *
+     * \param type_name Mangled type name.
+     * \return Demangled type name.
+     */
+    const char* demangle(const char* type_name) {
+        // Demangle name
+        int status = 0;
+        m_buf      = abi::__cxa_demangle(type_name, m_buf, &m_buf_len, &status);
+
+        // Check success
+        switch (status) {
+        case 0:
+            // Success. Do nothing.
+            break;
+        case -1: {
+            m_buf     = nullptr;
+            m_buf_len = 0;
+            std::stringstream ss;
+            ss << "Demangle: Invalid type name '" << type_name << '\'';
+            throw std::runtime_error(ss.str());
+            break;
+        }
+        case -2:
+            m_buf     = nullptr;
+            m_buf_len = 0;
+            throw std::runtime_error("Demangle: Memory allocation failure");
+            break;
+        case -3:
+            m_buf     = nullptr;
+            m_buf_len = 0;
+            throw std::runtime_error("Demangle: Invalid argument");
+            break;
+        default:
+            m_buf     = nullptr;
+            m_buf_len = 0;
+            throw std::runtime_error("Demangle: Unknown error");
+            break;
+        }
+
+        return m_buf;
+    }
+
+  private:
+    char*  m_buf;     /**< Demangle name buffer. Allocated with malloc. */
+    size_t m_buf_len; /**< Demangle name buffer length. */
+};
+#endif // __GNUC__
+
 /** Current prefixes */
 static prefix curPrefixes = prefix::FILE | prefix::LINE;
 /** \c true if output is enabled */
 static bool outputEnabled = true;
 /** \c true if colored output is enabled */
 static bool colorEnabled = false;
+#ifdef __GNUC__
+static Demangler demangler;
+#endif // __GNUC__
 
 /**
  * \brief Prefix formatter. */
@@ -1443,15 +1520,24 @@ std::ostream& color_end(std::ostream& os) noexcept {
 }
 
 /**
- * \brief Write type name to stream.
+ * \brief Variable type formatter.
  *
+ * \tparam T Variable type.
  * \param os Output stream.
  * \return Output stream.
- *
  */
+template<class T>
 std::ostream& type_name(std::ostream& os) {
-    if ((curPrefixes & prefix::TYPE_NAME) != prefix::NONE) {
-        os << "type ";
+    if ((curPrefixes & prefix::TYPE_NAME) == prefix::TYPE_NAME) {
+        const char* tn     = typeid(T).name();
+        const char* output = nullptr;
+#ifndef __GNUC__
+        output = tn;
+#else
+        output = demangler.demangle(tn);
+#endif // __GNUC__
+
+        os << output << ' ';
     }
     return os;
 }
@@ -1531,8 +1617,8 @@ class Array {
 template<class U>
 std::ostream& operator<<(std::ostream& os, const Array<U>& a) noexcept {
     if (outputEnabled) {
-        os << color_start << a.get_prefix_formatter() << type_name
-           << a.get_name() << " = {";
+        os << color_start << a.get_prefix_formatter()
+           << type_name<U> << a.get_name() << " = {";
         // Print first object without comma
         if (a.get_number_of_values() > 0) {
             os << format_value(a.get_values()[0]);
@@ -1650,8 +1736,8 @@ class Matrix {
 template<class U>
 std::ostream& operator<<(std::ostream& os, const Matrix<U>& m) noexcept {
     if (outputEnabled) {
-        os << color_start << m.get_prefix_formatter() << type_name
-           << m.get_name() << ": ";
+        os << color_start << m.get_prefix_formatter()
+           << type_name<U> << m.get_name() << ": ";
         if (m.get_number_of_columns() <= 0 || m.get_number_of_rows() <= 0) {
             os << "{}";
         } else {
@@ -1796,9 +1882,9 @@ bool is_color_enabled() noexcept {
 
 /**
  * \brief Output variable name and value. */
-#define GL_INTERNAL_LX(v)                    \
-    gl::internal::type_name << (#v) << " = " \
-                            << ::gl::internal::format_value((v))
+#define GL_INTERNAL_LX(v)                                 \
+    gl::internal::type_name<decltype(v)> << (#v) << " = " \
+                                         << ::gl::internal::format_value((v))
 
 #define GL_INTERNAL_L1(v1) GL_INTERNAL_LX(v1)
 

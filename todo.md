@@ -6,6 +6,7 @@
 * Compile with all warnings enabled
 * Valgrind
 * Clean up CMakeLists.txt
+* Cmake check if __cxa_demangle exists
 
 ## Testing
 
@@ -48,9 +49,10 @@
 
 # Features
 
-## Data type prefix
+## External libraries
 
-* Readd functionality for this with __cxa_demangle in GCC, clang
+* Rip out cxx-pretty-print if permissible by license
+* Rip out type name library?
 
 ## VS code
 
