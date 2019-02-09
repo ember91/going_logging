@@ -235,7 +235,7 @@
  * m: [0,0] = 11, [0,1] = 12, [1,0] = 21, [1,1] = 22
  * \endcode
  *
- * \note Uses prefix information set with \ref set_prefixes()
+ * \note Uses prefix information set with \ref set_prefixes().
  * \note Unlike \ref l(), this does not support multiple variables
  * as parameters.
  *
