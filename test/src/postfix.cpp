@@ -6,6 +6,11 @@
 #include "test/test.h"
 
 /**
+ * \file
+ * Test postfix.
+ */
+
+/**
  * \brief Test entry point.
  *
  * \param argc Number of arguments.

@@ -79,7 +79,7 @@
 
 ## Error handling
 
-* Add and use exception type
+* Add, use and document exception type
 * Give a useful error message when operator<< isn't overloaded
 
 ## C++ > 14
