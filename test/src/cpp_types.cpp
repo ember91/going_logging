@@ -24,6 +24,9 @@
  * Test logging output of types in the C++ standard library.
  */
 
+/**
+ * \brief Log std:.bitset.
+ */
 void log_bitset() {
     std::bitset<8> bs(0xaa);
 

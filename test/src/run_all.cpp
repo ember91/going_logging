@@ -9,7 +9,7 @@
 
 /**
  * \file
- * \Run all tests in framework.
+ * Run all tests in framework.
  */
 
 /** File path separator */

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ostream>
 
+/** Redefine postfix */
 #define GL_NEWLINE " end\n"
 #include "goinglogging.h"
 #include "test/test.h"

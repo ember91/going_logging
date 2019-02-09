@@ -46,6 +46,7 @@
 * Break out conversion to UTF-8 to function
 * Why do some functions need to use get_value()?
 * Add advanced test, such as std::map<std::pair<int, std::string>, std::vector<float>>
+* namespace testing framework
 
 # Features
 
@@ -66,7 +67,7 @@
 
 ## Build system
 
-* Run doxygen in cmake
+* Run doxygen in cmake for both main library and test
 
 ## Version control
 
